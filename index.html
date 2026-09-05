@@ -525,6 +525,7 @@
     <div class="set-tabs" id="setTabs">
       <button type="button" class="stab on" data-pane="audio">Audio</button>
       <button type="button" class="stab" data-pane="game">Game</button>
+      <button type="button" class="stab" data-pane="art">Art</button>
       <button type="button" class="stab" data-pane="upg">Upgrades</button>
     </div>
 
@@ -569,6 +570,15 @@
         <button type="button" class="tog" id="setEcho">Nothing</button>
         <b class="set-key"></b>
       </div>
+    </div>
+
+    <div class="set-pane" data-pane="art" hidden>
+      <div class="set-row">
+        <span>Style</span>
+        <button type="button" class="tog" id="artGeo">Geometry</button>
+        <button type="button" class="tog" id="artPixel">Pixel art</button>
+      </div>
+      <div class="set-note">Pixel art swaps in sprites for you, the green crawlers, bombs, blasts and the xp you pick up — and turns you to face the way you walk.</div>
     </div>
 
     <div class="set-pane" data-pane="upg" hidden>
@@ -899,7 +909,7 @@
   const reqOf = u => UPGRADES.find(x => x.id === u.req);
   const hasReq = u => !u.req || countOf(u.req) > 0;
 
-  const player = { x: 0, y: 0, hp: START_HEARTS, max: START_HEARTS, inv: 0, flash: 0 };
+  const player = { x: 0, y: 0, hp: START_HEARTS, max: START_HEARTS, inv: 0, flash: 0, face: -Math.PI / 2 };
   const cam = { x: 0, y: 0 };           // the field has no walls; the view follows you
   let bosses = [];
   let mobs = [];
@@ -908,6 +918,7 @@
   let bombs = [];
   let beams = [];
   let fires = [];       // napalm patches left by blasts
+  let xpDrops = [];     // xp waiting on the ground
   let volley = 0;
   const pathLog = [];   // where you stood on every tick, for the echoes to replay
   let shots = [];
@@ -932,6 +943,144 @@
       sparks.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: rnd(14, 34), color });
     }
   }
+
+  /* ---------- pixel art: sprites drawn from strings, no image files ---------- */
+  const PIX = (() => {
+    const P = {
+      ".": null,
+      a: "#ffb03a", A: "#ffd98a", d: "#8a5a14", e: "#2a1400",   // you
+      g: "#4a8f2a", G: "#7fd13b", k: "#1b3d10", y: "#ffd166",   // green crawler
+      n: "#141414", N: "#3a3a3a", s: "#8a8a95", w: "#d8d8e2",   // bomb + gun
+      o: "#ff8a3d", r: "#ff3d2a", W: "#fff3c4",                 // fire
+      c: "#2ec4b6", C: "#8ef7ec"                                // xp
+    };
+
+    const SHEET = {
+      // you: a little figure, gun drawn separately so it can be mirrored
+      player: [
+        "..aaaa..",
+        ".AaaaaA.",
+        "aaeaaeaa",
+        "aaaaaaaa",
+        "adaaaada",
+        ".aaaaaa.",
+        "..a..a..",
+        "..d..d.."
+      ],
+      gun: [
+        "..sww.",
+        "sNNNNN",
+        "sNNn..",
+        ".nn..."
+      ],
+      // the green starter crawler, two frames of shuffle
+      crawl0: [
+        "..GGGG..",
+        ".GGGGGG.",
+        "GGkGGkGG",
+        "GGGGGGGG",
+        "GgGGGGgG",
+        ".GGGGGG.",
+        "..G..G..",
+        ".k....k."
+      ],
+      crawl1: [
+        "........",
+        "..GGGG..",
+        ".GkGGkG.",
+        "GGGGGGGG",
+        "GgGGGGgG",
+        "GGGGGGGG",
+        ".G....G.",
+        "k......k"
+      ],
+      bomb: [
+        "....y..",
+        "...s...",
+        ".nnn...",
+        "nnNnn..",
+        "nnnnn..",
+        ".nnn...",
+        "......."
+      ],
+      // three frames of a blast
+      boom0: [
+        ".........",
+        "....o....",
+        "...oro...",
+        "..orWro..",
+        ".oorWroo.",
+        "..orWro..",
+        "...oro...",
+        "....o....",
+        "........."
+      ],
+      boom1: [
+        "...ooo...",
+        "..orrro..",
+        ".orrWrro.",
+        "orrWWWrro",
+        "orWWWWWro",
+        "orrWWWrro",
+        ".orrWrro.",
+        "..orrro..",
+        "...ooo..."
+      ],
+      boom2: [
+        "..r...r..",
+        ".r.ooo.r.",
+        "..or.ro..",
+        ".o..r..o.",
+        "r.r...r.r",
+        ".o..r..o.",
+        "..or.ro..",
+        ".r.ooo.r.",
+        "..r...r.."
+      ],
+      xp: [
+        ".ccc.",
+        "cCCCc",
+        "cCCCc",
+        "cCCCc",
+        ".ccc."
+      ]
+    };
+
+    const cache = {};
+    function sprite(name, px = 3) {
+      const key = name + "@" + px;
+      if (cache[key]) return cache[key];
+      const rows = SHEET[name];
+      const cv = document.createElement("canvas");
+      cv.width = rows[0].length * px;
+      cv.height = rows.length * px;
+      const c = cv.getContext("2d");
+      rows.forEach((row, y) => {
+        [...row].forEach((ch, x) => {
+          const col = P[ch];
+          if (!col) return;
+          c.fillStyle = col;
+          c.fillRect(x * px, y * px, px, px);
+        });
+      });
+      cache[key] = cv;
+      return cv;
+    }
+
+    /* draw centred, optionally rotated */
+    function draw(ctx, name, x, y, px, angle, flip) {
+      const img = sprite(name, px);
+      ctx.save();
+      ctx.translate(x, y);
+      if (angle) ctx.rotate(angle);
+      if (flip) ctx.scale(1, -1);
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(img, -img.width / 2, -img.height / 2);
+      ctx.restore();
+    }
+
+    return { draw, sprite };
+  })();
 
   /* ---------- sound: everything here is synthesised, no files ---------- */
   const SND = (() => {
@@ -1210,7 +1359,7 @@
         medic: (flags & 1) !== 0, echo: (flags & 2) !== 0
       });
     }
-    sparks = []; bombs = []; beams = []; orbs = []; fires = [];
+    sparks = []; bombs = []; beams = []; orbs = []; fires = []; xpDrops = [];
     snaps.length = i + 1;               // everything after this moment is erased
   }
 
@@ -1405,7 +1554,7 @@
     stats.rations = 0; stats.bossHeal = 0; stats.adrenaline = 0; stats.tollFree = 0;
     stats.echoLong = 0; stats.echoBomb = 0; stats.bossXp = 0; stats.guard = 0;
     fires = []; player.rush = 0;
-    clones = []; orbs = []; bombs = []; beams = []; volley = 0; pathLog.length = 0;
+    clones = []; orbs = []; bombs = []; beams = []; xpDrops = []; volley = 0; pathLog.length = 0;
     player.hp = START_HEARTS; player.max = START_HEARTS; player.inv = 0; player.flash = 0;
     renderUpgradeChips();
     bosses = []; game.spawned = 0; game.duel = null; game.bossWave = 0;
@@ -1512,6 +1661,7 @@
     updateClones();
     updateBombs();
     updateOrbs();
+    updateXpDrops();
     if (updateBosses()) return;
     if (updateMobs()) return;
     updateShots();
@@ -1558,6 +1708,7 @@
     const rush = player.rush > 0 ? 1 + stats.adrenaline * 0.28 : 1;
     const mag = Math.hypot(dx, dy);
     if (mag > 0) {
+      player.face = Math.atan2(dy, dx);          // the sprite turns to follow your feet
       player.x += dx / mag * stats.speed * throttle * rush;
       player.y += dy / mag * stats.speed * throttle * rush;
     }
@@ -1744,6 +1895,34 @@
     }
   }
 
+  /* xp falls where the kill happened; magnet reels it in, otherwise walk over it */
+  function dropXp(x, y, amount) {
+    if (amount <= 0) return;
+    if (xpDrops.length > 160) xpDrops.shift();
+    xpDrops.push({ x: x + rnd(-8, 8), y: y + rnd(-8, 8), n: amount, t: 0 });
+  }
+
+  function updateXpDrops() {
+    const reach = 32 + stats.magnet * 40;
+    const pullR = stats.magnet > 0 ? 150 + stats.magnet * 170 : 0;
+    for (let i = xpDrops.length - 1; i >= 0; i--) {
+      const o = xpDrops[i];
+      o.t++;
+      const dx = player.x - o.x, dy = player.y - o.y;
+      const d = Math.hypot(dx, dy) || 1;
+      if (d > 1500) { xpDrops.splice(i, 1); continue; }
+      if (d < pullR) {
+        const pull = Math.min(9, 1.6 + stats.magnet * 1.6 + (pullR - d) / pullR * 4);
+        o.x += dx / d * pull; o.y += dy / d * pull;
+      }
+      if (d < reach) {
+        addXp(o.n);
+        burst(o.x, o.y, C.cyan, 3, 2);
+        xpDrops.splice(i, 1);
+      }
+    }
+  }
+
   /* healing you can walk into */
   function dropOrb(x, y) {
     if (orbs.length > 14) return;
@@ -1911,7 +2090,7 @@
         burst(m.x, m.y, def.color, 14, 3.4);
         game.kills++;
         SND.kill();
-        addXp(def.xp * (m.max / def.hp));      // a tougher spawn is worth more
+        dropXp(m.x, m.y, def.xp * (m.max / def.hp));   // xp lands on the ground — go get it
         if (stats.siphon > 0 && player.hp < player.max && Math.random() < stats.siphon) heal(1);
         if (def.boom) {                                  // bursts on death
           for (let a = 0; a < def.boom; a++) {
@@ -2051,7 +2230,11 @@
         const b = bosses[i];
         burst(b.x, b.y, b.def.color, 70, 6);
         shake = 20;
-        addXp(BOSS_XP[b.tier] * (b.max / b.def.hp) * (1 + stats.bossXp));
+        for (let q = 0; q < 12; q++) {
+          const qa = Math.random() * Math.PI * 2, qd = rnd(10, 70);
+          dropXp(b.x + Math.cos(qa) * qd, b.y + Math.sin(qa) * qd,
+                 BOSS_XP[b.tier] * (b.max / b.def.hp) * (1 + stats.bossXp) / 12);
+        }
         if (stats.bossHeal > 0) heal(stats.bossHeal);
         SND.bigKill();
         const duelKill = game.duel && game.duel.tier === b.tier;
@@ -2312,6 +2495,7 @@
 
     if (!view) {
       drawFires();
+      drawXpDrops();
       drawOrbs();
       drawClones();
       drawBombs();
@@ -2474,6 +2658,12 @@
   function drawBombs() {
     for (const b of bombs) {
       const p = b.t / b.life;
+      if (artMode === "pixel") {
+        PIX.draw(ctx, "bomb", b.x, b.y, 2.6, b.t * 0.12);
+        ctx.strokeStyle = `rgba(255,138,61,${0.25 + p * 0.5})`; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(b.tx, b.ty, 105 + stats.bomb * 12, 0, Math.PI * 2); ctx.stroke();
+        continue;
+      }
       ctx.fillStyle = "#ff8a3d"; ctx.shadowColor = "#ff8a3d"; ctx.shadowBlur = 12;
       ctx.beginPath(); ctx.arc(b.x, b.y, 6 + Math.sin(b.t * 0.5) * 1.6, 0, Math.PI * 2); ctx.fill();
       ctx.shadowBlur = 0;
@@ -2482,10 +2672,31 @@
     }
   }
 
+  function drawXpDrops() {
+    for (const o of xpDrops) {
+      const bob = Math.sin(o.t * 0.13) * 2;
+      if (artMode === "pixel") {
+        PIX.draw(ctx, "xp", o.x, o.y + bob, 2.2);
+        continue;
+      }
+      ctx.fillStyle = C.cyan; ctx.shadowColor = C.cyan; ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.moveTo(o.x, o.y - 5 + bob); ctx.lineTo(o.x + 4, o.y + bob);
+      ctx.lineTo(o.x, o.y + 5 + bob); ctx.lineTo(o.x - 4, o.y + bob);
+      ctx.closePath(); ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+
   function drawBeams() {
     for (const b of beams) {
       const a = b.life / 16;
       if (b.ring) {
+        if (artMode === "pixel") {           // three frames of a pixel blast
+          const frame = a > 0.66 ? "boom0" : a > 0.33 ? "boom1" : "boom2";
+          PIX.draw(ctx, frame, b.x, b.y, Math.max(2, b.r / 4.5));
+          continue;
+        }
         ctx.globalAlpha = a;
         ctx.strokeStyle = "#ff8a3d"; ctx.lineWidth = 4;
         ctx.beginPath(); ctx.arc(b.x, b.y, b.r * (1.15 - a * 0.35), 0, Math.PI * 2); ctx.stroke();
@@ -2530,10 +2741,28 @@
     const blink = player.inv > 0 && (game.lived % 8 < 4);
     const col = hurt ? C.magenta : C.amber;
     ctx.globalAlpha = blink ? 0.4 : 1;
-    ctx.fillStyle = col;
-    ctx.shadowColor = col; ctx.shadowBlur = 14;
-    ctx.beginPath(); ctx.arc(player.x, player.y, PLAYER_R, 0, Math.PI * 2); ctx.fill();
-    ctx.shadowBlur = 0;
+
+    if (artMode === "pixel") {
+      // the figure faces the way you walk; the gun points where you aim
+      const gunA = Math.atan2(aim.y - player.y, aim.x - player.x);
+      PIX.draw(ctx, "player", player.x, player.y, 2.4, player.face + Math.PI / 2);
+      const gx = player.x + Math.cos(gunA) * 7, gy = player.y + Math.sin(gunA) * 7;
+      PIX.draw(ctx, "gun", gx, gy, 2.2, gunA, Math.abs(gunA) > Math.PI / 2);
+      if (stats.back > 0) {                      // rear guard: the same gun, other side
+        const bx = player.x - Math.cos(gunA) * 7, by = player.y - Math.sin(gunA) * 7;
+        PIX.draw(ctx, "gun", bx, by, 2.2, gunA + Math.PI, Math.abs(gunA + Math.PI) > Math.PI / 2);
+      }
+      if (hurt) {
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = C.magenta;
+        ctx.beginPath(); ctx.arc(player.x, player.y, PLAYER_R + 3, 0, Math.PI * 2); ctx.fill();
+      }
+    } else {
+      ctx.fillStyle = col;
+      ctx.shadowColor = col; ctx.shadowBlur = 14;
+      ctx.beginPath(); ctx.arc(player.x, player.y, PLAYER_R, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+    }
     ctx.globalAlpha = blink ? 0.25 : 0.5;
     ctx.strokeStyle = col; ctx.lineWidth = 1.2;
     ctx.beginPath(); ctx.arc(player.x, player.y, PLAYER_R + 5, 0, Math.PI * 2); ctx.stroke();
@@ -2550,6 +2779,17 @@
 
   function drawMob(x, y, k, t, hp, max) {
     const def = KINDS[k];
+    if (artMode === "pixel" && k === 0) {
+      PIX.draw(ctx, ((t / 12) | 0) % 2 ? "crawl1" : "crawl0", x, y, 2.8);
+      if (hp < max) {
+        const w = def.r * 2;
+        ctx.fillStyle = "rgba(15,7,24,0.9)";
+        ctx.fillRect(x - w / 2, y - def.r - 8, w, 3);
+        ctx.fillStyle = def.color;
+        ctx.fillRect(x - w / 2, y - def.r - 8, w * clamp(hp / max, 0, 1), 3);
+      }
+      return;
+    }
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(t * (k === 3 ? 0.012 : 0.03));
@@ -2974,6 +3214,16 @@
   const setShake = document.getElementById("setShake");
   const setEchoBtn = document.getElementById("setEcho");
   const setTabs = document.getElementById("setTabs");
+  const artGeoBtn = document.getElementById("artGeo");
+  const artPixBtn = document.getElementById("artPixel");
+
+  function setArt(m) {
+    artMode = m;
+    try { localStorage.setItem("tw-art", m); } catch {}
+    syncMuteBtn();
+  }
+  artGeoBtn.addEventListener("click", () => setArt("geo"));
+  artPixBtn.addEventListener("click", () => setArt("pixel"));
   const banList = document.getElementById("banList");
   const banCount = document.getElementById("banCount");
   const BAN_MAX = 5;
@@ -3053,10 +3303,12 @@
     [...trackListEl.children].forEach(b => b.classList.toggle("on", b.dataset.id === current));
   }
 
+  let artMode = "geo";                     // geo | pixel
   let shakeOn = true;
   let startUpgrade = null;                 // an upgrade id to open every run holding
   try {
     shakeOn = localStorage.getItem("tw-shake") !== "0";
+    if (localStorage.getItem("tw-art") === "pixel") artMode = "pixel";
     if (localStorage.getItem("tw-start-echo") === "1") startUpgrade = "clone";   // old setting
     const su = localStorage.getItem("tw-start-up");
     if (su) startUpgrade = su === "none" ? null : su;
@@ -3073,6 +3325,8 @@
     volSfx.value = Math.round(SND.sfx() * 100);
     volMusicVal.textContent = volMusic.value;
     volSfxVal.textContent = volSfx.value;
+    artGeoBtn.classList.toggle("on", artMode === "geo");
+    artPixBtn.classList.toggle("on", artMode === "pixel");
     setShake.textContent = shakeOn ? "On" : "Off";
     setShake.classList.toggle("on", shakeOn);
     const su = startUpgrade && UPGRADES.find(u => u.id === startUpgrade);
