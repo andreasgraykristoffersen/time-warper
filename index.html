@@ -960,205 +960,281 @@
   const PIX = (() => {
     /* every sprite is a Piskel png embedded in the page; frames get trimmed
        to their drawn pixels so padding never throws the scaling off */
-    /* bosses drawn in the same grammar as the hand-made sprites:
-       one-pixel black outline, flat body, dark blocks for eyes and mouth,
-       two frames that differ only in the legs or the jaw */
+    /* bosses: same grammar as the hand-made sprites, but 16x16 with
+       highlight / body / shade / deep tones, a hot core and two frames */
     const BOSS_ART = {
-      // Splinter — squat and blocky
+      // Splinter — a crystal shard thing
       0: [[
-        "..@@@@@@@@..",
-        ".@BBBBBBBB@.",
-        ".@B@BB@@B@B@",
-        ".@BBBBBBBB@.",
-        ".@B@@@@@@B@.",
-        ".@B@DDDD@B@.",
-        ".@B@@@@@@B@.",
-        ".@BBBBBBBB@.",
-        "..@@@@@@@@..",
-        "..@B@..@B@..",
-        "..@@@..@@@.."
+        ".....@@@@.......",
+        "....@HHHH@......",
+        "...@HBBBBH@.....",
+        "..@HBBBBBBH@....",
+        ".@HBB@EE@BBH@...",
+        ".@BBB@EE@BBBH@..",
+        "@SBBBBBBBBBBS@..",
+        "@SB@@@@@@@@BS@..",
+        "@SB@KKKKKK@BS@..",
+        "@SB@K@EE@K@BS@..",
+        "@SB@KKKKKK@BS@..",
+        "@SB@@@@@@@@BS@..",
+        ".@SBBBBBBBBS@...",
+        "..@@SS@@SS@@....",
+        "...@S@..@S@.....",
+        "...@@@..@@@....."
       ], [
-        "..@@@@@@@@..",
-        ".@BBBBBBBB@.",
-        ".@B@BB@@B@B@",
-        ".@BBBBBBBB@.",
-        ".@B@@@@@@B@.",
-        ".@B@DDDD@B@.",
-        ".@B@@@@@@B@.",
-        ".@BBBBBBBB@.",
-        "..@@@@@@@@..",
-        ".@B@....@B@.",
-        ".@@@....@@@."
+        ".....@@@@.......",
+        "....@HHHH@......",
+        "...@HBBBBH@.....",
+        "..@HBBBBBBH@....",
+        ".@HBB@GG@BBH@...",
+        ".@BBB@GG@BBBH@..",
+        "@SBBBBBBBBBBS@..",
+        "@SB@@@@@@@@BS@..",
+        "@SB@KKKKKK@BS@..",
+        "@SB@K@GG@K@BS@..",
+        "@SB@KKKKKK@BS@..",
+        "@SB@@@@@@@@BS@..",
+        ".@SBBBBBBBBS@...",
+        "..@@SS@@SS@@....",
+        "..@S@....@S@....",
+        "..@@@....@@@...."
       ]],
-      // Fracture — horned
+      // Fracture — split down the middle, horns up
       1: [[
-        ".@@......@@.",
-        ".@B@@@@@@B@.",
-        ".@BBBBBBBB@.",
-        "@BB@BB@@BB@@",
-        "@BBBBBBBBBB@",
-        "@B@@@@@@@@B@",
-        "@B@DD@@DD@B@",
-        "@B@@@@@@@@B@",
-        ".@BBBBBBBB@.",
-        "..@@@@@@@@..",
-        "..@B@..@B@.."
+        "..@@........@@..",
+        "..@H@......@H@..",
+        "..@BH@@@@@@HB@..",
+        ".@HBBBBBBBBBBH@.",
+        ".@BB@EE@@EE@BB@.",
+        "@SBBBBB@@BBBBBS@",
+        "@SB@@@@@@@@@@BS@",
+        "@SB@KKKK@KKK@BS@",
+        "@SB@K@GG@GG@K@S@",
+        "@SB@KKKK@KKK@BS@",
+        "@SB@@@@@@@@@@BS@",
+        "@SBBBBBB@BBBBBS@",
+        ".@SBBBBB@BBBBS@.",
+        "..@@SSS@@SSS@@..",
+        "...@S@....@S@...",
+        "...@@@....@@@..."
       ], [
-        ".@@......@@.",
-        ".@B@@@@@@B@.",
-        ".@BBBBBBBB@.",
-        "@BB@@B@@BB@@",
-        "@BBBBBBBBBB@",
-        "@B@@@@@@@@B@",
-        "@B@D@@@@D@B@",
-        "@B@@@@@@@@B@",
-        ".@BBBBBBBB@.",
-        "..@@@@@@@@..",
-        ".@B@......@B"
+        "..@@........@@..",
+        "..@H@......@H@..",
+        "..@BH@@@@@@HB@..",
+        ".@HBBBBBBBBBBH@.",
+        ".@BB@GG@@GG@BB@.",
+        "@SBBBBB@@BBBBBS@",
+        "@SB@@@@@@@@@@BS@",
+        "@SB@KKK@@KKK@BS@",
+        "@SB@KK@EE@KK@BS@",
+        "@SB@KKK@@KKK@BS@",
+        "@SB@@@@@@@@@@BS@",
+        "@SBBBBB@@BBBBBS@",
+        ".@SBBBB@@BBBBS@.",
+        "..@@SS@@@@SS@@..",
+        "..@S@......@S@..",
+        "..@@@......@@@.."
       ]],
-      // Terminus — wide jaw
+      // Terminus — armoured, heavy jaw
       2: [[
-        "@@@@@@@@@@@@",
-        "@BBBBBBBBBB@",
-        "@B@@BB@@BB@@",
-        "@BBBBBBBBBB@",
-        "@B@@@@@@@@B@",
-        "@BDD@DD@DDB@",
-        "@B@@@@@@@@B@",
-        "@BBBBBBBBBB@",
-        "@@@@@@@@@@@@",
-        ".@B@.@@.@B@.",
-        ".@@@....@@@."
+        "@@@@@@@@@@@@@@@@",
+        "@HHBBBBBBBBBBHH@",
+        "@HB@@@@@@@@@@BH@",
+        "@BB@KEE@@EEK@BB@",
+        "@BB@KKK@@KKK@BB@",
+        "@BB@@@@@@@@@@BB@",
+        "@SBBBBBBBBBBBBS@",
+        "@SB@K@K@K@K@K@S@",
+        "@SB@EEEEEEEE@BS@",
+        "@SB@K@K@K@K@K@S@",
+        "@SBBBBBBBBBBBBS@",
+        "@@SSSSSSSSSSSS@@",
+        ".@S@@@@@@@@@@S@.",
+        ".@S@..@@@@..@S@.",
+        ".@@@..@..@..@@@.",
+        "......@@.@@....."
       ], [
-        "@@@@@@@@@@@@",
-        "@BBBBBBBBBB@",
-        "@B@@BB@@BB@@",
-        "@BBBBBBBBBB@",
-        "@B@@@@@@@@B@",
-        "@B@D@DD@D@B@",
-        "@B@@@@@@@@B@",
-        "@BBBBBBBBBB@",
-        "@@@@@@@@@@@@",
-        "@B@..@@..@B@",
-        "@@@......@@@"
+        "@@@@@@@@@@@@@@@@",
+        "@HHBBBBBBBBBBHH@",
+        "@HB@@@@@@@@@@BH@",
+        "@BB@KGG@@GGK@BB@",
+        "@BB@KKK@@KKK@BB@",
+        "@BB@@@@@@@@@@BB@",
+        "@SBBBBBBBBBBBBS@",
+        "@SB@K@K@K@K@K@S@",
+        "@SB@GGGGGGGG@BS@",
+        "@SB@K@K@K@K@K@S@",
+        "@SBBBBBBBBBBBBS@",
+        "@@SSSSSSSSSSSS@@",
+        ".@S@@@@@@@@@@S@.",
+        "@S@..@@@@@@..@S@",
+        "@@@..@....@..@@@",
+        ".....@@..@@....."
       ]],
-      // Lattice — a hive full of cells
+      // Lattice — a hive of cells with spawn ports
       3: [[
-        "..@@@@@@@@..",
-        ".@BBBBBBBB@.",
-        "@B@@B@@B@@B@",
-        "@BBBBBBBBBB@",
-        "@B@@B@@B@@B@",
-        "@BDBBDDBBDB@",
-        "@B@@B@@B@@B@",
-        "@BBBBBBBBBB@",
-        ".@@@@@@@@@@.",
-        "..@B@..@B@..",
-        "..@@@..@@@.."
+        "...@@@@@@@@@@...",
+        "..@HHBBBBBBHH@..",
+        ".@HB@@B@@B@@BH@.",
+        ".@BBKKBKKBKKBB@.",
+        "@SB@@B@@B@@B@BS@",
+        "@SBKKBEEBKKB@BS@",
+        "@SB@@B@@B@@B@BS@",
+        "@SBKKBKKBKKBBBS@",
+        "@SB@@B@@B@@B@BS@",
+        "@SBBBBEEBBBBBBS@",
+        "@SB@@B@@B@@B@BS@",
+        ".@SBKKBKKBKKS@..",
+        ".@@SSSSSSSSS@@..",
+        "..@S@@..@@S@....",
+        "..@@@....@@@....",
+        "................"
       ], [
-        "..@@@@@@@@..",
-        ".@BBBBBBBB@.",
-        "@B@@B@@B@@B@",
-        "@BBBBBBBBBB@",
-        "@BDDB@@BDDB@",
-        "@B@BB@@BB@B@",
-        "@B@@B@@B@@B@",
-        "@BBBBBBBBBB@",
-        ".@@@@@@@@@@.",
-        ".@B@....@B@.",
-        ".@@@....@@@."
+        "...@@@@@@@@@@...",
+        "..@HHBBBBBBHH@..",
+        ".@HB@@B@@B@@BH@.",
+        ".@BBKKBKKBKKBB@.",
+        "@SB@@B@@B@@B@BS@",
+        "@SBKKBGGBKKB@BS@",
+        "@SB@@B@@B@@B@BS@",
+        "@SBKKBKKBKKBBBS@",
+        "@SB@@BEEB@@B@BS@",
+        "@SBBBB@@BBBBBBS@",
+        "@SB@@B@@B@@B@BS@",
+        ".@SBKKBKKBKKS@..",
+        ".@@SSSSSSSSS@@..",
+        "...@@S@..@S@@...",
+        "....@@@..@@@....",
+        "................"
       ]],
-      // Nova — a burning core with spikes
+      // Nova — a star with a white-hot core
       4: [[
-        "..@..@@..@..",
-        ".@B@@BB@@B@.",
-        "@BBBBBBBBBB@",
-        "@B@@@@@@@@B@",
-        "@B@DDDDDD@B@",
-        "@B@D@@@@D@B@",
-        "@B@DDDDDD@B@",
-        "@B@@@@@@@@B@",
-        "@BBBBBBBBBB@",
-        ".@B@@BB@@B@.",
-        "..@..@@..@.."
+        "...@..@@@@..@...",
+        "..@H@@HHHH@@H@..",
+        ".@HBBBBBBBBBBH@.",
+        "@HBB@@@@@@@@BBH@",
+        "@BB@KKKKKKKK@BB@",
+        "@BB@KEEEEEEK@BB@",
+        "@BB@KEGGGGEK@BB@",
+        "@BB@KEGGGGEK@BB@",
+        "@BB@KEEEEEEK@BB@",
+        "@BB@KKKKKKKK@BB@",
+        "@HBB@@@@@@@@BBH@",
+        ".@HBBBBBBBBBBH@.",
+        "..@H@@HHHH@@H@..",
+        "...@..@@@@..@...",
+        "................",
+        "................"
       ], [
-        "..@@.@@.@@..",
-        ".@BB@BB@BB@.",
-        "@BBBBBBBBBB@",
-        "@B@@@@@@@@B@",
-        "@B@D@DD@D@B@",
-        "@B@@DDDD@@B@",
-        "@B@D@DD@D@B@",
-        "@B@@@@@@@@B@",
-        "@BBBBBBBBBB@",
-        ".@BB@BB@BB@.",
-        "..@@.@@.@@.."
+        "..@@..@..@..@@..",
+        ".@HH@@HH@@HH@...",
+        ".@HBBBBBBBBBBH@.",
+        "@HBB@@@@@@@@BBH@",
+        "@BB@KKKKKKKK@BB@",
+        "@BB@KGGGGGGK@BB@",
+        "@BB@KGEEEEGK@BB@",
+        "@BB@KGEEEEGK@BB@",
+        "@BB@KGGGGGGK@BB@",
+        "@BB@KKKKKKKK@BB@",
+        "@HBB@@@@@@@@BBH@",
+        ".@HBBBBBBBBBBH@.",
+        ".@HH@@HH@@HH@...",
+        "..@@..@..@..@@..",
+        "................",
+        "................"
       ]],
-      // Wraith — narrow, trailing off at the bottom
+      // Wraith — hooded, hollow-eyed, trailing off
       5: [[
-        "...@@@@@@...",
-        "..@BBBBBB@..",
-        "..@B@BB@B@..",
-        "..@BBBBBB@..",
-        "..@B@@@@B@..",
-        "..@BDDDDB@..",
-        "..@BBBBBB@..",
-        "...@BBBB@...",
-        "....@BB@....",
-        "....@B@.....",
-        ".....@......"
+        ".....@@@@@@.....",
+        "....@HHHHHH@....",
+        "...@HBBBBBBH@...",
+        "..@HBB@@@@BBH@..",
+        "..@BB@KKKK@BB@..",
+        "..@BB@EE@E@BB@..",
+        "..@BB@KKKK@BB@..",
+        "..@BBB@@@@BBB@..",
+        "..@SBBBBBBBBS@..",
+        "...@SBBBBBBS@...",
+        "....@SBBBBS@....",
+        ".....@SBBS@.....",
+        "......@SS@......",
+        "......@S@.......",
+        ".......@........",
+        "................"
       ], [
-        "...@@@@@@...",
-        "..@BBBBBB@..",
-        "..@B@BB@B@..",
-        "..@BBBBBB@..",
-        "..@B@@@@B@..",
-        "..@BD@@DB@..",
-        "..@BBBBBB@..",
-        "...@BBBB@...",
-        "....@BB@....",
-        ".....@B@....",
-        "......@....."
+        ".....@@@@@@.....",
+        "....@HHHHHH@....",
+        "...@HBBBBBBH@...",
+        "..@HBB@@@@BBH@..",
+        "..@BB@KKKK@BB@..",
+        "..@BB@G@GG@BB@..",
+        "..@BB@KKKK@BB@..",
+        "..@BBB@@@@BBB@..",
+        "..@SBBBBBBBBS@..",
+        "...@SBBBBBBS@...",
+        "...@SBBBBBBS@...",
+        "....@SBBBBS@....",
+        ".....@S@@S@.....",
+        ".....@@..@@.....",
+        "................",
+        "................"
       ]],
-      // Hydra — two heads on one body
+      // Hydra — two fanged heads on a coiled body
       6: [[
-        ".@@@..@@@...",
-        "@BBB@@BBB@..",
-        "@B@B@@B@B@..",
-        "@BBB@@BBB@..",
-        ".@@BBBB@@...",
-        "..@BBBBBB@..",
-        ".@BDDDDDDB@.",
-        ".@BBBBBBBB@.",
-        "..@@@@@@@@..",
-        "..@B@..@B@..",
-        "..@@@..@@@.."
+        "..@@@@....@@@@..",
+        ".@HBBH@..@HBBH@.",
+        ".@B@EB@..@BE@B@.",
+        ".@BBBB@..@BBBB@.",
+        ".@B@@B@..@B@@B@.",
+        ".@SBBS@@@@SBBS@.",
+        "..@SBBBBBBBBS@..",
+        "..@BBBBBBBBBB@..",
+        ".@BB@KKKKKK@BB@.",
+        ".@BB@KEEEEK@BB@.",
+        ".@BB@KKKKKK@BB@.",
+        ".@SBBBBBBBBBBS@.",
+        "..@@SSSSSSSS@@..",
+        "...@S@@..@@S@...",
+        "...@@@....@@@...",
+        "................"
       ], [
-        "...@@@..@@@.",
-        "..@BBB@@BBB@",
-        "..@B@B@@B@B@",
-        "..@BBB@@BBB@",
-        "...@@BBBB@@.",
-        "..@BBBBBB@..",
-        ".@BDDDDDDB@.",
-        ".@BBBBBBBB@.",
-        "..@@@@@@@@..",
-        ".@B@....@B@.",
-        ".@@@....@@@."
+        ".@@@@......@@@@.",
+        "@HBBH@....@HBBH@",
+        "@B@GB@....@BG@B@",
+        "@BBBB@....@BBBB@",
+        "@B@@B@....@B@@B@",
+        "@SBBS@@@@@@SBBS@",
+        ".@SBBBBBBBBBBS@.",
+        "..@BBBBBBBBBB@..",
+        ".@BB@KKKKKK@BB@.",
+        ".@BB@KGGGGK@BB@.",
+        ".@BB@KKKKKK@BB@.",
+        ".@SBBBBBBBBBBS@.",
+        "..@@SSSSSSSS@@..",
+        "..@S@@....@@S@..",
+        "..@@@......@@@..",
+        "................"
       ]]
     };
 
     const BOSS_PAL = BOSSES.map(b => ({
-      "@": "#0b0b10",
+      "@": "#07070b",
+      H: shade(b.color, 1.45),
       B: b.color,
+      S: shade(b.color, 0.62),
+      K: shade(b.color, 0.3),
+      E: "#fff6d8",
+      G: shade(b.color, 1.9),
       D: shade(b.color, 0.45)
     }));
 
+    /* k < 1 darkens, k > 1 lightens — clamped so highlights stay legal */
     function shade(hex, k) {
       const n = parseInt(hex.slice(1), 16);
-      const r = Math.round(((n >> 16) & 255) * k);
-      const g = Math.round(((n >> 8) & 255) * k);
-      const b = Math.round((n & 255) * k);
+      const cl = v => Math.max(0, Math.min(255, Math.round(v)));
+      const r = cl(((n >> 16) & 255) * k);
+      const g = cl(((n >> 8) & 255) * k);
+      const b = cl((n & 255) * k);
       return `rgb(${r},${g},${b})`;
     }
 
@@ -1172,11 +1248,11 @@
       c.fillRect(0, 0, T, T);
       let seed = 1337;
       const rand = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
-      for (let i = 0; i < 90; i++) {
+      for (let i = 0; i < 260; i++) {
         const x = (rand() * T) | 0, y = (rand() * T) | 0;
         const t = rand();
-        c.fillStyle = t > 0.82 ? "#2f5c26" : t > 0.5 ? "#1d3a1a" : "#12281a";
-        c.fillRect(x, y, 2, t > 0.82 ? 3 : 2);
+        c.fillStyle = t > 0.86 ? "#2f5c26" : t > 0.55 ? "#1d3a1a" : "#12281a";
+        c.fillRect(x, y, 1, t > 0.86 ? 2 : 1);
       }
       return cv;
     }
@@ -2866,7 +2942,7 @@
     for (const b of bombs) {
       const p = b.t / b.life;
       if (artMode === "pixel") {
-        PIX.draw("bomb", (b.t / 6) | 0, b.x, b.y, 22);
+        PIX.draw("bomb", (b.t / 6) | 0, b.x, b.y, 15);
         ctx.strokeStyle = `rgba(255,138,61,${0.25 + p * 0.5})`; ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.arc(b.tx, b.ty, 105 + stats.bomb * 12, 0, Math.PI * 2); ctx.stroke();
         continue;
@@ -2883,7 +2959,7 @@
     for (const o of xpDrops) {
       const bob = Math.sin(o.t * 0.13) * 2;
       if (artMode === "pixel") {
-        PIX.draw("xp", (o.t / 10) | 0, o.x, o.y + bob, 13);
+        PIX.draw("xp", (o.t / 10) | 0, o.x, o.y + bob, 9);
         continue;
       }
       ctx.fillStyle = C.cyan; ctx.shadowColor = C.cyan; ctx.shadowBlur = 10;
@@ -2901,7 +2977,7 @@
       if (b.ring) {
         if (artMode === "pixel") {           // three frames of a pixel blast
           const frame = a > 0.66 ? 0 : a > 0.33 ? 1 : 2;
-          PIX.draw("boom", frame, b.x, b.y, b.r * 1.8);
+          PIX.draw("boom", frame, b.x, b.y, b.r * 1.4);
           continue;
         }
         ctx.globalAlpha = a;
@@ -2955,14 +3031,14 @@
       const flip = Math.abs(gunA) > Math.PI / 2;
       const facingLeft = Math.cos(player.face) < 0;
       const lean = clamp(Math.sin(player.face) * 0.9, -0.78, 0.78) * (facingLeft ? -1 : 1);
-      PIX.draw("player", 0, player.x, player.y, 30, lean, false, facingLeft);
+      PIX.draw("player", 0, player.x, player.y, 21, lean, false, facingLeft);
       PIX.draw("gun", 0,
-        player.x + Math.cos(gunA) * 10, player.y + Math.sin(gunA) * 10,
-        13, gunA, flip);
+        player.x + Math.cos(gunA) * 8, player.y + Math.sin(gunA) * 8,
+        9, gunA, flip);
       if (stats.back > 0) {                      // rear guard: the same gun, other side
         PIX.draw("gun", 0,
-          player.x - Math.cos(gunA) * 10, player.y - Math.sin(gunA) * 10,
-          13, gunA + Math.PI, !flip);
+          player.x - Math.cos(gunA) * 8, player.y - Math.sin(gunA) * 8,
+          9, gunA + Math.PI, !flip);
       }
       if (hurt) {
         ctx.globalAlpha = 0.5;
@@ -2993,7 +3069,7 @@
     const def = KINDS[k];
     if (artMode === "pixel" && (k === 0 || k === 1)) {
       const fps = k === 0 ? CRAWL_FPS : CHASE_FPS;
-      PIX.draw(k === 0 ? "crawl" : "chase", (game.lived / (TPS / fps)) | 0, x, y, k === 0 ? 30 : 28);
+      PIX.draw(k === 0 ? "crawl" : "chase", (game.lived / (TPS / fps)) | 0, x, y, k === 0 ? 21 : 19);
       if (hp < max) {
         const w = def.r * 2;
         ctx.fillStyle = "rgba(15,7,24,0.9)";
@@ -3033,7 +3109,7 @@
     const def = BOSSES[tier];
     const R = rad || def.r;
     if (artMode === "pixel") {
-      PIX.draw("boss" + tier, (game.lived / (TPS / BOSS_FPS)) | 0, x, y, R * 2.3);
+      PIX.draw("boss" + tier, (game.lived / (TPS / BOSS_FPS)) | 0, x, y, R * 1.55);
       const frac2 = hp / (max || def.hp);
       if (frac2 < 1) {                                  // the health ring stays
         ctx.strokeStyle = "rgba(15,7,24,0.85)"; ctx.lineWidth = 4;
