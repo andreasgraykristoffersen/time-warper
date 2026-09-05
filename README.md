@@ -1,8 +1,8 @@
-# Time Whopper
+# Time Warper
 
 A 2D arcade shooter where you can stop time and scrub the world backwards — but never yourself.
 
-**Play it:** https://andreasgraykristoffersen.github.io/time-whopper/
+**Play it:** https://andreasgraykristoffersen.github.io/time-warper/
 
 ## The idea
 

@@ -1,4 +1,4 @@
-<title>Time Whopper</title>
+<title>Time Warper</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&family=Chakra+Petch:wght@400;600;700&family=Azeret+Mono:wght@400;600&display=swap">
@@ -377,7 +377,7 @@
 
 <div class="shell">
   <header>
-    <h1>Time Whopper</h1>
+    <h1>Time Warper</h1>
     <div class="tag">Outlive the clock.<br>Wind it back, keep your ground.</div>
   </header>
 
@@ -419,7 +419,7 @@
     <canvas id="game" width="760" height="520"></canvas>
 
     <div class="overlay" id="ovTitle">
-      <h2>Time Whopper</h2>
+      <h2>Time Warper</h2>
       <p>An endless field, no walls to back into, and three bosses on a timetable: <b style="color:#4fd6e8">Splinter</b>, then <b style="color:#b98cff">Fracture</b>, then <b style="color:#ff2d55">Terminus</b>. Between them the swarm thickens — drifters, then chasers, spitters, darts, brutes and wardens, each wave tougher than the last. Pick how you want to meet them.</p>
       <p><b>Your gun follows the mouse</b> and fires on its own; a short shot hits harder than a long one, so close range is where the damage is. Upgrades add lasers, bomblets, ring volleys, medic rounds that drop healing on the ground for you to walk into — and <b>Echo</b>, which leaves a copy of you replaying the seconds you just rewound.</p>
       <p>Press <b>E</b> and time stops. Scroll backwards as far as you like — the swarm, the bullets and the damage you dealt all unwind with it, but <b>you stay standing exactly where you are</b>. Rewinding is unlimited but not free: <b>every fifth rewind costs you a heart</b>, it never gives hearts back, and it puts seconds back on the clock you'll have to survive again. You start with three hearts, a hit costs one, and at zero the run starts over.</p>
@@ -1466,44 +1466,50 @@
   }
 
   /* the gun follows the mouse; damage falls off with how far the shot travels */
-  function fireFrom(x, y, tx, ty, echo) {
+  /* opts.st is the loadout doing the firing — an echo carries the one you had when it was recorded */
+  function fireFrom(x, y, tx, ty, opts = {}) {
+    const st = opts.st || stats;
+    const echo = !!opts.echo;
     const a = Math.atan2((ty ?? aim.y) - y, (tx ?? aim.x) - x);
-    const v = 8.4 * stats.bulletSpeed;
+    const v = 8.4 * st.bulletSpeed;
     const shot = (ang, medic) => shots.push({
       x, y, ox: x, oy: y,
       vx: Math.cos(ang) * v, vy: Math.sin(ang) * v,
-      pierce: stats.pierce, hit: null, medic, echo: !!echo
+      pierce: st.pierce, hit: null, medic, echo, st
     });
 
-    if (!echo) { volley++; if (volley % 2 === 0) SND.shoot(); }   // every other volley, so it stays a texture
-    const medic = !echo && stats.medic > 0 && Math.random() < stats.medic;
+    let vol;
+    if (echo) vol = opts.volley || 0;
+    else { volley++; if (volley % 2 === 0) SND.shoot(); vol = volley; }   // every other volley, so it stays a texture
 
-    for (let i = 0; i <= stats.spread; i++) shot(a + (i - stats.spread / 2) * 0.13, medic && i === 0);
+    const medic = st.medic > 0 && Math.random() < st.medic;
 
-    if (stats.back > 0) for (let i = 0; i < stats.back; i++) shot(a + Math.PI + (i - 0.5) * 0.16, false);
+    for (let i = 0; i <= st.spread; i++) shot(a + (i - st.spread / 2) * 0.13, medic && i === 0);
+
+    if (st.back > 0) for (let i = 0; i < st.back; i++) shot(a + Math.PI + (i - 0.5) * 0.16, false);
 
     // ring shot: every fifth volley goes out in every direction
-    if (!echo && stats.ring > 0 && volley % Math.max(2, 5 - stats.wide) === 0) {
-      const n = 8 + stats.ring * 4;
+    if (st.ring > 0 && vol % Math.max(2, 5 - st.wide) === 0) {
+      const n = 8 + st.ring * 4;
       for (let i = 0; i < n; i++) shot(a + i * Math.PI * 2 / n, false);
     }
 
     // rail shot: one heavy round that goes through everything
-    if (!echo && stats.rail > 0 && volley % 8 === 0) {
+    if (st.rail > 0 && vol % 8 === 0) {
       shots.push({
         x, y, ox: x, oy: y,
         vx: Math.cos(a) * 15, vy: Math.sin(a) * 15,
-        pierce: 99, hit: null, rail: true, mult: 2.2 + stats.rail
+        pierce: 99, hit: null, rail: true, mult: 2.2 + st.rail, echo, st
       });
     }
   }
 
-  function fireLance(ox, oy, tx, ty) {
+  function fireLance(ox, oy, tx, ty, st = stats) {
     const sx = ox ?? player.x, sy = oy ?? player.y;
     SND.laser();
     const base = Math.atan2((ty ?? aim.y) - sy, (tx ?? aim.x) - sx);
-    const len = 620, dmg = 46 * stats.dmg * stats.laser;
-    const arms = 1 + stats.prism * 2;          // prism lance splits the beam
+    const len = 620, dmg = 46 * st.dmg * st.laser;
+    const arms = 1 + st.prism * 2;          // prism lance splits the beam
 
     for (let i = 0; i < arms; i++) {
       const a = base + (i - (arms - 1) / 2) * 0.26;
@@ -1517,7 +1523,7 @@
         const t = clamp((px * Math.cos(a) + py * Math.sin(a)) / len, 0, 1);
         const cx = sx + Math.cos(a) * len * t, cy = sy + Math.sin(a) * len * t;
         if (Math.hypot(o.x - cx, o.y - cy) < r + 10) {
-          o.hp -= dmg * (o.def ? 1 + stats.siege * 0.25 : 1 + stats.hollow * 0.25);
+          o.hp -= dmg * (o.def ? 1 + st.siege * 0.25 : 1 + st.hollow * 0.25);
           burst(o.x, o.y, C.cyan, 8, 3);
         }
       }
@@ -1525,7 +1531,7 @@
     shake = Math.max(shake, 6);
   }
 
-  function lobBomb(ox, oy, tx, ty) {
+  function lobBomb(ox, oy, tx, ty, st = stats) {
     const sx = ox ?? player.x, sy = oy ?? player.y;
     const gx = tx ?? aim.x, gy = ty ?? aim.y;
     SND.bomb();
@@ -1534,13 +1540,13 @@
     bombs.push({
       x: sx, y: sy,
       tx: sx + Math.cos(a) * reach, ty: sy + Math.sin(a) * reach,
-      t: 0, life: 34
+      t: 0, life: 34, st
     });
   }
 
-  function blast(x, y, child) {
-    const R = (105 + stats.bomb * 12) * (child ? 0.6 : 1);
-    const dmg = 150 * stats.dmg * (child ? 0.5 : 1);
+  function blast(x, y, child, st = stats) {
+    const R = (105 + st.bomb * 12) * (child ? 0.6 : 1);
+    const dmg = 150 * st.dmg * (child ? 0.5 : 1);
     for (const o of [...mobs, ...bosses]) {
       const d = Math.hypot(o.x - x, o.y - y);
       if (d < R) o.hp -= dmg * (1 - d / R * 0.55);
@@ -1549,16 +1555,16 @@
     beams.push({ ring: true, x, y, r: R, life: 16 });
     shake = Math.max(shake, child ? 6 : 12);
 
-    if (stats.napalm > 0) fires.push({ x, y, r: R * 0.8, life: (2 + stats.napalm) * TPS });
+    if (st.napalm > 0) fires.push({ x, y, r: R * 0.8, life: (2 + st.napalm) * TPS, st });
 
     // cluster shells throw smaller charges outward
-    if (!child && stats.cluster > 0) {
-      const n = 2 + stats.cluster;
+    if (!child && st.cluster > 0) {
+      const n = 2 + st.cluster;
       for (let i = 0; i < n; i++) {
         const a = Math.random() * Math.PI * 2, r = rnd(60, 150);
         bombs.push({
           x, y, tx: x + Math.cos(a) * r, ty: y + Math.sin(a) * r,
-          t: 0, life: 26, child: true
+          t: 0, life: 26, child: true, st
         });
       }
     }
@@ -1571,7 +1577,7 @@
       const p = clamp(b.t / b.life, 0, 1);
       b.x += (b.tx - b.x) * 0.16;
       b.y += (b.ty - b.y) * 0.16;
-      if (p >= 1) { blast(b.x, b.y, b.child); bombs.splice(i, 1); }
+      if (p >= 1) { blast(b.x, b.y, b.child, b.st || stats); bombs.splice(i, 1); }
     }
     for (let i = beams.length - 1; i >= 0; i--) if (--beams[i].life <= 0) beams.splice(i, 1);
 
@@ -1579,7 +1585,8 @@
     for (let i = fires.length - 1; i >= 0; i--) {
       const f = fires[i];
       if (--f.life <= 0) { fires.splice(i, 1); continue; }
-      const dmg = 1.1 * stats.dmg * stats.napalm;
+      const fst = f.st || stats;
+      const dmg = 1.1 * fst.dmg * fst.napalm;
       for (const o of [...mobs, ...bosses]) {
         if (Math.hypot(o.x - f.x, o.y - f.y) < f.r) o.hp -= dmg;
       }
@@ -1654,8 +1661,9 @@
   /* an echo of you, replaying the stretch you just erased */
   function spawnEchoes(frames) {
     if (!stats.clone || frames.length < 8) return;
+    const loadout = { ...stats };          // frozen copy: the echo fights with the gun you had here
     for (let i = 0; i < stats.clone; i++) {
-      clones.push({ frames, i: -i * 12, fire: 0 });
+      clones.push({ frames, i: -i * 12, volley: 0, st: loadout });
     }
     game.banner = { text: "ECHO", note: `${stats.clone} cop${stats.clone > 1 ? "ies" : "y"} replaying the erased seconds`, life: 100 };
   }
@@ -1666,10 +1674,11 @@
       c.i++;
       if (c.i < 0) continue;
 
-      const span = c.frames.length * (1 + stats.echoLong);   // déjà vu replays it again
+      const st = c.st || stats;                       // the loadout it was recorded with
+      const span = c.frames.length * (1 + st.echoLong);   // déjà vu replays it again
       if (c.i >= span) {
-        if (stats.echoBomb > 0 && c.x !== undefined) {       // echo shell goes off as it fades
-          for (let b = 0; b < stats.echoBomb; b++) blast(c.x + rnd(-30, 30), c.y + rnd(-30, 30), b > 0);
+        if (st.echoBomb > 0 && c.x !== undefined) {      // echo shell goes off as it fades
+          for (let b = 0; b < st.echoBomb; b++) blast(c.x + rnd(-30, 30), c.y + rnd(-30, 30), b > 0, st);
         }
         clones.splice(i, 1);
         continue;
@@ -1685,25 +1694,26 @@
         if (d < best) { best = d; bx = o.x; by = o.y; }
       }
 
-      const rate = Math.max(2, stats.fireEvery - stats.echoRate * 3);
-      if (c.i % rate === 0) fireFrom(c.x, c.y, bx, by, true);
-      if (stats.laser > 0 && c.i % lanceEvery() === 0) fireLance(c.x, c.y, bx, by);
-      if (stats.bomb > 0 && c.i % bombEvery() === 0) lobBomb(c.x, c.y, bx, by);
+      const rate = Math.max(2, st.fireEvery - st.echoRate * 3);
+      if (c.i % rate === 0) fireFrom(c.x, c.y, bx, by, { echo: true, st, volley: ++c.volley });
+      if (st.laser > 0 && c.i % lanceEvery(st) === 0) fireLance(c.x, c.y, bx, by, st);
+      if (st.bomb > 0 && c.i % bombEvery(st) === 0) lobBomb(c.x, c.y, bx, by, st);
     }
   }
 
-  const lanceEvery = () => Math.max(40, Math.round((170 - stats.laser * 30) / (1 + stats.laserRate)));
-  const bombEvery = () => Math.max(80, 210 - stats.bomb * 40);
+  const lanceEvery = (st = stats) => Math.max(40, Math.round((170 - st.laser * 30) / (1 + st.laserRate)));
+  const bombEvery = (st = stats) => Math.max(80, 210 - st.bomb * 40);
 
   function shotDamage(s, onBoss) {
+    const st = s.st || stats;
     const travelled = Math.hypot(s.x - s.ox, s.y - s.oy);
     // long shot flips the falloff: the further it flew, the harder it lands
-    const curve = stats.sniper
-      ? clamp(travelled / (500 * stats.range), 0, 1)
-      : clamp(1 - travelled / (420 * stats.range), 0, 1);
-    let d = (10 + 10 * curve) * stats.dmg * (s.mult || 1);
-    d *= onBoss ? 1 + stats.siege * 0.25 : 1 + stats.hollow * 0.25;
-    if (stats.crit > 0 && Math.random() < stats.crit * 0.08) d *= 2;
+    const curve = st.sniper
+      ? clamp(travelled / (500 * st.range), 0, 1)
+      : clamp(1 - travelled / (420 * st.range), 0, 1);
+    let d = (10 + 10 * curve) * st.dmg * (s.mult || 1);
+    d *= onBoss ? 1 + st.siege * 0.25 : 1 + st.hollow * 0.25;
+    if (st.crit > 0 && Math.random() < st.crit * 0.08) d *= 2;
     return d;
   }
 
@@ -1891,7 +1901,7 @@
   }
 
   /* homing chips: nudge the bullet toward whatever is nearest */
-  function steerShot(s) {
+  function steerShot(s, homing) {
     let best = 320, tx = 0, ty = 0;
     for (const o of [...mobs, ...bosses]) {
       const d = Math.hypot(o.x - s.x, o.y - s.y);
@@ -1902,7 +1912,7 @@
     const a = Math.atan2(s.vy, s.vx);
     const want = Math.atan2(ty - s.y, tx - s.x);
     let diff = ((want - a + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
-    const turn = clamp(diff, -0.06 * stats.homing, 0.06 * stats.homing);
+    const turn = clamp(diff, -0.06 * homing, 0.06 * homing);
     s.vx = Math.cos(a + turn) * sp;
     s.vy = Math.sin(a + turn) * sp;
   }
@@ -1929,18 +1939,19 @@
     for (let i = shots.length - 1; i >= 0; i--) {
       const s = shots[i];
       s.x += s.vx; s.y += s.vy;
-      if (stats.homing > 0 && !s.rail) steerShot(s);
+      const sst = s.st || stats;
+      if (sst.homing > 0 && !s.rail) steerShot(s, sst.homing);
 
       for (const m of mobs) {
         if (m === s.hit) continue;
         if (Math.hypot(s.x - m.x, s.y - m.y) < KINDS[m.k].r + 3) {
           m.hp -= shotDamage(s, false);
-          if (stats.chill > 0) m.chill = Math.max(m.chill || 0, 40 + stats.chill * 25);
+          if (sst.chill > 0) m.chill = Math.max(m.chill || 0, 40 + sst.chill * 25);
           burst(s.x, s.y, s.medic ? C.lime : C.amber, 3, 2.2);
           if (s.medic) dropOrb(s.x, s.y);
           if (!s.medic && s.pierce > 0) { s.pierce--; s.hit = m; continue outer; }
           // ricochet: kick on to whatever else is close
-          if (!s.medic && stats.bounce > 0 && (s.bounced || 0) < stats.bounce && bounceShot(s, m)) continue outer;
+          if (!s.medic && sst.bounce > 0 && (s.bounced || 0) < sst.bounce && bounceShot(s, m)) continue outer;
           shots.splice(i, 1);
           continue outer;
         }
