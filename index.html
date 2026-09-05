@@ -510,6 +510,8 @@
   <!-- pixel sprites, drawn in Piskel -->
   <img class="spr" id="spr_player" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAUCAYAAAC07qxWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB2SURBVDhP7ZKxFYAgDEQPnwOxDrMw0K1Dl45VsBB5IaBo729CLvcuRXA4KbXe4RyAEmMEAOScrQEigpQStkuYmTQbqomknXVaSwwhNHGm7XpgU6dGkkMqSXjvgS+rm3HFbxwQkfZ2tS7/42OipjuhPpntX68+AIZvKag44HXLAAAAAElFTkSuQmCC">
   <img class="spr" id="spr_gun" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAKCAYAAABv7tTEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABxSURBVChTjZHRCcAgDERf3MYpMnum8FPIIvajjaSCtgcBuXi5eAowAOEbIw5FVYM4lqry3EVUddRaAWitzbE7mNktWhvuTu99pQNSzOzFuPtsbmoGMGLfNGQbTsmCxWWLSC+/4yjgccoOvyD50/64AFxd1jI1Op/RcQAAAABJRU5ErkJggg==">
+  <img class="spr" id="spr_spit" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACG0lEQVRYR+2WQStEURTHj140GPEBlJSNryNlYa8sFdkoKTvKUtlRipKs+QSWFijRa5ixGCUjwvA8/e+bcztz373vzR3KZn6r23nvnvO75965b7ron+nKqB/rUULWu23jSqqKH6z20uNTnWbWI44D15y2sCXTxRlIgIaIbU7b2JLFl7tFen5NduCu+t0IJyKGhNwmW65cbJNUUkgAiLBE9FmnqRW9HZgbr80GtLDZFAMti2U91CLl6jfVGh0xzwQEgJBQGGLAWssaFORKbM0HVHtVQyeWDmlSAQtxoVCgm71uJSHPRB4QZTmXRCsCQC29cjRAF2GkOwEml970WP5yOI5YWKn/WgCktoOLvJTLVBweVmMUlFIGqXqpQA6x7AIKTQQBbYyO0lwY0mEUuQScdZwPHKgunGz0aYHS2JgqDomR62vdcsbVesYazCA+3erXB5E7sFMqNW1BsadOt1XKPYAgFchArd4UkPAhxIXFQAS4JFoV0AdQ3owmUgj3A4NO/EYgVZwLyW4AsyOQGOxPutCugCqOky8vISkAKb4XxO8dedUFtr34qToguuAnUDseovuHLzoPkxXIVUoB4xvBeeP95cA8B34CetSMWiEGLBFWPsxPNbDN9xLIQ/93OLt6twkwLJJ6lgp4ohLjYnJ0IBevly3oi0mcDa+cXi9bUB3ANoxPv2Donc97ggV50LzzeU/4azoCnQ50OvAD0yRWML6mnq8AAAAQZGVCR0Q4OTJGOUQ5MkY3NTgwRTmouwVEAAAAAElFTkSuQmCC">
+  <img class="spr" id="spr_shot" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABgCAYAAACtxXToAAACbklEQVR4Xu2awVXDMAxAmzNTsAgXhmAUZmAUhuDCIkzBOTzxbD1VkW25kds40r9AG0dSvhSXl7JcnLM4v/4QEBMQt4BzYgKcD8DxJ2Bd1xWatCzLkGYNCWrNSAk3BcwFUUYUV4Ln35O7eiJPBOxJdkQOeTEg/l6iewVsJqJAb9wNdPqIDPP86oWJ9fP1CV9Q3r5+Lz/vL/+/P398p3e747cwzy8u4Pc+7QAUAMkyuSBaQCYVIua4EfP81YMC5h2Q4A0AUhPM8zcXMDaFFeiNq8U8v3rhWREFFHbgh5BroXXwW2RPjc0TpQIytWN7GRmbMjT4DISAGbo0khCAKpwSApw2HgkBqMIpIcBp45EQgCqcEgKcNh4JAajCKSHAaeOREIAqCPypK2f0g8oatdpuqav7hCMBMuhF89cauhZnrLvAkeJbxJUYEnQmrgRI5jOpA8XjjFFizfOrFybMv50FqHg+6uy+Ns/fXMAw/36eI21kWRC8bZ2/elDAvAOdmOffLJD2ATqC6WeLTVwtpNtSDPP86oX3pCHBlN0JGhPzEHoENhdIFwhoglugyS+t0danWnRmQsCZu6shBKAKp4QAp41HQgCqcEoIcNp4JASgCqeEAKeNR0IAqnBKCJAaD4+YtI+UZqd4ka0Hi63js6Aunj94hAs/w6SoBXAkIfhiIqYs2pIrAbSrs3a0l+IEFGRcjX2FYtyj0Vuo+bezj6a3wOH/H3BvUIDyc/38E9D4eHO/B5yO2ri7IASU2sz3AkreF6Q1jU30cExV7AiqAqQOA7N1uUZVQAnl3wxTMP0F7CUEoAqnhACnjUdCAKpwyh/0fEFwcvZ94AAAABBkZUJHRDI2RENERjREMjE3OTlFNMzDzHYAAAAASUVORK5CYIIA">
   <img class="spr" id="spr_chase" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAABACAYAAAB7jnWuAAAA6UlEQVRoQ+2Y0Q3DIAxEyXRZILtkhu7SBTpdKsuCBod8HER2Je59oFjC+HKxImBJwSzB9SmADtABOtDlwFGersDroQlH+rxLcGHdZITWhCb/jwB507MTOZ7LAYurA+uW9lI5pZcMcwkQtOGU3JAzNKEQ+idUAXXD2RgCTmgUtDEEnGA+QYgAixUEASc8DQXQATpAB+gAHaADdKDHgdBdMe8HflvwfBwTctyxNYcmlzPAHW4CtFCNqwO8HxDOnyH3hVsP3OEgQAj9E6qAuuNtDAEnNAraGAJOaBR0P54PFbQMLzAKBdABOvAFFqt4Qbo5e/4AAAAQZGVCRzc0Q0Y3NURERTZENTA5RjS1XqSKAAAAAElFTkSuQmCC">
   <img class="spr" id="spr_crawl" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAABACAYAAAB7jnWuAAAA70lEQVRoQ+2Y0Q3CMAxEnQXYjllgBJiF7VggyFEdFTf9uBTZSL3301iq4+vVipIUSaYk16cAOkAH6MCUA7WPtsDzoQn1cu3jDe9Xe0BzQi//jQD90rUTFp/LAU+oA2r1TUQetcq9FHlmCTDCBShLwzWsIU/RhErqStgEuI73MQScMCjoYwg4wf2CFAEeLwgCTvg1FEAH6AAdoAN0gA7QgRkHUnfFvB/oW3A7jikWz2zNoZftDLBHmICl0BehDqgA3g+sf4P1RVgP7BEhQEldCZsA1/E+hoATBgV9DAEnDAqGH88PFfQcnuAoFEAH6MAHMV1+QYFlzKkAAAAQZGVCR0Q5RTkxNDEwMjI3OUU4Mjk7eUFtAAAAAElFTkSuQmCC">
   <img class="spr" id="spr_boom" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAKt0lEQVR4Xu2cT2gkWR3HfzkEQwY2WZiRGdEYCEh0HRwDmlmJ6FwikoN7MIJR5rDEwUF2D+tlVry5uHsaxEVm2A3CBBnQDDIecthc1sWAE4QYadcNSGAIq9OwOaSFDZGALZ/fe7/K6+rqdHd1d2qTvA9U6k9X1Xv1+/7e772q+lX6JFIofYWWHokCFM2JbwFvilR/UJAjdaPsjg6GG89I9UvvinRakbxUn79QXfj1B8dePsa3OnRy7bkPBIz/xrudnaMTiiwfAeafvyCdip/7QPjV16T6o3c6O0cnnIbyOzJekR54WsrPK0AS/wLynisPp6b8vEarXrlyJVnZ2NhglvdceTg15ec12qnxwJx07frzHJRVuJHnfO1yqsrPY7Ca5m8cYxg6VeVHAdqnqw7Q9gHdrkAOTlX5eQx2qmJwDrp6/W0fEOkuUYCCiQIUTBSgYKIABRMFKJgoQMFEAQomClAwUYCCiQIUTBSgYKIABRMFKJgoQMFEAQomClAwUYCCiQIUTBQgH7wXbtd24bvk5Nh2T1JDNz5QOIFU33TfBECza0+MHhwD+QUwo3frA4UTSPVDETnnKp513TVGD8kSLesETTHjd+MDhTYImzAcR5lp1Pvnn3tO+h4+ZD2sg9aP34dEZERESiJyWUQm+/vl6XPnZGBgQMrlcvcE+MszInyeBNYqeiiGXryR5U3HQPUtEZmemJC+9XWKs/KrvxORijc8bHshEIDlbw0MyP7+fl196za0SNobIe+5WkUvcvbaNVl6+235jtvW6zLTVB95I3/CrScCsB2DM636jdYSnh0elt3d3cy6Zm5sgSLy89X78DIuDK/K6tR6iDpdtb9f1g4O5Kpt9VjomQrqh/Hv+3oONxChbkOLFNIC/h0082W/HIgAiUf6uZH3OkM0BM54D8fIhBfi/PRLl0VGLous3hcZn5KVV1ZrHMVaghetpi55Kpa+uJA852uF6sWLF+Vn5bLM/3BEZK8ia4sVmRwbk7WtLb1IH5IStLM8f14WdnbSIkG79dRr5pzaqX7bNosaXLZLWicZHHJCbK6KTMzofGWxomIwcWyq5fS1WxHodXZyjcA03dHRUfnJxobMcuHnR0TmXhX55feSfVYeHIYm5oCnDk5MyMr6ugoEHYQs9X7OP/tzzszJh0R2tp3xgXoxheteGOoHhCfqR+u1QUS7FYFeCqAXSnO15kulzYCTv5hzF46HgV0s20S0VbBkE2N1hn5MCPn48WN2a7eOiffTouT6JefteDoCMH1ZRP7u6qBQH/bht8EhWVqsqPdjfAtJ33B7fuQEAO1sbfjGHI+BWcKPed6Lt0Teedn98GcfCvYqsnS7FIajdo2d5tDz+/tl7+BABq/7MIP4lPmUd4art0TeXxXZWhb5pwuTOp0fkSd3txPjMyFk384OR+UTIFmqJ8/56hgYGKgu7u9rS5h89Ej2rl5VETDENCGAi//KkMh/KyJjM+7C3x9RYdZul7RjtCbuZrlQ41vYwBEY0cxb+Rj3CxWRL9509figJPIf31Y/NiTyll+evikLN+7otehqf78sHBx0FIJ6DgIQMu6VyzUtYXBsTOSFSdcKPlUR+cd9kc/NuQvH6tsl7fSmAw/LWdnE+MCpWb7006DDhWe9sQ1awaPXRJ4aEfn4TZH7L4tMzcnSjTtJWITQQfJW8DjQlsbop1wua3l6I/abW64P+EzFeR7G54LfG1LjPHngBMsa8rWIlsvzHjrxzfV1NRzn1NEPnSshEL7uWyHl4wh/vSPyySnXGv7kwg/OsvbKaiJA2AEnf04I6pVzGOb3r4o8fO2wswO/vLdYsQdlkOf6DssZG5O+rS11Ah0CmwBgMf77M84JEOIC7VRcSPxjRb1f1pe1ToQvfk2HxzwVLIpDw9ARpsfffsTBSKgT76cMbyCjb3h4uPrG7q4bBlMW0BGzTGukLyAU0RKAFvC3YL+dbVm6u520pOD8H+kQlCaJy+PEYvNA8CFh4YH7/bNuK7QjQji4SB+nv1UZhdnwk7KZ4wiEQ4yP4WkJeD/bvWMwMADkIQQFdTwxAjgD+OcweBKDv/B+gTlyMOcCj3hen4ukFdD6CEMmAEa2fiEUxzsHTgHUlRGQjIyITE1J3717bD4RAjjjMwKqVGRzZycxNIb3j3mTG6WlnR0VIN3ZdQojM+YMj1UEDG/3A74F6uMHttE/Bca3kMP9DXVj75PSAg6NjyW3ttyV1IOR9Q797sZGctMTxtpkqXO0Tjx+niQkgXm/9Q/bJVlYrGSVr8d6dFs3K9YLwgobR9VZ93/PCxCIcNQxeajyeIPWYK3NQgwhknJbfV/RdIcTiN7E+dd/Vv1eXWd1fHxcfry5qQL49qBDzbMswLFC3/CH/X0t0wcgDYH2sM3NGtN0h0hL6OtSBKAV0AJedHfwTe3bdIdISxzeJE5MiMzMyNOvv575CjJN0x0iLaEC2OtKQlCrnX/THSItk4zYgscZTe3bdIdILhCjJdu2tFOb1N1sRBrTyEB5jKjH0Pyg1SZ41mlkIO1UwneX9oMnFEgxwxtRgNZIGzZE0+2C22pgfxWHMS+Te+bnRgC8dICMZyCRBjQzkIoQvMVRNEE1SIqyO0BgOeOFSLrFNCv3zNDMEHqHB+bpZmw8HuPbk0dgmddugQBJv2B3iRninGmaGULzMcFuMCzsYExb11SR9WV9/s12/xxECcNVD59OnliaGUIF4HGrvpDmmTeTT0JN3v4Ac56H71Vk0wtB6DLDM0+/kI4cbQjtbAkpmo5hLxvAXsmZ0RFjfTkRgInWYEeQVbZ0cJDuzCNhnPaYYdT4MM/rNzDjwldTGQDkRZogniUvAFM6IzhZijgBzNg20rF1jJekYuDlYz73hYw00jDIACA1j3VyY8jRhOmbGqZISkWSGHYaU+Px3Hjx0ts+QJjlwwOMby+dLR8TLA8SLD3PMoR9zs7K7VLseJuQCKB//AcNmFHz6y0TGIP+b9mFHQyPwcn+MtICAP2ATxe/3uADtUhtPK6Sd0NnaWg6ONDpftqn32FsJmI/c0KSiUEICkZKqbSMKEAGNQLYmH3W59ck+S/XvOczYXDmlglmrcLiv09I1RZw14WpF2ILaEidAPg8Q89LlgFG/P/ujDO2hR8wESwVz8D4tACfGwNeABZjK0hRJ4BFcQ0/Ns7/vM99xNjMCTkIwTpJqMHwE9FW/Bchdq54B9yYOgGAZKNxHi/g/Xa3O+vz3oEceD7FIez4cKNz+t7gq0DrpvmF9dgX1JMpAGGIaZxhqH0LxRzCxFTd+fLh+uCQfqHCLxxvQhDS2NZqstJZIm0M/UDORvjzpIFbKwCMD+bxbLd+YnBInixWEq/H8GDez7C22wmzp4G0ITSt77e7u2o0zI3pzZj6WAKDb5f0UYNtZz8zNPvbMtiynSsKUEtaAEhCkYUODOgivJuzzX6jv7Cnnmb08HE0IOq/dneT/5vQoNwzSZYhkuEoBp0l06tUkk1/g2ZebssmjBnfGxjCc8cX9g1oKECD0KHeTIgyEVIdrJF53mTJkbXPmSPLCEkLwLDWEm4E/26Fz3X8jZV+Qej/BQBknS9yBFkGUwHMs5l/c3QUI2ftG+mQtFFrYjXExwi9pU4AM37QmUJ6v0iXSBs2dpTHTFqAyDETBSiYKEDB/B9pITGdeRNSdAAAABBkZUJHMTNEMjE3N0ZCMEE5MTIxRekqEhQAAAAASUVORK5CYIIA">
@@ -755,6 +757,7 @@
   const CRAWL_FPS = 6;                  // green crawler animation speed
   const CHASE_FPS = 12;                 // teal chaser animation speed
   const BOSS_FPS = 4;                   // bosses breathe slowly
+  const MOB_FPS = 8;                    // the rest of the swarm
   const HEART_PIPS = 12;                // beyond this the HUD counts instead of drawing them
 
   const deadline = () => (game.mode === "endless" ? Infinity : loopSeconds() * TPS + game.bonus);
@@ -1217,6 +1220,169 @@
       ]]
     };
 
+    /* rounds: a dark jacket, a bright body and a hot tip, pointing right */
+    const SHOT_ART = [[
+      "..@@@@@..",
+      ".@KKBBHW.",
+      ".@KKBBHW.",
+      "..@@@@@.."
+    ]];
+    const RAIL_ART = [[
+      "..@@@@@@@..",
+      ".@KKBBBHWW.",
+      "..@@@@@@@.."
+    ]];
+    const FLAK_ART = [[
+      ".@@@.",
+      "@BHB@",
+      "@HWH@",
+      "@BHB@",
+      ".@@@."
+    ]];
+
+    /* monster archetypes — two frames each, coloured per species */
+    const MOB_ART = {
+      blob: [[
+        "..@@@@..",
+        ".@HBBH@.",
+        "@BB@@BB@",
+        "@B@EE@B@",
+        "@BBBBBB@",
+        "@KBBBBK@",
+        ".@KBBK@.",
+        "..@@@@.."
+      ], [
+        "........",
+        "..@@@@..",
+        ".@HBBH@.",
+        "@BB@@BB@",
+        "@B@EE@B@",
+        "@BBBBBB@",
+        "@KBBBBK@",
+        ".@@@@@@."
+      ]],
+      heavy: [[
+        "@@@@@@@@@@",
+        "@HHBBBBHH@",
+        "@B@@BB@@B@",
+        "@BBEBBEBB@",
+        "@BB@@@@BB@",
+        "@KBBBBBBK@",
+        "@K@KKKK@K@",
+        "@@@@@@@@@@",
+        ".@K@..@K@.",
+        ".@@@..@@@."
+      ], [
+        "@@@@@@@@@@",
+        "@HHBBBBHH@",
+        "@B@@BB@@B@",
+        "@BB@BB@BB@",
+        "@BBEBBEBB@",
+        "@KBBBBBBK@",
+        "@K@KKKK@K@",
+        "@@@@@@@@@@",
+        "@K@......@",
+        "@@@......@"
+      ]],
+      spiky: [[
+        "...@@...",
+        "..@HH@..",
+        ".@BEEB@.",
+        "@BBBBBB@",
+        "@K@BB@K@",
+        ".@KBBK@.",
+        "..@@@@..",
+        "...@@..."
+      ], [
+        "...@@...",
+        "..@HH@..",
+        ".@BEEB@.",
+        "@BBBBBB@",
+        "@KBBBBK@",
+        ".@K@@K@.",
+        "..@..@..",
+        "..@..@.."
+      ]],
+      tall: [[
+        "..@@@@..",
+        ".@HBBH@.",
+        ".@BEEB@.",
+        ".@BBBB@.",
+        ".@B@@B@.",
+        ".@BBBB@.",
+        ".@KBBK@.",
+        ".@K@@K@.",
+        "..@..@..",
+        "..@@.@@."
+      ], [
+        "..@@@@..",
+        ".@HBBH@.",
+        ".@BEEB@.",
+        ".@BBBB@.",
+        ".@BBBB@.",
+        ".@B@@B@.",
+        ".@KBBK@.",
+        "..@KK@..",
+        "..@..@..",
+        ".@@..@@."
+      ]],
+      round: [[
+        "..@@@@..",
+        ".@HBBH@.",
+        "@BBEEBB@",
+        "@BB@@BB@",
+        "@BBBBBB@",
+        "@KBBBBK@",
+        ".@KKKK@.",
+        "..@@@@.."
+      ], [
+        "..@@@@..",
+        ".@HBBH@.",
+        "@BB@@BB@",
+        "@BBEEBB@",
+        "@BBBBBB@",
+        "@KBBBBK@",
+        ".@KKKK@.",
+        "..@@@@.."
+      ]],
+      wisp: [[
+        "..@@@@..",
+        ".@HBBH@.",
+        ".@BEEB@.",
+        ".@BBBB@.",
+        "..@BB@..",
+        "..@KK@..",
+        "...@@...",
+        "....@..."
+      ], [
+        "..@@@@..",
+        ".@HBBH@.",
+        ".@BEEB@.",
+        ".@BBBB@.",
+        "..@BB@..",
+        "...@K@..",
+        "...@@...",
+        "..@....."
+      ]]
+    };
+
+    const mobPal = c => ({
+      "@": "#0b0b10",
+      H: shade(c, 1.4),
+      B: c,
+      K: shade(c, 0.55),
+      E: "#0c0c12"
+    });
+
+    // which shape each species wears
+    const MOB_SHAPE = {
+      2: "round", 3: "heavy", 4: "heavy", 5: "spiky", 6: "wisp", 7: "round",
+      8: "blob", 9: "tall", 10: "spiky", 11: "round", 12: "blob",
+      13: "tall", 14: "wisp", 15: "heavy"
+    };
+
+    const shotPal = c => ({ "@": "#0b0b10", K: shade(c, 0.55), B: c, H: shade(c, 1.4), W: "#fff6d8" });
+
     const BOSS_PAL = BOSSES.map(b => ({
       "@": "#07070b",
       H: shade(b.color, 1.45),
@@ -1263,6 +1429,8 @@
       gun:    { img: "spr_gun",    cols: 1, rows: 1 },
       crawl:  { img: "spr_crawl",  cols: 1, rows: 2 },
       chase:  { img: "spr_chase",  cols: 1, rows: 2 },
+      shot:   { img: "spr_shot",   cols: 2, rows: 3, pick: [0, 1, 2, 3, 4] },
+      spit:   { img: "spr_spit",   cols: 1, rows: 1 },
       bomb:   { img: "spr_boom",   cols: 3, rows: 3, pick: [0, 1, 2, 3] },
       boom:   { img: "spr_boom",   cols: 3, rows: 3, pick: [4, 5, 6] },
       xp:     { img: "spr_xp",     cols: 2, rows: 2 },
@@ -1272,7 +1440,18 @@
       boss3:  { paint: BOSS_ART[3], pal: 3 },
       boss4:  { paint: BOSS_ART[4], pal: 4 },
       boss5:  { paint: BOSS_ART[5], pal: 5 },
-      boss6:  { paint: BOSS_ART[6], pal: 6 }
+      boss6:  { paint: BOSS_ART[6], pal: 6 },
+      shotA:  { paint: SHOT_ART, palette: shotPal("#ffb03a") },
+      shotC:  { paint: SHOT_ART, palette: shotPal("#4fd6e8") },
+      shotG:  { paint: SHOT_ART, palette: shotPal("#9ef01a") },
+      rail:   { paint: RAIL_ART, palette: shotPal("#ffe08a") },
+      flakM:  { paint: FLAK_ART, palette: shotPal("#ff3d81") },
+      flakY:  { paint: FLAK_ART, palette: shotPal("#ffd166") },
+      flakC:  { paint: FLAK_ART, palette: shotPal("#4fd6e8") },
+      flakV:  { paint: FLAK_ART, palette: shotPal("#b98cff") },
+      flakR:  { paint: FLAK_ART, palette: shotPal("#ff2d55") },
+      ...Object.fromEntries(Object.entries(MOB_SHAPE).map(([k, shape]) =>
+        ["mob" + k, { paint: MOB_ART[shape], palette: mobPal(KINDS[k].color) }]))
     };
 
     const cut = {};      // name -> array of trimmed canvases
@@ -1280,7 +1459,7 @@
     function build(name) {
       const def = SHEETS[name];
       if (def.paint) {                                  // string art, painted once
-        const pal = BOSS_PAL[def.pal];
+        const pal = def.palette || BOSS_PAL[def.pal];
         cut[name] = def.paint.map(rows => {
           const px = 3;
           const cv = document.createElement("canvas");
@@ -2785,7 +2964,15 @@
     }
 
     ctx.lineWidth = 2.4; ctx.globalAlpha = view ? 0.7 : 0.9;
-    if (view) {
+    if (!view && artMode === "pixel") {
+      for (const s of shots) {
+        const a = Math.atan2(s.vy, s.vx);
+        if (s.rail) PIX.draw("rail", 0, s.x, s.y, 8, a);
+        else if (s.medic) PIX.draw("shotG", 0, s.x, s.y, 6, a);
+        else if (s.echo) PIX.draw("shotC", 0, s.x, s.y, 6, a);
+        else PIX.draw("shot", (game.lived / 4) | 0, s.x, s.y, 9, a);
+      }
+    } else if (view) {
       for (let p = 0; p < view.s.length; p += 8) {
         const flags = view.s[p + 7] | 0;
         ctx.strokeStyle = (flags & 1) ? C.lime : (flags & 2) ? C.cyan : C.amber;
@@ -2997,6 +3184,10 @@
   }
 
   function drawFlak(x, y, c) {
+    if (artMode === "pixel") {
+      PIX.draw(["flakY", "flakC", "flakV", "flakR"][c] || "flakM", 0, x, y, 9);
+      return;
+    }
     const col = FLAK_COLORS[c] || FLAK_COLORS[0];
     ctx.fillStyle = col; ctx.shadowColor = col;
     ctx.beginPath(); ctx.arc(x, y, 4.6, 0, Math.PI * 2); ctx.fill();
@@ -3067,9 +3258,12 @@
 
   function drawMob(x, y, k, t, hp, max) {
     const def = KINDS[k];
-    if (artMode === "pixel" && (k === 0 || k === 1)) {
-      const fps = k === 0 ? CRAWL_FPS : CHASE_FPS;
-      PIX.draw(k === 0 ? "crawl" : "chase", (game.lived / (TPS / fps)) | 0, x, y, k === 0 ? 21 : 19);
+    if (artMode === "pixel") {
+      const fps = k === 0 ? CRAWL_FPS : k === 1 ? CHASE_FPS : MOB_FPS;
+      const sheet = k === 0 ? "crawl" : k === 1 ? "chase" : k === 2 ? "spit" : "mob" + k;
+      // one-frame sprites get a slow breath so they are not dead still
+      const breath = k === 2 ? 1 + Math.sin(game.lived * 0.18 + x) * 0.08 : 1;
+      PIX.draw(sheet, (game.lived / (TPS / fps)) | 0, x, y, def.r * 1.7 * breath);
       if (hp < max) {
         const w = def.r * 2;
         ctx.fillStyle = "rgba(15,7,24,0.9)";
