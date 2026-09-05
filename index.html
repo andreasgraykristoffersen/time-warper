@@ -754,6 +754,7 @@
   const HEART_MAX = 999;                // the console can hand out this many
   const CRAWL_FPS = 6;                  // green crawler animation speed
   const CHASE_FPS = 12;                 // teal chaser animation speed
+  const BOSS_FPS = 4;                   // bosses breathe slowly
   const HEART_PIPS = 12;                // beyond this the HUD counts instead of drawing them
 
   const deadline = () => (game.mode === "endless" ? Infinity : loopSeconds() * TPS + game.bonus);
@@ -959,6 +960,228 @@
   const PIX = (() => {
     /* every sprite is a Piskel png embedded in the page; frames get trimmed
        to their drawn pixels so padding never throws the scaling off */
+    /* bosses drawn in the same grammar as the hand-made sprites:
+       one-pixel black outline, flat body, dark blocks for eyes and mouth,
+       two frames that differ only in the legs or the jaw */
+    const BOSS_ART = {
+      // Splinter — squat and blocky
+      0: [[
+        "..@@@@@@@@..",
+        ".@BBBBBBBB@.",
+        ".@B@BB@@B@B@",
+        ".@BBBBBBBB@.",
+        ".@B@@@@@@B@.",
+        ".@B@DDDD@B@.",
+        ".@B@@@@@@B@.",
+        ".@BBBBBBBB@.",
+        "..@@@@@@@@..",
+        "..@B@..@B@..",
+        "..@@@..@@@.."
+      ], [
+        "..@@@@@@@@..",
+        ".@BBBBBBBB@.",
+        ".@B@BB@@B@B@",
+        ".@BBBBBBBB@.",
+        ".@B@@@@@@B@.",
+        ".@B@DDDD@B@.",
+        ".@B@@@@@@B@.",
+        ".@BBBBBBBB@.",
+        "..@@@@@@@@..",
+        ".@B@....@B@.",
+        ".@@@....@@@."
+      ]],
+      // Fracture — horned
+      1: [[
+        ".@@......@@.",
+        ".@B@@@@@@B@.",
+        ".@BBBBBBBB@.",
+        "@BB@BB@@BB@@",
+        "@BBBBBBBBBB@",
+        "@B@@@@@@@@B@",
+        "@B@DD@@DD@B@",
+        "@B@@@@@@@@B@",
+        ".@BBBBBBBB@.",
+        "..@@@@@@@@..",
+        "..@B@..@B@.."
+      ], [
+        ".@@......@@.",
+        ".@B@@@@@@B@.",
+        ".@BBBBBBBB@.",
+        "@BB@@B@@BB@@",
+        "@BBBBBBBBBB@",
+        "@B@@@@@@@@B@",
+        "@B@D@@@@D@B@",
+        "@B@@@@@@@@B@",
+        ".@BBBBBBBB@.",
+        "..@@@@@@@@..",
+        ".@B@......@B"
+      ]],
+      // Terminus — wide jaw
+      2: [[
+        "@@@@@@@@@@@@",
+        "@BBBBBBBBBB@",
+        "@B@@BB@@BB@@",
+        "@BBBBBBBBBB@",
+        "@B@@@@@@@@B@",
+        "@BDD@DD@DDB@",
+        "@B@@@@@@@@B@",
+        "@BBBBBBBBBB@",
+        "@@@@@@@@@@@@",
+        ".@B@.@@.@B@.",
+        ".@@@....@@@."
+      ], [
+        "@@@@@@@@@@@@",
+        "@BBBBBBBBBB@",
+        "@B@@BB@@BB@@",
+        "@BBBBBBBBBB@",
+        "@B@@@@@@@@B@",
+        "@B@D@DD@D@B@",
+        "@B@@@@@@@@B@",
+        "@BBBBBBBBBB@",
+        "@@@@@@@@@@@@",
+        "@B@..@@..@B@",
+        "@@@......@@@"
+      ]],
+      // Lattice — a hive full of cells
+      3: [[
+        "..@@@@@@@@..",
+        ".@BBBBBBBB@.",
+        "@B@@B@@B@@B@",
+        "@BBBBBBBBBB@",
+        "@B@@B@@B@@B@",
+        "@BDBBDDBBDB@",
+        "@B@@B@@B@@B@",
+        "@BBBBBBBBBB@",
+        ".@@@@@@@@@@.",
+        "..@B@..@B@..",
+        "..@@@..@@@.."
+      ], [
+        "..@@@@@@@@..",
+        ".@BBBBBBBB@.",
+        "@B@@B@@B@@B@",
+        "@BBBBBBBBBB@",
+        "@BDDB@@BDDB@",
+        "@B@BB@@BB@B@",
+        "@B@@B@@B@@B@",
+        "@BBBBBBBBBB@",
+        ".@@@@@@@@@@.",
+        ".@B@....@B@.",
+        ".@@@....@@@."
+      ]],
+      // Nova — a burning core with spikes
+      4: [[
+        "..@..@@..@..",
+        ".@B@@BB@@B@.",
+        "@BBBBBBBBBB@",
+        "@B@@@@@@@@B@",
+        "@B@DDDDDD@B@",
+        "@B@D@@@@D@B@",
+        "@B@DDDDDD@B@",
+        "@B@@@@@@@@B@",
+        "@BBBBBBBBBB@",
+        ".@B@@BB@@B@.",
+        "..@..@@..@.."
+      ], [
+        "..@@.@@.@@..",
+        ".@BB@BB@BB@.",
+        "@BBBBBBBBBB@",
+        "@B@@@@@@@@B@",
+        "@B@D@DD@D@B@",
+        "@B@@DDDD@@B@",
+        "@B@D@DD@D@B@",
+        "@B@@@@@@@@B@",
+        "@BBBBBBBBBB@",
+        ".@BB@BB@BB@.",
+        "..@@.@@.@@.."
+      ]],
+      // Wraith — narrow, trailing off at the bottom
+      5: [[
+        "...@@@@@@...",
+        "..@BBBBBB@..",
+        "..@B@BB@B@..",
+        "..@BBBBBB@..",
+        "..@B@@@@B@..",
+        "..@BDDDDB@..",
+        "..@BBBBBB@..",
+        "...@BBBB@...",
+        "....@BB@....",
+        "....@B@.....",
+        ".....@......"
+      ], [
+        "...@@@@@@...",
+        "..@BBBBBB@..",
+        "..@B@BB@B@..",
+        "..@BBBBBB@..",
+        "..@B@@@@B@..",
+        "..@BD@@DB@..",
+        "..@BBBBBB@..",
+        "...@BBBB@...",
+        "....@BB@....",
+        ".....@B@....",
+        "......@....."
+      ]],
+      // Hydra — two heads on one body
+      6: [[
+        ".@@@..@@@...",
+        "@BBB@@BBB@..",
+        "@B@B@@B@B@..",
+        "@BBB@@BBB@..",
+        ".@@BBBB@@...",
+        "..@BBBBBB@..",
+        ".@BDDDDDDB@.",
+        ".@BBBBBBBB@.",
+        "..@@@@@@@@..",
+        "..@B@..@B@..",
+        "..@@@..@@@.."
+      ], [
+        "...@@@..@@@.",
+        "..@BBB@@BBB@",
+        "..@B@B@@B@B@",
+        "..@BBB@@BBB@",
+        "...@@BBBB@@.",
+        "..@BBBBBB@..",
+        ".@BDDDDDDB@.",
+        ".@BBBBBBBB@.",
+        "..@@@@@@@@..",
+        ".@B@....@B@.",
+        ".@@@....@@@."
+      ]]
+    };
+
+    const BOSS_PAL = BOSSES.map(b => ({
+      "@": "#0b0b10",
+      B: b.color,
+      D: shade(b.color, 0.45)
+    }));
+
+    function shade(hex, k) {
+      const n = parseInt(hex.slice(1), 16);
+      const r = Math.round(((n >> 16) & 255) * k);
+      const g = Math.round(((n >> 8) & 255) * k);
+      const b = Math.round((n & 255) * k);
+      return `rgb(${r},${g},${b})`;
+    }
+
+    /* the grass under everything: one tile, scattered blades, tiled forever */
+    function grassTile() {
+      const T = 32;
+      const cv = document.createElement("canvas");
+      cv.width = cv.height = T;
+      const c = cv.getContext("2d");
+      c.fillStyle = "#16301a";
+      c.fillRect(0, 0, T, T);
+      let seed = 1337;
+      const rand = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+      for (let i = 0; i < 90; i++) {
+        const x = (rand() * T) | 0, y = (rand() * T) | 0;
+        const t = rand();
+        c.fillStyle = t > 0.82 ? "#2f5c26" : t > 0.5 ? "#1d3a1a" : "#12281a";
+        c.fillRect(x, y, 2, t > 0.82 ? 3 : 2);
+      }
+      return cv;
+    }
+    let grassPattern = null;
+
     const SHEETS = {
       player: { img: "spr_player", cols: 1, rows: 1 },
       gun:    { img: "spr_gun",    cols: 1, rows: 1 },
@@ -966,13 +1189,37 @@
       chase:  { img: "spr_chase",  cols: 1, rows: 2 },
       bomb:   { img: "spr_boom",   cols: 3, rows: 3, pick: [0, 1, 2, 3] },
       boom:   { img: "spr_boom",   cols: 3, rows: 3, pick: [4, 5, 6] },
-      xp:     { img: "spr_xp",     cols: 2, rows: 2 }
+      xp:     { img: "spr_xp",     cols: 2, rows: 2 },
+      boss0:  { paint: BOSS_ART[0], pal: 0 },
+      boss1:  { paint: BOSS_ART[1], pal: 1 },
+      boss2:  { paint: BOSS_ART[2], pal: 2 },
+      boss3:  { paint: BOSS_ART[3], pal: 3 },
+      boss4:  { paint: BOSS_ART[4], pal: 4 },
+      boss5:  { paint: BOSS_ART[5], pal: 5 },
+      boss6:  { paint: BOSS_ART[6], pal: 6 }
     };
 
     const cut = {};      // name -> array of trimmed canvases
 
     function build(name) {
       const def = SHEETS[name];
+      if (def.paint) {                                  // string art, painted once
+        const pal = BOSS_PAL[def.pal];
+        cut[name] = def.paint.map(rows => {
+          const px = 3;
+          const cv = document.createElement("canvas");
+          cv.width = rows[0].length * px; cv.height = rows.length * px;
+          const c = cv.getContext("2d");
+          rows.forEach((row, y) => [...row].forEach((ch, x) => {
+            const col = pal[ch];
+            if (!col) return;
+            c.fillStyle = col;
+            c.fillRect(x * px, y * px, px, px);
+          }));
+          return cv;
+        });
+        return cut[name];
+      }
       const img = document.getElementById(def.img);
       if (!img || !img.complete || !img.naturalWidth) return null;
 
@@ -1029,7 +1276,12 @@
       ctx.restore();
     }
 
-    return { draw, frames };
+    function grass() {
+      if (!grassPattern) grassPattern = ctx.createPattern(grassTile(), "repeat");
+      return grassPattern;
+    }
+
+    return { draw, frames, grass };
   })();
 
   /* ---------- sound: everything here is synthesised, no files ---------- */
@@ -2426,11 +2678,16 @@
     ctx.translate(Math.round(W / 2 - cam.x), Math.round(H / 2 - cam.y));
 
     const left = cam.x - W / 2, top = cam.y - H / 2;
-    ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
-    ctx.beginPath();
-    for (let x = Math.floor(left / 38) * 38; x <= left + W; x += 38) { ctx.moveTo(x, top); ctx.lineTo(x, top + H); }
-    for (let y = Math.floor(top / 38) * 38; y <= top + H; y += 38) { ctx.moveTo(left, y); ctx.lineTo(left + W, y); }
-    ctx.stroke();
+    if (artMode === "pixel") {
+      const g = PIX.grass();                       // tiled grass, scrolling with the field
+      if (g) { ctx.fillStyle = g; ctx.fillRect(left - 40, top - 40, W + 80, H + 80); }
+    } else {
+      ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let x = Math.floor(left / 38) * 38; x <= left + W; x += 38) { ctx.moveTo(x, top); ctx.lineTo(x, top + H); }
+      for (let y = Math.floor(top / 38) * 38; y <= top + H; y += 38) { ctx.moveTo(left, y); ctx.lineTo(left + W, y); }
+      ctx.stroke();
+    }
 
     if (view) ctx.globalAlpha = 0.85;
     for (const b of shownBosses) drawBoss(b.x, b.y, b.hp, b.t, b.tier, b.max, b.rad);
@@ -2775,6 +3032,19 @@
   function drawBoss(x, y, hp, t, tier, max, rad) {
     const def = BOSSES[tier];
     const R = rad || def.r;
+    if (artMode === "pixel") {
+      PIX.draw("boss" + tier, (game.lived / (TPS / BOSS_FPS)) | 0, x, y, R * 2.3);
+      const frac2 = hp / (max || def.hp);
+      if (frac2 < 1) {                                  // the health ring stays
+        ctx.strokeStyle = "rgba(15,7,24,0.85)"; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.arc(x, y, R + 12, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = def.color; ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(x, y, R + 12, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * clamp(frac2, 0, 1));
+        ctx.stroke();
+      }
+      return;
+    }
     const frac = hp / (max || def.hp), spin = t * 0.012;
     const points = [5, 6, 8, 7, 12, 3, 9][tier] || 6;
     const a0 = ctx.globalAlpha;
