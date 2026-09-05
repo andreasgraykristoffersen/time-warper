@@ -88,6 +88,10 @@
   .heart{width:13px;height:13px;border-radius:3px;border:1px solid var(--magenta);
     background:var(--magenta);box-shadow:0 0 9px -1px var(--magenta)}
   .heart.empty{background:transparent;box-shadow:none;opacity:.4}
+  .heartcount{
+    font-family:"Azeret Mono",ui-monospace,monospace;font-size:.78rem;color:var(--magenta);
+    font-variant-numeric:tabular-nums;margin-left:2px;
+  }
   .upgrades{grid-column:1 / -1;display:flex;gap:6px;flex-wrap:wrap;min-height:0}
   .upgrades:empty{display:none}
   .chip{
@@ -709,6 +713,8 @@
   const DUEL_TICKS = 30 * TPS;
   const QTY_MAX = 999999999;
   const REWIND_TOLL = 5;                // rewinds per heart
+  const HEART_MAX = 999;                // the console can hand out this many
+  const HEART_PIPS = 12;                // beyond this the HUD counts instead of drawing them
 
   const deadline = () => (game.mode === "endless" ? Infinity : loopSeconds() * TPS + game.bonus);
   const mmss = t => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
@@ -2601,11 +2607,20 @@
       ctx.fillRect(x, y, w * (1 - left / loopSeconds()), 8);   // fills as you survive
     }
 
-    for (let i = 0; i < player.max; i++) {
+    const pips = Math.min(player.max, HEART_PIPS);
+    for (let i = 0; i < pips; i++) {
       ctx.globalAlpha = i < player.hp ? 1 : 0.3;
       ctx.fillStyle = C.magenta;
       ctx.fillRect(x + i * 17, y + 16, 12, 12);
       ctx.globalAlpha = 1;
+    }
+    let cursor = x + pips * 17 + 8;
+    if (player.max > HEART_PIPS) {                 // too many to draw — count them instead
+      ctx.font = '600 11px "Azeret Mono", monospace';
+      ctx.fillStyle = C.magenta;
+      const label = `${Math.max(0, player.hp)}/${player.max}`;
+      ctx.fillText(label, cursor, y + 26);
+      cursor += ctx.measureText(label).width + 10;
     }
     ctx.font = '600 11px "Azeret Mono", monospace';
     ctx.fillStyle = game.duel ? C.magenta : C.ink;
@@ -2613,7 +2628,7 @@
       game.duel ? `kill it — ${(game.duel.timer / TPS).toFixed(1)}s`
       : game.mode === "endless" ? mmss(game.tick / TPS)
       : `${left.toFixed(1)}s left`,
-      x + player.max * 17 + 8, y + 26
+      cursor, y + 26
     );
 
     let ry = y + 40;
@@ -2777,15 +2792,25 @@
     const ti = tierIndex(game.tick);
     el.threat.dataset.tier = ti;
     el.threat.textContent = TIERS[ti].name;
-    if (el.hearts.children.length !== player.max) {
-      el.hearts.innerHTML = "";
-      for (let i = 0; i < player.max; i++) {
-        const h = document.createElement("span");
-        h.className = "heart";
-        el.hearts.appendChild(h);
+    if (player.max > HEART_PIPS) {
+      // too many to draw — one heart and a count
+      if (el.hearts.dataset.mode !== "count") {
+        el.hearts.dataset.mode = "count";
+        el.hearts.innerHTML = '<span class="heart"></span><b class="heartcount"></b>';
       }
+      el.hearts.querySelector(".heartcount").textContent = `${Math.max(0, player.hp)} / ${player.max}`;
+    } else {
+      if (el.hearts.dataset.mode === "count" || el.hearts.children.length !== player.max) {
+        el.hearts.dataset.mode = "pips";
+        el.hearts.innerHTML = "";
+        for (let i = 0; i < player.max; i++) {
+          const h = document.createElement("span");
+          h.className = "heart";
+          el.hearts.appendChild(h);
+        }
+      }
+      for (let i = 0; i < player.max; i++) el.hearts.children[i].classList.toggle("empty", i >= player.hp);
     }
-    for (let i = 0; i < player.max; i++) el.hearts.children[i].classList.toggle("empty", i >= player.hp);
     const need = xpNeed();
     el.lvlNum.textContent = game.level;
     el.xpVal.textContent = `${game.xp} / ${need} xp`;
@@ -3112,11 +3137,24 @@
   }
 
   function runCommand(raw) {
-    const cmd = raw.trim().replace(/^\//, "").toLowerCase();
+    const line = raw.trim().replace(/^\//, "").toLowerCase();
+    const [cmd, ...rest] = line.split(/\s+/);
     closeConsole();
     if (cmd === "u" || cmd === "upgrade") { if (!offerUpgrades()) note("nothing left to offer"); return; }
     if (cmd === "g" || cmd === "give") { offerEverything(); return; }
     if (cmd === "t" || cmd === "time") { offerTime(); return; }
+    if (cmd === "h" || cmd === "hp" || cmd === "hearts") {
+      const n = parseInt(rest[0], 10);
+      if (!Number.isFinite(n)) { note(`you have ${player.hp} of ${player.max} hearts`); return; }
+      player.max = clamp(Math.floor(n), 1, HEART_MAX);
+      player.hp = player.max;
+      player.inv = Math.max(player.inv, 30);
+      burst(player.x, player.y, C.magenta, 24, 3.5);
+      SND.heal();
+      note(`${player.max} heart${player.max === 1 ? "" : "s"}`);
+      syncHud();
+      return;
+    }
     if (cmd === "") return;
     note(`unknown: /${cmd}`);
   }
