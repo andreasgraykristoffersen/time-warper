@@ -578,7 +578,7 @@
         <button type="button" class="tog" id="artGeo">Geometry</button>
         <button type="button" class="tog" id="artPixel">Pixel art</button>
       </div>
-      <div class="set-note">Pixel art swaps in sprites: you are the gun, swinging onto your aim, with a second one on your back if you hold Rear guard. Green crawlers, bombs, blasts and xp all get sprites too.</div>
+      <div class="set-note">Pixel art swaps in sprites: your figure turns with your feet while the gun swings onto your aim, and Rear guard adds a second gun behind you. Green crawlers, bombs, blasts and xp get sprites too.</div>
     </div>
 
     <div class="set-pane" data-pane="upg" hidden>
@@ -956,17 +956,29 @@
     };
 
     const SHEET = {
-      // you ARE the gun — muzzle points right, so it rotates straight onto your aim
+      // you: a dark figure, drawn facing up so it can turn with your feet
       player: [
-        "............",
-        "...wsNNNNNN.",
-        "..sNNNNNNNNn",
-        "..sNNNNNNNn.",
-        "..sNNNNn....",
-        "...NNNn.....",
-        "...nNNn.....",
-        "...nNNn.....",
-        "....nn......"
+        "..wwwww..",
+        ".wwwwwww.",
+        ".wsssssw.",
+        "..sssss..",
+        ".NNNNNNN.",
+        "NNNNNNNNN",
+        "NNnNNNnNN",
+        "NNNNNNNNN",
+        ".NNNNNNN.",
+        "..NN.NN..",
+        "..nn.nn..",
+        "........."
+      ],
+      // the gun you carry — muzzle right, so it rotates straight onto your aim
+      gun: [
+        "...nnnnnn.",
+        ".nNNNNNNNn",
+        ".nNNNNNn..",
+        ".nNNNn....",
+        "..nNn.....",
+        "..nn......"
       ],
       // the green starter crawler, two frames of shuffle
       crawl0: [
@@ -2738,15 +2750,17 @@
     ctx.globalAlpha = blink ? 0.4 : 1;
 
     if (artMode === "pixel") {
-      // the gun is you: it swings onto your aim, and never hangs upside down
+      // the figure turns with your feet; the gun swings onto your aim
       const gunA = Math.atan2(aim.y - player.y, aim.x - player.x);
       const flip = Math.abs(gunA) > Math.PI / 2;
-      PIX.draw(ctx, "player", player.x, player.y, 2.6, gunA, flip);
-      if (stats.back > 0) {                      // rear guard: the same gun on your back
-        const back = gunA + Math.PI;
-        PIX.draw(ctx, "player",
+      PIX.draw(ctx, "player", player.x, player.y, 2.2, player.face + Math.PI / 2);
+      PIX.draw(ctx, "gun",
+        player.x + Math.cos(gunA) * 9, player.y + Math.sin(gunA) * 9,
+        2.1, gunA, flip);
+      if (stats.back > 0) {                      // rear guard: the same gun, other side
+        PIX.draw(ctx, "gun",
           player.x - Math.cos(gunA) * 9, player.y - Math.sin(gunA) * 9,
-          2.6, back, Math.abs(((back + Math.PI) % (Math.PI * 2)) - Math.PI) > Math.PI / 2);
+          2.1, gunA + Math.PI, !flip);
       }
       if (hurt) {
         ctx.globalAlpha = 0.5;
