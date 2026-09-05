@@ -165,6 +165,7 @@
   .mode.on b{color:var(--amber)}
 
   .duelclock{color:var(--magenta) !important;font-weight:700}
+  .stat.hot{color:var(--magenta) !important;font-weight:700}   /* endless: hits cost more than a heart */
   .endbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center}
 
   .qtyform{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:2px}
@@ -280,6 +281,27 @@
     all:unset;cursor:pointer;color:var(--muted);font-size:1.1rem;line-height:1;padding:0 4px;
   }
   .set-x:hover{color:var(--ink)}
+  .set-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);padding-bottom:8px}
+  .stab{
+    all:unset;flex:1;text-align:center;cursor:pointer;padding:5px 0;border-radius:6px;
+    font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  }
+  .stab:hover{color:var(--ink)}
+  .stab.on{background:var(--panel-2);color:var(--cyan);box-shadow:inset 0 0 0 1px var(--line)}
+  .set-pane{display:flex;flex-direction:column;gap:9px}
+  .set-pane[hidden]{display:none}
+  .set-note{font-size:.68rem;color:var(--muted);line-height:1.45}
+  .banlist{display:flex;gap:5px;flex-wrap:wrap}
+  .banlist:empty::after{
+    content:"nothing blocked";font-size:.7rem;color:var(--muted);opacity:.7;
+  }
+  .banchip{
+    cursor:pointer;font-size:.64rem;letter-spacing:.06em;padding:3px 8px;border-radius:4px;
+    background:rgba(255,61,129,.16);border:1px solid var(--magenta);color:var(--ink);
+  }
+  .banchip:hover{background:rgba(255,61,129,.32)}
+  .banchip::after{content:" ×";opacity:.7}
+
   .set-row{display:flex;align-items:center;gap:9px;font-size:.78rem;color:var(--ink)}
   .set-row>span{width:74px;flex:none;color:var(--muted)}
   .set-row b{
@@ -477,42 +499,63 @@
       <span>Settings</span>
       <button type="button" class="set-x" id="setClose" aria-label="close">×</button>
     </div>
-    <label class="set-row">
-      <span>Music</span>
-      <input type="range" id="volMusic" min="0" max="100" step="1">
-      <b id="volMusicVal">22</b>
-    </label>
-    <label class="set-row">
-      <span>Effects</span>
-      <input type="range" id="volSfx" min="0" max="100" step="1">
-      <b id="volSfxVal">55</b>
-    </label>
-    <div class="set-row">
-      <span>Track</span>
-      <button type="button" class="tog" id="setTrack">Cyberpunk</button>
-      <button type="button" class="tog" id="setSynth">Synth</button>
-      <button type="button" class="tog" id="setNoMusic">Off</button>
+    <div class="set-tabs" id="setTabs">
+      <button type="button" class="stab on" data-pane="audio">Audio</button>
+      <button type="button" class="stab" data-pane="game">Game</button>
+      <button type="button" class="stab" data-pane="upg">Upgrades</button>
     </div>
-    <div class="set-row">
-      <span>Sound</span>
-      <button type="button" class="tog" id="setMute">On</button>
-      <b class="set-key">M</b>
+
+    <div class="set-pane" data-pane="audio">
+      <label class="set-row">
+        <span>Music</span>
+        <input type="range" id="volMusic" min="0" max="100" step="1">
+        <b id="volMusicVal">22</b>
+      </label>
+      <label class="set-row">
+        <span>Effects</span>
+        <input type="range" id="volSfx" min="0" max="100" step="1">
+        <b id="volSfxVal">55</b>
+      </label>
+      <div class="set-row">
+        <span>Track</span>
+        <button type="button" class="tog" id="setTrack">Cyberpunk</button>
+        <button type="button" class="tog" id="setSynth">Synth</button>
+        <button type="button" class="tog" id="setNoMusic">Off</button>
+      </div>
+      <div class="set-row">
+        <span>Sound</span>
+        <button type="button" class="tog" id="setMute">On</button>
+        <b class="set-key">M</b>
+      </div>
     </div>
-    <div class="set-row">
-      <span>Screen shake</span>
-      <button type="button" class="tog" id="setShake">On</button>
-      <b class="set-key"></b>
+
+    <div class="set-pane" data-pane="game" hidden>
+      <div class="set-row">
+        <span>Screen shake</span>
+        <button type="button" class="tog" id="setShake">On</button>
+        <b class="set-key"></b>
+      </div>
+      <div class="set-row">
+        <span>Controls</span>
+        <button type="button" class="tog" id="ctlAuto">Auto</button>
+        <button type="button" class="tog" id="ctlMobile">Mobile</button>
+        <button type="button" class="tog" id="ctlDesktop">Desktop</button>
+      </div>
+      <div class="set-row">
+        <span>Start with</span>
+        <button type="button" class="tog" id="setEcho">Nothing</button>
+        <b class="set-key"></b>
+      </div>
     </div>
-    <div class="set-row">
-      <span>Controls</span>
-      <button type="button" class="tog" id="ctlAuto">Auto</button>
-      <button type="button" class="tog" id="ctlMobile">Mobile</button>
-      <button type="button" class="tog" id="ctlDesktop">Desktop</button>
-    </div>
-    <div class="set-row">
-      <span>Start with</span>
-      <button type="button" class="tog" id="setEcho">Echo</button>
-      <b class="set-key"></b>
+
+    <div class="set-pane" data-pane="upg" hidden>
+      <div class="set-row">
+        <span>Blocked</span>
+        <button type="button" class="tog" id="banAdd">Block an upgrade</button>
+        <b id="banCount">0/5</b>
+      </div>
+      <div class="banlist" id="banList"></div>
+      <div class="set-note">Blocked upgrades never come up in a level-up pick. Tap one to unblock it.</div>
     </div>
   </div>
 
@@ -556,9 +599,16 @@
   const BOSSES = [
     { atS: 30, atD: 10, name: "Splinter", rank: "Easy",   hp: 900,  r: 30, color: "#4fd6e8", speed: 1.05, rage: 0 },
     { atS: 60, atD: 20, name: "Fracture", rank: "Medium", hp: 1500, r: 39, color: "#b98cff", speed: 1.35, rage: 1 },
-    { atS: 90, atD: 25, name: "Terminus", rank: "Hard",   hp: 2400, r: 50, color: "#ff2d55", speed: 1.6,  rage: 3 }
+    { atS: 90, atD: 25, name: "Terminus", rank: "Hard",   hp: 2400, r: 50, color: "#ff2d55", speed: 1.6,  rage: 3 },
+    // endless only — these never appear on a scheduled run
+    { name: "Lattice", rank: "Hive",   hp: 2000, r: 42, color: "#9ef01a", speed: 0.85, rage: 1, hive: true },
+    { name: "Nova",    rank: "Nova",   hp: 2600, r: 46, color: "#ffb03a", speed: 0.7,  rage: 2, nova: true },
+    { name: "Wraith",  rank: "Wraith", hp: 1700, r: 27, color: "#e8f4ff", speed: 2.3,  rage: 2, blink: true },
+    { name: "Hydra",   rank: "Hydra",  hp: 2200, r: 44, color: "#ff6b2c", speed: 1.1,  rage: 1, split: 2 }
   ];
-  const ALL_SPAWNED = (1 << BOSSES.length) - 1;
+  const SCHEDULED = 3;                        // only the first three have a timetable
+  const ALL_SPAWNED = (1 << SCHEDULED) - 1;
+  const bossR = b => b.rad || b.def.r;
   const bossAt = tier => (game.mode === "duel" ? BOSSES[tier].atD : BOSSES[tier].atS) * TPS;
 
   const FIRE_EVERY = 8;
@@ -579,22 +629,33 @@
   // waves are read as a fraction of the run, so both modes escalate the same way
   const TIERS = [
     { until: 0.16, name: "Quiet",    every: 100, count: 1, kinds: [0] },
-    { until: 0.34, name: "Rising",   every: 74,  count: 1, kinds: [0, 1, 1, 5] },
-    { until: 0.58, name: "Heavy",    every: 54,  count: 2, kinds: [1, 2, 0, 5, 4] },
-    { until: 0.80, name: "Severe",   every: 42,  count: 2, kinds: [1, 2, 3, 4, 5, 1] },
-    { until: Infinity, name: "Critical", every: 32, count: 3, kinds: [1, 2, 3, 4, 4, 5, 3] }
+    { until: 0.34, name: "Rising",   every: 74,  count: 1, kinds: [0, 1, 1, 5, 6] },
+    { until: 0.58, name: "Heavy",    every: 54,  count: 2, kinds: [1, 2, 0, 5, 4, 6, 8, 10] },
+    { until: 0.80, name: "Severe",   every: 42,  count: 2, kinds: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13] },
+    { until: Infinity, name: "Critical", every: 32, count: 3,
+      kinds: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15] }
   ];
 
-  // 0 drift, 1 chase, 2 spit, 3 brute, 4 warden, 5 dart
+  // 0 drift, 1 chase, 2 spit, 3 brute, 4 warden, 5 dart, then the endless-era swarm
   const KINDS = [
     { hp: 26,  r: 11, speed: 0.85, color: "#9ef01a", sides: 3, xp: 3 },
     { hp: 40,  r: 10, speed: 1.85, color: "#5df0c0", sides: 3, xp: 4 },
-    { hp: 62,  r: 13, speed: 1.05, color: "#ffd166", sides: 4, xp: 6 },
-    { hp: 165, r: 20, speed: 0.62, color: "#ff8a3d", sides: 5, xp: 14 },
+    { hp: 62,  r: 13, speed: 1.05, color: "#ffd166", sides: 4, xp: 6, spit: true },
+    { hp: 165, r: 20, speed: 0.62, color: "#ff8a3d", sides: 5, xp: 14, boom: 10 },
     { hp: 300, r: 24, speed: 0.95, color: "#ff5c8a", sides: 6, xp: 24 },  // warden: tanky, shrugs off chip damage
-    { hp: 22,  r: 8,  speed: 3.15, color: "#7cf0ff", sides: 3, xp: 4 }    // dart: paper thin, very fast
+    { hp: 22,  r: 8,  speed: 3.15, color: "#7cf0ff", sides: 3, xp: 4 },   // dart: paper thin, very fast
+    { hp: 70,  r: 12, speed: 1.5,  color: "#c77dff", sides: 4, xp: 7,  wave: 1 },        // weaver: sidewinds in
+    { hp: 120, r: 16, speed: 0.8,  color: "#f4a261", sides: 6, xp: 12, lob: 150 },       // mortar: arcs shells at you
+    { hp: 90,  r: 15, speed: 1.2,  color: "#80ed99", sides: 5, xp: 9,  split: 2 },       // splitter: halves when killed
+    { hp: 210, r: 19, speed: 0.75, color: "#48cae4", sides: 6, xp: 18, heal: true },     // shepherd: mends the swarm
+    { hp: 55,  r: 11, speed: 1.35, color: "#ffd6ff", sides: 3, xp: 8,  burst: 110 },     // zapper: three-round bursts
+    { hp: 130, r: 14, speed: 1.9,  color: "#ff9770", sides: 4, xp: 13, keep: 190, spit: true }, // orbiter: circles and fires
+    { hp: 45,  r: 13, speed: 2.35, color: "#ff4d6d", sides: 3, xp: 9,  boom: 16 },       // bomber: runs in and bursts
+    { hp: 150, r: 17, speed: 0,    color: "#a0c4ff", sides: 8, xp: 11, radial: 130 },    // spike: rooted, fires rings
+    { hp: 60,  r: 12, speed: 2.7,  color: "#e0e0ff", sides: 3, xp: 10, phase: true },    // phantom: blinks in and out
+    { hp: 700, r: 30, speed: 0.5,  color: "#ff2d55", sides: 7, xp: 42, boom: 22 }        // titan: a wall with legs
   ];
-  const BOSS_XP = [70, 120, 200];
+  const BOSS_XP = [70, 120, 200, 150, 190, 140, 170];
   // 0 monster spit, then one per boss rank
   const FLAK_COLORS = ["#ffd166", "#4fd6e8", "#b98cff", "#ff2d55"];
 
@@ -1042,10 +1103,11 @@
 
   /* ---------- time recording ---------- */
   function snapshot() {
-    const b = new Float32Array(bosses.length * 6);
+    const b = new Float32Array(bosses.length * 7);
     bosses.forEach((o, i) => {
-      const p = i * 6;
-      b[p] = o.x; b[p + 1] = o.y; b[p + 2] = o.hp; b[p + 3] = o.t; b[p + 4] = o.tier; b[p + 5] = o.max;
+      const p = i * 7;
+      b[p] = o.x; b[p + 1] = o.y; b[p + 2] = o.hp; b[p + 3] = o.t;
+      b[p + 4] = o.tier; b[p + 5] = o.max; b[p + 6] = bossR(o);
     });
     const m = new Float32Array(mobs.length * 6);
     mobs.forEach((o, i) => {
@@ -1081,11 +1143,12 @@
     game.duel = s.duel ? { tier: s.duel.tier, timer: s.duel.timer } : null;
     game.bossWave = s.bossWave || 0;
     bosses = [];
-    for (let p = 0; p < s.b.length; p += 6) {
+    for (let p = 0; p < s.b.length; p += 7) {
       const tier = s.b[p + 4] | 0;
       bosses.push({
         tier, x: s.b[p], y: s.b[p + 1], hp: s.b[p + 2], t: s.b[p + 3],
-        max: s.b[p + 5] || BOSSES[tier].hp, def: BOSSES[tier]
+        max: s.b[p + 5] || BOSSES[tier].hp, rad: s.b[p + 6] || BOSSES[tier].r,
+        head: (s.b[p + 6] || BOSSES[tier].r) < BOSSES[tier].r, def: BOSSES[tier]
       });
     }
     mobs = [];
@@ -1116,7 +1179,7 @@
 
   /* time stops and you pick one of three — the other two are gone */
   function offerUpgrades() {
-    const pool = UPGRADES.filter(u => !maxed(u) && hasReq(u) && (!u.avail || u.avail()));
+    const pool = UPGRADES.filter(u => !maxed(u) && hasReq(u) && !banned.has(u.id) && (!u.avail || u.avail()));
     if (!pool.length) return false;
     const offer = [];
     while (offer.length < 3 && offer.length < pool.length) {
@@ -1133,6 +1196,7 @@
       name: u.name,
       note: u.note,
       tag: !hasReq(u) ? `needs ${reqOf(u).name}`
+         : banned.has(u.id) ? "blocked in settings"
          : maxed(u) ? "maxed out"
          : countOf(u.id) ? `already ×${countOf(u.id)}` : "new",
       disabled: maxed(u) || !hasReq(u),
@@ -1175,7 +1239,7 @@
       qtyForm.hidden = true;
       game.offer = null;
       ovPick.hidden = true;
-      setState("playing");
+      setState(game.pickFrom === "title" || game.pickFrom === "over" ? game.pickFrom : "playing");
       syncHud();
     };
   }
@@ -1227,6 +1291,8 @@
 
   function showCards(list, eyebrow, title) {
     qtyForm.hidden = true;
+    // opening a picker from the title screen must hand you back to the title screen
+    if (game.state !== "choose") game.pickFrom = game.state;
     game.offer = list;
     pickEyebrow.textContent = eyebrow;
     pickTitle.textContent = title;
@@ -1260,7 +1326,7 @@
     game.offer = null;
     ovPick.hidden = true;
     qtyForm.hidden = true;
-    setState("playing");
+    setState(game.pickFrom === "title" || game.pickFrom === "over" ? game.pickFrom : "playing");
     syncHud();
   }
 
@@ -1305,7 +1371,10 @@
     cam.x = 0; cam.y = 0;
     aim.x = 0; aim.y = -120;
     mobs = []; shots = []; flak = []; sparks = []; snaps = [];
-    if (startEcho) grant(UPGRADES.find(u => u.id === "clone"), 1);   // settings: start holding Echo
+    if (startUpgrade) {                                   // settings: open the run holding one
+      const u = UPGRADES.find(x => x.id === startUpgrade);
+      if (u) grant(u, 1);
+    }
     SND.unlock();
     setState("playing");
     syncHud();
@@ -1517,7 +1586,7 @@
       beams.push({ x: sx, y: sy, ex, ey, life: 14 });
 
       for (const o of [...mobs, ...bosses]) {
-        const r = o.def ? o.def.r : KINDS[o.k].r;
+        const r = o.def ? bossR(o) : KINDS[o.k].r;
         // distance from the enemy to the beam segment
         const px = o.x - sx, py = o.y - sy;
         const t = clamp((px * Math.cos(a) + py * Math.sin(a)) / len, 0, 1);
@@ -1746,14 +1815,51 @@
 
       if (m.chill > 0) m.chill--;
       const sp = def.speed * slowFactor() * (m.chill > 0 ? 0.45 : 1);
-      if (m.k === 2) {
-        if (d > 200) { m.x += dx / d * sp; m.y += dy / d * sp; }
-        if (m.t % 96 === 0) {
-          const a = Math.atan2(dy, dx);
-          flak.push({ x: m.x, y: m.y, vx: Math.cos(a) * 3.1, vy: Math.sin(a) * 3.1, c: 0 });
-        }
+      const toward = Math.atan2(dy, dx);
+
+      // --- how it moves ---
+      const hold = def.keep || (def.spit ? 200 : 0);
+      if (def.speed === 0) {
+        /* rooted */
+      } else if (hold) {
+        if (d > hold) { m.x += dx / d * sp; m.y += dy / d * sp; }
+        else { m.x += -dy / d * sp * 0.8; m.y += dx / d * sp * 0.8; }   // strafe around you
+      } else if (def.wave) {
+        const s2 = Math.sin(m.t * 0.09) * sp * 0.9;
+        m.x += dx / d * sp - dy / d * s2;
+        m.y += dy / d * sp + dx / d * s2;
       } else {
-        m.x += dx / d * sp; m.y += dy / d * sp;
+        const dash = def.phase && m.t % 120 < 30 ? 2.1 : 1;             // phantoms lunge, then fade
+        m.x += dx / d * sp * dash; m.y += dy / d * sp * dash;
+      }
+
+      // --- how it shoots ---
+      if (def.spit && m.t % 96 === 0) {
+        flak.push({ x: m.x, y: m.y, vx: Math.cos(toward) * 3.1, vy: Math.sin(toward) * 3.1, c: 0 });
+      }
+      if (def.burst && m.t % def.burst < 12 && m.t % 4 === 0) {
+        flak.push({ x: m.x, y: m.y, vx: Math.cos(toward) * 4.4, vy: Math.sin(toward) * 4.4, c: 0 });
+      }
+      if (def.radial && m.t % def.radial === 0) {
+        for (let k = 0; k < 10; k++) {
+          const a = k * Math.PI / 5 + m.t * 0.01;
+          flak.push({ x: m.x, y: m.y, vx: Math.cos(a) * 2.1, vy: Math.sin(a) * 2.1, c: 0 });
+        }
+      }
+      if (def.lob && m.t % def.lob === 0) {
+        for (let k = -1; k <= 1; k++) {
+          const a = toward + k * 0.26;
+          flak.push({ x: m.x, y: m.y, vx: Math.cos(a) * 1.7, vy: Math.sin(a) * 1.7, c: 0 });
+        }
+      }
+      if (def.heal && m.t % 45 === 0) {                    // shepherd knits the swarm back together
+        for (const o of mobs) {
+          if (o === m || o.hp >= o.max) continue;
+          if (Math.hypot(o.x - m.x, o.y - m.y) < 190) {
+            o.hp = Math.min(o.max, o.hp + o.max * 0.06);
+            burst(o.x, o.y, def.color, 1, 1.5);
+          }
+        }
       }
 
       if (d > 1400) { mobs.splice(i, 1); continue; }     // left far behind
@@ -1765,10 +1871,20 @@
         SND.kill();
         addXp(def.xp * (m.max / def.hp));      // a tougher spawn is worth more
         if (stats.siphon > 0 && player.hp < player.max && Math.random() < stats.siphon) heal(1);
-        if (m.k === 3) {
-          for (let a = 0; a < 10; a++) {
-            const ang = a * Math.PI / 5;
+        if (def.boom) {                                  // bursts on death
+          for (let a = 0; a < def.boom; a++) {
+            const ang = a * Math.PI * 2 / def.boom;
             flak.push({ x: m.x, y: m.y, vx: Math.cos(ang) * 2.2, vy: Math.sin(ang) * 2.2, c: 0 });
+          }
+        }
+        if (def.split && !m.half) {                      // splitter comes apart
+          for (let k = 0; k < def.split; k++) {
+            const a = Math.random() * Math.PI * 2;
+            const hp = Math.round(m.max * 0.45);
+            mobs.push({
+              k: m.k, half: true, hp, max: hp, t: 0,
+              x: m.x + Math.cos(a) * 22, y: m.y + Math.sin(a) * 22
+            });
           }
         }
 
@@ -1796,6 +1912,7 @@
   function spawnEndlessBoss() {
     const due = (game.bossWave + 1) * ENDLESS_BOSS_EVERY;
     if (game.tick !== due) return;
+    // the first three come in order, then the whole roster keeps cycling
     const cycle = Math.floor(game.bossWave / BOSSES.length);
     const tier = game.bossWave % BOSSES.length;
     const def = BOSSES[tier];
@@ -1814,7 +1931,7 @@
   /* each boss lands on its own schedule, dead predecessor or not */
   function spawnBosses() {
     if (game.mode === "endless") return spawnEndlessBoss();
-    BOSSES.forEach((def, tier) => {
+    BOSSES.slice(0, SCHEDULED).forEach((def, tier) => {
       if (game.tick !== bossAt(tier) || (game.spawned & (1 << tier))) return;
       placeBoss(tier, def.hp);
       SND.bossIn();
@@ -1861,7 +1978,30 @@
       if (rage >= 2 && t % 6 === 0) spawnFlak(b, t * 0.36, 2.4);
       if (rage >= 3 && t % 5 === 0) spawnFlak(b, -t * 0.36 + Math.PI, 2.6);
 
-      if (d < def.r + PLAYER_R && hitPlayer()) return true;
+      // --- the endless roster's own tricks ---
+      if (def.hive && t % 150 === 0 && mobs.length < enemyCap()) {
+        for (let k = 0; k < 3; k++) {                    // Lattice hatches escorts
+          const a = Math.random() * Math.PI * 2;
+          const kind = pick([1, 1, 5, 2]);
+          const kd = KINDS[kind], hp = Math.round(kd.hp * 1.3);
+          mobs.push({ k: kind, x: b.x + Math.cos(a) * 40, y: b.y + Math.sin(a) * 40, hp, max: hp, t: 0 });
+        }
+        burst(b.x, b.y, def.color, 18, 3.5);
+      }
+      if (def.nova && t % 190 === 0) {                    // Nova unloads a full sphere
+        for (let k = 0; k < 30; k++) spawnFlak(b, k * Math.PI * 2 / 30 + t * 0.01, 2.6);
+        shake = Math.max(shake, 10);
+      }
+      if (def.blink && t % 110 === 0) {                   // Wraith steps through space
+        burst(b.x, b.y, def.color, 22, 4);
+        const a = Math.random() * Math.PI * 2, dist = rnd(160, 260);
+        b.x = player.x + Math.cos(a) * dist;
+        b.y = player.y + Math.sin(a) * dist;
+        burst(b.x, b.y, def.color, 22, 4);
+        for (let k = 0; k < 8; k++) spawnFlak(b, k * Math.PI / 4, 3);
+      }
+
+      if (d < bossR(b) + PLAYER_R && hitPlayer()) return true;
     }
 
     for (let i = bosses.length - 1; i >= 0; i--) {
@@ -1879,6 +2019,21 @@
           life: 110
         };
         bosses.splice(i, 1);
+
+        // Hydra comes apart into smaller, faster heads
+        if (b.def.split && !b.head && b.max > 300) {
+          for (let h = 0; h < b.def.split; h++) {
+            const a = Math.random() * Math.PI * 2;
+            const hp = Math.round(b.max * 0.4);
+            bosses.push({
+              tier: b.tier, def: b.def, hp, max: hp, t: 0, head: true,
+              rad: b.def.r * 0.62,
+              x: b.x + Math.cos(a) * 70, y: b.y + Math.sin(a) * 70
+            });
+          }
+          game.banner = { text: "HYDRA SPLITS", note: "two heads where one stood", life: 110 };
+        }
+
         if (duelKill) endDuel();
       }
     }
@@ -1896,7 +2051,7 @@
   }
 
   function spawnFlak(b, a, sp) {
-    flak.push({ x: b.x + Math.cos(a) * b.def.r, y: b.y + Math.sin(a) * b.def.r,
+    flak.push({ x: b.x + Math.cos(a) * bossR(b), y: b.y + Math.sin(a) * bossR(b),
                 vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, c: b.tier + 1 });
   }
 
@@ -1957,7 +2112,7 @@
         }
       }
       for (const b of bosses) {
-        if (Math.hypot(s.x - b.x, s.y - b.y) < b.def.r + 3) {
+        if (Math.hypot(s.x - b.x, s.y - b.y) < bossR(b) + 3) {
           b.hp = Math.max(0, b.hp - shotDamage(s, true));
           burst(s.x, s.y, s.medic ? C.lime : b.def.color, 3, 2.4);
           if (s.medic) dropOrb(s.x, s.y);
@@ -1989,9 +2144,17 @@
   }
 
   /* a hit costs a heart, not the run — mercy ticks stop chip damage */
+  /* endless bites harder the longer you last: from 5:00, one more heart per minute */
+  function hitCost() {
+    if (game.mode !== "endless") return 1;
+    const secs = game.tick / TPS;
+    if (secs < 300) return 1;
+    return 2 + Math.floor((secs - 300) / 60);
+  }
+
   function hitPlayer() {
     if (player.inv > 0) return false;
-    player.hp--;
+    player.hp -= hitCost();
     player.inv = stats.inv;
     player.flash = 14;
     burst(player.x, player.y, C.magenta, 20, 4);
@@ -2074,11 +2237,11 @@
     let shownBosses = bosses;
     if (view) {
       shownBosses = [];
-      for (let p = 0; p < view.b.length; p += 6) {
+      for (let p = 0; p < view.b.length; p += 7) {
         const tier = view.b[p + 4] | 0;
         shownBosses.push({
           x: view.b[p], y: view.b[p + 1], hp: view.b[p + 2], t: view.b[p + 3],
-          tier, max: view.b[p + 5] || BOSSES[tier].hp
+          tier, max: view.b[p + 5] || BOSSES[tier].hp, rad: view.b[p + 6] || BOSSES[tier].r
         });
       }
     }
@@ -2095,7 +2258,7 @@
     ctx.stroke();
 
     if (view) ctx.globalAlpha = 0.85;
-    for (const b of shownBosses) drawBoss(b.x, b.y, b.hp, b.t, b.tier, b.max);
+    for (const b of shownBosses) drawBoss(b.x, b.y, b.hp, b.t, b.tier, b.max, b.rad);
 
     if (view) {
       for (let b = 0; b < view.m.length; b += 6) {
@@ -2371,10 +2534,11 @@
   }
 
   /* each rank keeps its own colour and silhouette: 5, 6 and 8 points */
-  function drawBoss(x, y, hp, t, tier, max) {
+  function drawBoss(x, y, hp, t, tier, max, rad) {
     const def = BOSSES[tier];
+    const R = rad || def.r;
     const frac = hp / (max || def.hp), spin = t * 0.012;
-    const points = [5, 6, 8][tier];
+    const points = [5, 6, 8, 7, 12, 3, 9][tier] || 6;
     const a0 = ctx.globalAlpha;
 
     ctx.save();
@@ -2384,7 +2548,7 @@
     ctx.shadowColor = def.color; ctx.shadowBlur = 18;
     ctx.beginPath();
     for (let i = 0; i < points; i++) {
-      const a = spin + i * Math.PI * 2 / points, r = def.r + (i % 2 ? 8 : 0);
+      const a = spin + i * Math.PI * 2 / points, r = R + (i % 2 ? 8 : 0);
       i === 0 ? ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r) : ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
     }
     ctx.closePath(); ctx.stroke();
@@ -2393,22 +2557,22 @@
     ctx.rotate(-spin * 2.4);
     ctx.globalAlpha = a0 * 0.55;
     ctx.strokeStyle = def.color; ctx.lineWidth = 1.4;
-    ctx.beginPath(); ctx.arc(0, 0, def.r * 0.62, 0.4, 4.2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.62, 0.4, 4.2); ctx.stroke();
 
     ctx.rotate(spin * 4);
     ctx.globalAlpha = a0 * (0.35 + frac * 0.55);
     ctx.fillStyle = def.color;
-    ctx.beginPath(); ctx.arc(0, 0, def.r * 0.34, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.34, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
     ctx.globalAlpha = a0;
 
     // health ring so each boss reads its own damage
     if (frac < 1) {
       ctx.strokeStyle = "rgba(15,7,24,0.85)"; ctx.lineWidth = 4;
-      ctx.beginPath(); ctx.arc(x, y, def.r + 12, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y, R + 12, 0, Math.PI * 2); ctx.stroke();
       ctx.strokeStyle = def.color; ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.arc(x, y, def.r + 12, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * clamp(frac, 0, 1));
+      ctx.arc(x, y, R + 12, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * clamp(frac, 0, 1));
       ctx.stroke();
     }
   }
@@ -2532,7 +2696,7 @@
     ctx.font = '600 12px "Azeret Mono", monospace';
     ctx.fillStyle = C.ink;
     const onField = [];
-    for (let p = 0; p < view.b.length; p += 6) onField.push(BOSSES[view.b[p + 4] | 0].rank.toLowerCase());
+    for (let p = 0; p < view.b.length; p += 7) onField.push(BOSSES[view.b[p + 4] | 0].rank.toLowerCase());
     ctx.fillText(
       (view.duel
         ? `kill it — ${(view.duel.timer / TPS).toFixed(1)}s`
@@ -2631,7 +2795,11 @@
       : `${Math.max(0, need - game.xp)} xp to level ${game.level + 1}`;
     const toGo = REWIND_TOLL - (game.rewinds % REWIND_TOLL);
     el.rewinds.textContent = `${game.rewinds} rewind${game.rewinds === 1 ? "" : "s"} · heart in ${toGo}`;
-    el.kills.textContent = `${game.kills} killed`;
+    const cost = hitCost();
+    el.kills.textContent = cost > 1
+      ? `${game.kills} killed · hits cost ${cost}`
+      : `${game.kills} killed`;
+    el.kills.classList.toggle("hot", cost > 1);
   }
 
   /* ---------- overlays ---------- */
@@ -2744,6 +2912,51 @@
   const setMute = document.getElementById("setMute");
   const setShake = document.getElementById("setShake");
   const setEchoBtn = document.getElementById("setEcho");
+  const setTabs = document.getElementById("setTabs");
+  const banList = document.getElementById("banList");
+  const banCount = document.getElementById("banCount");
+  const BAN_MAX = 5;
+
+  const banned = new Set();
+  try {
+    const raw = JSON.parse(localStorage.getItem("tw-banned") || "[]");
+    if (Array.isArray(raw)) raw.slice(0, BAN_MAX).forEach(id => banned.add(id));
+  } catch {}
+  const saveBans = () => { try { localStorage.setItem("tw-banned", JSON.stringify([...banned])); } catch {} };
+
+  setTabs.addEventListener("click", e => {
+    const tab = e.target.closest(".stab");
+    if (!tab) return;
+    [...setTabs.querySelectorAll(".stab")].forEach(t => t.classList.toggle("on", t === tab));
+    setPanel.querySelectorAll(".set-pane").forEach(p => { p.hidden = p.dataset.pane !== tab.dataset.pane; });
+  });
+
+  function renderBans() {
+    banList.innerHTML = "";
+    for (const id of banned) {
+      const u = UPGRADES.find(x => x.id === id);
+      if (!u) continue;
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "banchip";
+      chip.textContent = u.name;
+      chip.addEventListener("click", () => { banned.delete(id); saveBans(); renderBans(); });
+      banList.appendChild(chip);
+    }
+    banCount.textContent = `${banned.size}/${BAN_MAX}`;
+    document.getElementById("banAdd").disabled = banned.size >= BAN_MAX;
+  }
+
+  document.getElementById("banAdd").addEventListener("click", () => {
+    const cards = UPGRADES.map(u => ({
+      name: u.name,
+      note: u.note,
+      tag: banned.has(u.id) ? "blocked" : "block this",
+      disabled: banned.has(u.id) || banned.size >= BAN_MAX,
+      run: () => { banned.add(u.id); saveBans(); renderBans(); }
+    }));
+    showCards(cards, `Blocked ${banned.size}/${BAN_MAX}`, "Block an upgrade");
+  });
   const ctlBtns = {
     auto: document.getElementById("ctlAuto"),
     mobile: document.getElementById("ctlMobile"),
@@ -2756,10 +2969,12 @@
   };
 
   let shakeOn = true;
-  let startEcho = false;
+  let startUpgrade = null;                 // an upgrade id to open every run holding
   try {
     shakeOn = localStorage.getItem("tw-shake") !== "0";
-    startEcho = localStorage.getItem("tw-start-echo") === "1";
+    if (localStorage.getItem("tw-start-echo") === "1") startUpgrade = "clone";   // old setting
+    const su = localStorage.getItem("tw-start-up");
+    if (su) startUpgrade = su === "none" ? null : su;
   } catch {}
 
   function syncMuteBtn() {
@@ -2775,8 +2990,9 @@
     volSfxVal.textContent = volSfx.value;
     setShake.textContent = shakeOn ? "On" : "Off";
     setShake.classList.toggle("on", shakeOn);
-    setEchoBtn.textContent = startEcho ? "Echo" : "Nothing";
-    setEchoBtn.classList.toggle("on", startEcho);
+    const su = startUpgrade && UPGRADES.find(u => u.id === startUpgrade);
+    setEchoBtn.textContent = su ? su.name : "Nothing";
+    setEchoBtn.classList.toggle("on", !!su);
     for (const [m, btn] of Object.entries(ctlBtns)) btn.classList.toggle("on", controlMode === m);
     applyControlMode();
     for (const [m, btn] of Object.entries(trackBtns)) btn.classList.toggle("on", SND.mode() === m);
@@ -2812,14 +3028,26 @@
       };
     });
   }
+  /* the whole catalogue, but you're choosing what to open the next run with */
   setEchoBtn.addEventListener("click", () => {
-    startEcho = !startEcho;
-    try { localStorage.setItem("tw-start-echo", startEcho ? "1" : "0"); } catch {}
-    syncMuteBtn();
+    const choose = id => {
+      startUpgrade = id;
+      try { localStorage.setItem("tw-start-up", id || "none"); } catch {}
+      syncMuteBtn();
+    };
+    const cards = UPGRADES.filter(u => !u.req && !banned.has(u.id)).map(u => ({   // gated ones need a parent first
+      name: u.name,
+      note: u.note,
+      tag: startUpgrade === u.id ? "chosen" : "start with this",
+      run: () => choose(u.id)
+    }));
+    cards.unshift({ name: "Nothing", note: "open every run empty-handed", tag: startUpgrade ? "" : "chosen", run: () => choose(null) });
+    showCards(cards, "Settings", "Start every run with");
   });
   volMusic.addEventListener("input", () => { SND.unlock(); SND.setMusic(volMusic.value / 100); volMusicVal.textContent = volMusic.value; });
   volSfx.addEventListener("input", () => { SND.unlock(); SND.setSfx(volSfx.value / 100); volSfxVal.textContent = volSfx.value; SND.pickCard(); });
   setPanel.addEventListener("keydown", e => e.stopPropagation());   // sliders shouldn't drive the player
+  renderBans();
   syncMuteBtn();
 
   // browsers only allow audio after a gesture, so wake it on the first one
