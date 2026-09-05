@@ -36,5 +36,8 @@ Some upgrades only appear once you own what they build on.
 ## Built with
 
 One HTML file, no build step, no dependencies — canvas 2D, hand-rolled fixed-timestep loop,
-WebAudio for the synth score and every sound effect. The soundtrack option is
-*Cyberpunk Strength* by ribhavagrawal, embedded in the page.
+WebAudio for the synth score and every sound effect. Eleven music tracks are baked into
+the page as compressed loops, picked from the settings card: Cyberpunk Strength and Free
+Vibez (ribhavagrawal), Energetic Chiptune (viicreateur), Upbeat Rock (soundgallerybydmitrytaras),
+Frenzy (alban_gogh), Devilu (blackbox), G-Funk Sacred Beast (imaboo), Crazy Oldman (amaksi),
+Crazy Teenager (magpiemusic), Sonnensegel Remix (aapofficial) and Abstract Soundscape (clavier-music).
