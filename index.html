@@ -89,9 +89,9 @@
     background:var(--magenta);box-shadow:0 0 9px -1px var(--magenta)}
   .heart.empty{background:transparent;box-shadow:none;opacity:.4}
   body.pixelart .heart{
-    width:15px;height:15px;border:none;border-radius:0;background-color:transparent;
-    box-shadow:none;opacity:1;background-size:contain;background-repeat:no-repeat;
-    background-position:center;image-rendering:pixelated;
+    border:none;border-radius:0;background-color:transparent;
+    box-shadow:none;opacity:1;background-size:100% 100%;background-repeat:no-repeat;
+    image-rendering:pixelated;
   }
   .heartcount{
     font-family:"Azeret Mono",ui-monospace,monospace;font-size:.78rem;color:var(--magenta);
@@ -3404,7 +3404,9 @@
     const pips = Math.min(player.max, HEART_PIPS);
     for (let i = 0; i < pips; i++) {
       if (artMode === "pixel") {
-        PIX.draw(i < player.hp ? "heartOn" : "heartOff", 0, x + i * 17 + 6, y + 22, 13);
+        const hs = (PIX.frames(i < player.hp ? "heartOn" : "heartOff") || [])[0];
+        PIX.draw(i < player.hp ? "heartOn" : "heartOff", 0, x + i * 17 + 6, y + 22,
+                 hs ? hs.height * HEART_ZOOM : 13);
         continue;
       }
       ctx.globalAlpha = i < player.hp ? 1 : 0.3;
@@ -3549,17 +3551,32 @@
   /* the drawn hearts sit inside 32px of padding — use the trimmed frame so
      they fill their box in the HUD */
   const heartUrl = {};
+  const HEART_ZOOM = 2;                        // whole-number scale keeps the pixels square
   const heartSrc = full => {
     const key = full ? "heartOn" : "heartOff";
     if (heartUrl[key]) return heartUrl[key];
     const frame = (PIX.frames(key) || [])[0];
-    if (frame) heartUrl[key] = frame.toDataURL();
-    else {
+    if (!frame) {
       const img = document.getElementById(full ? "spr_heart" : "spr_heartOff");
       return img ? img.src : "";
     }
+    heartUrl[key] = { url: frame.toDataURL(), w: frame.width, h: frame.height };
     return heartUrl[key];
   };
+
+  /* paint one pip with the drawn heart at its own size */
+  function paintHeart(el, full) {
+    if (artMode !== "pixel") {
+      el.style.backgroundImage = "";
+      el.style.width = el.style.height = "";
+      return;
+    }
+    const spr = heartSrc(full);
+    if (!spr || !spr.url) return;
+    el.style.backgroundImage = `url(${spr.url})`;
+    el.style.width = `${spr.w * HEART_ZOOM}px`;
+    el.style.height = `${spr.h * HEART_ZOOM}px`;
+  }
 
   function syncHud() {
     document.body.classList.toggle("pixelart", artMode === "pixel");
@@ -3613,7 +3630,7 @@
         el.hearts.innerHTML = '<span class="heart"></span><b class="heartcount"></b>';
       }
       const one = el.hearts.querySelector(".heart");
-      one.style.backgroundImage = artMode === "pixel" ? `url(${heartSrc(player.hp > 0)})` : "";
+      paintHeart(one, player.hp > 0);
       el.hearts.querySelector(".heartcount").textContent = `${Math.max(0, player.hp)} / ${player.max}`;
     } else {
       if (el.hearts.dataset.mode === "count" || el.hearts.children.length !== player.max) {
@@ -3629,7 +3646,7 @@
         const pip = el.hearts.children[i];
         const full = i < player.hp;
         pip.classList.toggle("empty", !full);
-        pip.style.backgroundImage = artMode === "pixel" ? `url(${heartSrc(full)})` : "";
+        paintHeart(pip, full);
       }
     }
     const need = xpNeed();
