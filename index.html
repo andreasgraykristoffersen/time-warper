@@ -3223,7 +3223,7 @@
         if (s.rail) PIX.draw("rail", 0, s.x, s.y, 17, a + Math.PI / 2);
         else if (s.medic) PIX.draw("shotG", 0, s.x, s.y, 6, a);
         else if (s.echo) PIX.draw("shotC", 0, s.x, s.y, 6, a);
-        else PIX.draw("rail", 0, s.x, s.y, 11, a + Math.PI / 2);   // the arrow, small
+        else PIX.draw("shot", (game.lived / 4) | 0, s.x, s.y, 9, a);
       }
     } else if (view) {
       for (let p = 0; p < view.s.length; p += 8) {
