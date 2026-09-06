@@ -515,6 +515,7 @@
   <!-- pixel sprites, drawn in Piskel -->
   <img class="spr" id="spr_player" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAUCAYAAAC07qxWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB2SURBVDhP7ZKxFYAgDEQPnwOxDrMw0K1Dl45VsBB5IaBo729CLvcuRXA4KbXe4RyAEmMEAOScrQEigpQStkuYmTQbqomknXVaSwwhNHGm7XpgU6dGkkMqSXjvgS+rm3HFbxwQkfZ2tS7/42OipjuhPpntX68+AIZvKag44HXLAAAAAElFTkSuQmCC">
   <img class="spr" id="spr_gun" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAKCAYAAABv7tTEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABxSURBVChTjZHRCcAgDERf3MYpMnum8FPIIvajjaSCtgcBuXi5eAowAOEbIw5FVYM4lqry3EVUddRaAWitzbE7mNktWhvuTu99pQNSzOzFuPtsbmoGMGLfNGQbTsmCxWWLSC+/4yjgccoOvyD50/64AFxd1jI1Op/RcQAAAABJRU5ErkJggg==">
+  <img class="spr" id="spr_weaver" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAC+ElEQVR4Xu2ZUZLaMBBEswfJCXOenDAH2RTUGIxLPGbMaBtMv5/doge11C3zAV+/jJQvqbtxAWr8BIhxAWJcgBgXIMYFiHEBYlyAGBcgZk8B35f/xuxZs8Kh/Kthff/7w+f//fe8ZHXdLIfzrwT18PALk0o4pH8lpEsAp4C3Zaxfm13AkfwrIR3yBhaYcv7UUHDeQCx+l9UMD9Y5pH8lpCk3oMAh/Ssh3QSwfRIGWmXtDIf0r4Q0CmB5P2ldkAdpXZAHaUhqKCAT0rogD9K6IA/SkNRQQCakdUEepHVBHqQhqaGATEjrgjxI64I8SENSQwGZkNYFeZDWBXmQhqSGgqvDlcsG4u+aytoZ6JBv698d0kx+ImSCLsBunl7gg3ABYlyAmCkfgU8vYJ7DBYhxAWJcgBgXIMYFiHEBYlyAGBcgxgWIcQFiXICYdyxg9KXYmrc6057NKgO4+Up4RNcPJQBvoOhdGt7+KjRiYgAPvReUe6h6pwdfIIBLAadDbstYv1YNIcmUC5AaCqZsoMDL+HdegNRQ8BI3MA53l1MIlQAKTLkAqaFgygYKvIR/9wVIDQXnALo3UOAlCshQOX9qKDhkAAWmnD81FNxsYPskDLTK2hkO6V8JaRTA8n7SuiAP0rogD9KQ1FBAJqR1QR6kdUEepCGpoYBMSOuCPEjrgjxIQ1JDAZmQ1gV5kNYFeZCGpIYCMiGtC/IgrQvyIA1JDQVkchWuVNbOQB60ty6m+KeGAtqAGvXefqQAcx8XIMYFiNn9EZgaMvNwAWJcgBgXIMYFiHEBYlyAGBcgxgWIcQFiXIAYFyDGBYhxAWL2FDD66nXNnjU/lmpYNz88jKj8HmpqQT0Mf8El5NlVwCngbRnr11xAnl0FPMIF5CkXEOHeZTXDg+ZMJSQ/ARPYXcD2SRholbU/lkpIowKW95NmgEpIFDJpBqiERCGTZoBKSBQyaQaohEQhk2aASkjXhK+4gCepFEBQOQZwSGJcgBgXIMYFiHEBYlyAmP9I6oV/8U2fqgAAABBkZUJHRDg4RTAzNzRBRDNGODJGN2hozksAAAAASUVORK5CYIIA">
   <img class="spr" id="spr_dart" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAADAElEQVR4Xu2Z0ZHaQBBEfQk4IKfgeJ2CA3IC59LViBKq5TEjZq9B9Pvhjh62d7slPsTHDyPlQ+puXIAa3wFiXIAYFyDGBYhxAWJcgBgXIMYFiDlSwOflrzFH1qxwKv9qWJ+///29/DPiz89fy0t13Syn868EdffwK5NKOKV/JaRLAEvA+zK2780u4Ez+lZBOeQUWmHL+1FDwtYFY/CabmcraGU7pXwlpyhVQ4JT+lZCuAtjfCQOtsnaGU/pXQhoFsH6etC7Ig7QuyIM0JDUUkAlpXZAHaV2QB2lIaiggE9K6IA/SuiAP0pDUUEAmpHVBHqR1QR6kIamhgExI64I8SOuCPEhDUkPB6CHYZQPxuqWydgY65Mv6d4c0k+8ImaAL4DAPL/BGuAAxLkDMlK/Ahxcwj+ECxLgAMS5AjAsQ4wLEuAAxLkCMCxDjAsS4ADEuQMwrFjB6KLblpc50ZLPKAK4eCY/o+qEEaD1/aXj/q9CIiQHc9V5R7qHqnR58ggAuBSyH3Jexfa8aQpIpF0BqKJiygQJP4995AaSGgqe4AuNwN1lCqARQYMoFkBoKpmygwFP4d18AqaHgK4DuDRR4igIyVM6fGgpOGUCBKedPDQVXG9jfCQOtsnaGU/pXQhoFsH6etC7Ig7QuyIM0JDUUkAlpXZAHaV2QB2lIaiggE9K6IA/SuiAP0pDUUEAmpHVBHqR1QR6kIamhgExI64I8SOuCPEhDUkMBmYyeEFbWzkAetLcupvinhgLagBr13r6lAHMbFyDGBYg5/BWYGjLzcAFiXIAYFyDGBYhxAWJcgBgXIMYFiHEBYlyAGBcgxgWIcQFijhQwevS65ciab0s1rKsfHkZUfg81taDuhr/iEvIcKmAJeF/G9j0XkOdQAfdwAXnKBUS4N9nMVNZ+Wyoh+Q6YwOEC9nfCQKus/bZUQhoVsH6eNANUQqKQSTNAJSQKmTQDVEKikEkzQCUkCpk0A1RCGj2EcwEPUimAoHIM4JDEuAAxLkCMCxDjAsS4ADH/AUj9hX/T/9NlAAAAEGRlQkc4NzE2ODJCMEFGRjIyRUVGlcxzbwAAAABJRU5ErkJgggAA">
   <img class="spr" id="spr_heart" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAc0lEQVRYR+2TMQ6AIBAEpeNZPt1n0WmOHEax8TYmVzjTAAkLyySUJZmSfD8FMIABDGBANrD7OPLz+jXhgF221dona2t9nNahM0ObnbPAzG8KGA8LyuuNcMBJL3Arob7ekEIX5O83kINfQQEMYAADGEg3cABogB4hbosERwAAABBkZUJHNUE5NzAwMUI4NUI4OUJCQXdxanYAAAAASUVORK5CYIIA">
   <img class="spr" id="spr_heartOff" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAc0lEQVRYR+2TMQ6AIBAE5XPUPtWaz2mOHEax8TYmVzjTAAkLyySUJZmSfD8FMIABDGBANrD7OPLz+jXhgF221tonW2t9nNahM0ObnbPAzG8KGA8LyuuNcMBJL3Arob7ekEIX5O83kINfQQEMYAADGEg3cABtYB4hgKggnQAAABBkZUJHREY2OEQ2QUFBQzMyMzYxRvz92aMAAAAASUVORK5CYIIA">
@@ -1444,6 +1445,7 @@
       shot:   { img: "spr_shot",   cols: 2, rows: 3, pick: [0, 1, 2, 3, 4] },
       spit:   { img: "spr_spit",   cols: 1, rows: 1 },
       dart:   { img: "spr_dart",   cols: 3, rows: 3, pick: [0,1,2,3,4,5,6] },
+      weaver: { img: "spr_weaver", cols: 3, rows: 3, pick: [0,1,2,3,4,5,6] },
       bossA:  { img: "spr_boss0", cols: 3, rows: 4, pick: [0,1,2,3,4,5,6,7,8,9,10] },
       flakA:  { img: "spr_flak0", cols: 3, rows: 3 },
       heartOn:  { img: "spr_heart",    cols: 1, rows: 1 },
@@ -3282,8 +3284,9 @@
   function drawMob(x, y, k, t, hp, max) {
     const def = KINDS[k];
     if (artMode === "pixel") {
-      const fps = k === 0 ? CRAWL_FPS : k === 1 ? CHASE_FPS : k === 5 ? DART_FPS : MOB_FPS;
-      const sheet = k === 0 ? "crawl" : k === 1 ? "chase" : k === 2 ? "spit" : k === 5 ? "dart" : "mob" + k;
+      const fps = k === 0 ? CRAWL_FPS : k === 1 ? CHASE_FPS : (k === 5 || k === 6) ? DART_FPS : MOB_FPS;
+      const sheet = k === 0 ? "crawl" : k === 1 ? "chase" : k === 2 ? "spit"
+                  : k === 5 ? "dart" : k === 6 ? "weaver" : "mob" + k;
       // one-frame sprites get a slow breath so they are not dead still
       const breath = k === 2 ? 1 + Math.sin(game.lived * 0.18 + x) * 0.08 : 1;
       PIX.draw(sheet, (game.lived / (TPS / fps)) | 0, x, y, def.r * 1.7 * breath);
