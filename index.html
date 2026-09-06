@@ -312,7 +312,7 @@
   .set-note{font-size:.68rem;color:var(--muted);line-height:1.45}
   .banlist{display:flex;gap:5px;flex-wrap:wrap}
   .banlist:empty::after{
-    content:"nothing blocked";font-size:.7rem;color:var(--muted);opacity:.7;
+    content:attr(data-empty);font-size:.7rem;color:var(--muted);opacity:.7;
   }
   .banchip{
     cursor:pointer;font-size:.64rem;letter-spacing:.06em;padding:3px 8px;border-radius:4px;
@@ -345,6 +345,11 @@
     padding:4px 0;font-size:.68rem;letter-spacing:.12em;box-shadow:none;border-radius:5px;
   }
   .tog:hover{transform:none;border-color:var(--lilac)}
+  .langsel{
+    appearance:none;-webkit-appearance:none;text-align:center;cursor:pointer;
+    font-family:inherit;letter-spacing:.12em;text-transform:uppercase;
+  }
+  .langsel option{background:#150c22;color:var(--ink);text-transform:none;letter-spacing:normal}
   .tog.on{background:var(--cyan);color:#0d2018;border-color:var(--cyan)}
   @media (max-width:560px){
     .settings{left:12px;right:12px;bottom:12px;width:auto}
@@ -420,7 +425,7 @@
 <div class="shell">
   <header>
     <h1>Time Warper</h1>
-    <div class="tag">Outlive the clock.<br>Wind it back, keep your ground.</div>
+    <div class="tag" data-t="tag">Outlive the clock.<br>Wind it back, keep your ground.</div>
   </header>
 
   <div class="hud">
@@ -431,18 +436,18 @@
       </div>
       <div class="bar"><i id="clockFill"></i></div>
       <div class="meter-top" style="margin-top:2px">
-        <span class="label">Hearts</span>
+        <span class="label" data-t="hud.hearts">Hearts</span>
         <span class="hearts" id="hearts"></span>
       </div>
       <div class="meter-top" style="margin-top:2px">
-        <span class="label">Level <b id="lvlNum">1</b></span>
+        <span class="label"><span data-t="hud.level">Level</span> <b id="lvlNum">1</b></span>
         <span class="val" id="xpVal">0 / 24 xp</span>
       </div>
       <div class="bar xpbar"><i id="xpFill"></i></div>
       <div class="bosslist" id="bossList"></div>
     </div>
     <div class="side">
-      <button class="ghost" id="btnFull" type="button">Fullscreen — F</button>
+      <button class="ghost" id="btnFull" type="button" data-t="hud.full">Fullscreen — F</button>
       <button class="iconbtn" id="btnMute" type="button" aria-label="Settings" title="Settings">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="3.4"></circle>
@@ -462,26 +467,26 @@
 
     <div class="overlay" id="ovTitle">
       <h2>Time Warper</h2>
-      <p>An endless field, no walls to back into, and three bosses on a timetable: <b style="color:#4fd6e8">Splinter</b>, then <b style="color:#b98cff">Fracture</b>, then <b style="color:#ff2d55">Terminus</b>. Between them the swarm thickens — drifters, then chasers, spitters, darts, brutes and wardens, each wave tougher than the last. Pick how you want to meet them.</p>
-      <p><b>Your gun follows the mouse</b> and fires on its own; a short shot hits harder than a long one, so close range is where the damage is. Upgrades add lasers, bomblets, ring volleys, medic rounds that drop healing on the ground for you to walk into — and <b>Echo</b>, which leaves a copy of you replaying the seconds you just rewound.</p>
-      <p>Press <b>E</b> and time stops. Scroll backwards as far as you like — the swarm, the bullets and the damage you dealt all unwind with it, but <b>you stay standing exactly where you are</b>. Rewinding is unlimited but not free: <b>every fifth rewind costs you a heart</b>, it never gives hearts back, and it puts seconds back on the clock you'll have to survive again. You start with three hearts, a hit costs one, and at zero the run starts over.</p>
-      <p><b>Kills are xp.</b> Fill the bar, time holds, and you <b>pick one of three</b> upgrades — faster fire, split barrels, piercing rounds, field patches that heal you, plating that adds a heart. They're the one thing time can't take back: <b>rewinding keeps every one</b>. Wind the clock back with a fully built gun and the same seconds hit very differently.</p>
+      <p data-t="intro.p1">An endless field, no walls to back into, and three bosses on a timetable: <b style="color:#4fd6e8">Splinter</b>, then <b style="color:#b98cff">Fracture</b>, then <b style="color:#ff2d55">Terminus</b>. Between them the swarm thickens — drifters, then chasers, spitters, darts, brutes and wardens, each wave tougher than the last. Pick how you want to meet them.</p>
+      <p data-t="intro.p2"><b>Your gun follows the mouse</b> and fires on its own; a short shot hits harder than a long one, so close range is where the damage is. Upgrades add lasers, bomblets, ring volleys, medic rounds that drop healing on the ground for you to walk into — and <b>Echo</b>, which leaves a copy of you replaying the seconds you just rewound.</p>
+      <p data-t="intro.p3">Press <b>E</b> and time stops. Scroll backwards as far as you like — the swarm, the bullets and the damage you dealt all unwind with it, but <b>you stay standing exactly where you are</b>. Rewinding is unlimited but not free: <b>every fifth rewind costs you a heart</b>, it never gives hearts back, and it puts seconds back on the clock you'll have to survive again. You start with three hearts, a hit costs one, and at zero the run starts over.</p>
+      <p data-t="intro.p4"><b>Kills are xp.</b> Fill the bar, time holds, and you <b>pick one of three</b> upgrades — faster fire, split barrels, piercing rounds, field patches that heal you, plating that adds a heart. They're the one thing time can't take back: <b>rewinding keeps every one</b>. Wind the clock back with a fully built gun and the same seconds hit very differently.</p>
       <div class="modes" id="modes">
         <button type="button" class="mode on" data-mode="survive">
-          <b>Survive</b><span>Two minutes. Splinter at 1:30 left, Fracture at 1:00, Terminus at 0:30 — they land and they stay. Outlive the clock.</span>
+          <b data-t="mode.survive">Survive</b><span data-t="mode.survive.note">Two minutes. Splinter at 1:30 left, Fracture at 1:00, Terminus at 0:30 — they land and they stay. Outlive the clock.</span>
         </button>
         <button type="button" class="mode" data-mode="endless">
-          <b>Endless</b><span>No deadline — a stopwatch counting up. Bosses land every thirty seconds and come back harder each cycle. You stop when your hearts do.</span>
+          <b data-t="mode.endless">Endless</b><span data-t="mode.endless.note">No deadline — a stopwatch counting up. Bosses land every thirty seconds and come back harder each cycle. You stop when your hearts do.</span>
         </button>
         <button type="button" class="mode" data-mode="duel">
-        <b>Boss duels</b><span>Each boss freezes the clock dead and gives you thirty seconds to kill it. Win the duel and the clock restarts at thirty — that boss never comes back. Killing all three is the only way to win.</span>
+        <b data-t="mode.duel">Boss duels</b><span data-t="mode.duel.note">Each boss freezes the clock dead and gives you thirty seconds to kill it. Win the duel and the clock restarts at thirty — that boss never comes back. Killing all three is the only way to win.</span>
         </button>
       </div>
       <div class="keys">
-        <kbd>W A S D — move</kbd><kbd>mouse — aim</kbd><kbd>E — rewind</kbd><kbd>1 2 3 — pick</kbd><kbd>F — fullscreen</kbd>
+        <kbd data-t="key.move">W A S D — move</kbd><kbd data-t="key.aim">mouse — aim</kbd><kbd data-t="key.rewind">E — rewind</kbd><kbd data-t="key.pick">1 2 3 — pick</kbd><kbd data-t="key.full">F — fullscreen</kbd>
       </div>
-      <p style="font-size:.82rem"><b>On a phone:</b> drag the left half to move, the right half to aim — the buttons under the field handle rewinding and fullscreen. Landscape plus fullscreen gives you the most room.</p>
-      <button id="btnStart">Start the run</button>
+      <p style="font-size:.82rem" data-t="intro.phone"><b>On a phone:</b> drag the left half to move, the right half to aim — the buttons under the field handle rewinding and fullscreen. Landscape plus fullscreen gives you the most room.</p>
+      <button id="btnStart" data-t="btn.start">Start the run</button>
     </div>
 
     <form class="console" id="console" hidden>
@@ -490,23 +495,23 @@
     </form>
 
     <div class="overlay pick" id="ovPick" hidden>
-      <span class="pick-eyebrow" id="pickEyebrow">Time holds — take one</span>
+      <span class="pick-eyebrow" id="pickEyebrow" data-t="pick.eyebrow">Time holds — take one</span>
       <h2 id="pickTitle">Upgrade</h2>
       <div class="cards" id="pickList"></div>
       <form class="qtyform" id="qtyForm" hidden>
-        <input id="qtyInput" type="number" min="1" max="999999999" step="1" placeholder="type an amount" inputmode="numeric">
-        <button type="submit">Take</button>
+        <input id="qtyInput" type="number" min="1" max="999999999" step="1" placeholder="type an amount" data-tph="pick.amount" inputmode="numeric">
+        <button type="submit" data-t="pick.take">Take</button>
         <span id="qtyNote"></span>
       </form>
-      <p class="pick-foot">The two you leave are gone. What you take survives every rewind.</p>
+      <p class="pick-foot" data-t="pick.foot">The two you leave are gone. What you take survives every rewind.</p>
     </div>
 
     <div class="overlay" id="ovEnd" hidden>
       <h2 id="endTitle">Run over</h2>
       <p id="endText"></p>
       <div class="endbtns">
-        <button id="btnRetry">Start over</button>
-        <button class="ghost" id="btnMode" type="button">Change mode</button>
+        <button id="btnRetry" data-t="btn.retry">Start over</button>
+        <button class="ghost" id="btnMode" type="button" data-t="btn.mode">Change mode</button>
       </div>
     </div>
   </div>
@@ -551,35 +556,35 @@
 
   <div class="settings" id="settings" hidden>
     <div class="set-head">
-      <span>Settings</span>
+      <span data-t="set.title">Settings</span>
       <button type="button" class="set-x" id="setClose" aria-label="close">×</button>
     </div>
     <div class="set-tabs" id="setTabs">
-      <button type="button" class="stab on" data-pane="audio">Audio</button>
-      <button type="button" class="stab" data-pane="game">Game</button>
-      <button type="button" class="stab" data-pane="art">Art</button>
-      <button type="button" class="stab" data-pane="upg">Upgrades</button>
+      <button type="button" class="stab on" data-pane="audio" data-t="set.tab.audio">Audio</button>
+      <button type="button" class="stab" data-pane="game" data-t="set.tab.game">Game</button>
+      <button type="button" class="stab" data-pane="art" data-t="set.tab.art">Art</button>
+      <button type="button" class="stab" data-pane="upg" data-t="set.tab.upg">Upgrades</button>
     </div>
 
     <div class="set-pane" data-pane="audio">
       <label class="set-row">
-        <span>Music</span>
+        <span data-t="set.music">Music</span>
         <input type="range" id="volMusic" min="0" max="100" step="1">
         <b id="volMusicVal">22</b>
       </label>
       <label class="set-row">
-        <span>Effects</span>
+        <span data-t="set.effects">Effects</span>
         <input type="range" id="volSfx" min="0" max="100" step="1">
         <b id="volSfxVal">55</b>
       </label>
       <div class="set-row">
-        <span>Music</span>
-        <button type="button" class="tog" id="musicOn">On</button>
-        <button type="button" class="tog" id="musicOff">Off</button>
+        <span data-t="set.music">Music</span>
+        <button type="button" class="tog" id="musicOn" data-t="set.on">On</button>
+        <button type="button" class="tog" id="musicOff" data-t="set.off">Off</button>
       </div>
       <div class="tracklist" id="trackList" hidden></div>
       <div class="set-row">
-        <span>Sound</span>
+        <span data-t="set.sound">Sound</span>
         <button type="button" class="tog" id="setMute">On</button>
         <b class="set-key">M</b>
       </div>
@@ -587,18 +592,22 @@
 
     <div class="set-pane" data-pane="game" hidden>
       <div class="set-row">
-        <span>Screen shake</span>
+        <span data-t="set.shake">Screen shake</span>
         <button type="button" class="tog" id="setShake">On</button>
         <b class="set-key"></b>
       </div>
       <div class="set-row">
-        <span>Controls</span>
-        <button type="button" class="tog" id="ctlAuto">Auto</button>
-        <button type="button" class="tog" id="ctlMobile">Mobile</button>
-        <button type="button" class="tog" id="ctlDesktop">Desktop</button>
+        <span data-t="set.controls">Controls</span>
+        <button type="button" class="tog" id="ctlAuto" data-t="set.auto">Auto</button>
+        <button type="button" class="tog" id="ctlMobile" data-t="set.mobile">Mobile</button>
+        <button type="button" class="tog" id="ctlDesktop" data-t="set.desktop">Desktop</button>
       </div>
       <div class="set-row">
-        <span>Start with</span>
+        <span data-t="set.language">Language</span>
+        <select class="tog langsel" id="setLang" aria-label="Language"></select>
+      </div>
+      <div class="set-row">
+        <span data-t="set.startwith">Start with</span>
         <button type="button" class="tog" id="setEcho">Nothing</button>
         <b class="set-key"></b>
       </div>
@@ -606,40 +615,40 @@
 
     <div class="set-pane" data-pane="art" hidden>
       <div class="set-row">
-        <span>Style</span>
-        <button type="button" class="tog" id="artGeo">Geometry</button>
-        <button type="button" class="tog" id="artPixel">Pixel art</button>
-        <button type="button" class="tog" id="artCool">Cool</button>
-        <button type="button" class="tog" id="artReal">Balls</button>
+        <span data-t="set.style">Style</span>
+        <button type="button" class="tog" id="artGeo" data-t="art.geo">Geometry</button>
+        <button type="button" class="tog" id="artPixel" data-t="art.pixel">Pixel art</button>
+        <button type="button" class="tog" id="artCool" data-t="art.cool">Cool</button>
+        <button type="button" class="tog" id="artReal" data-t="art.balls">Balls</button>
       </div>
-      <div class="set-note">Cool is neon glass — everything glows, trails and pulses. Balls is lit spheres with shadows on rough ground. Pixel art swaps in sprites: your figure turns with your feet while the gun swings onto your aim, and Rear guard adds a second gun behind you. Green crawlers, bombs, blasts and xp get sprites too.</div>
+      <div class="set-note" data-t="art.note">Cool is neon glass — everything glows, trails and pulses. Balls is lit spheres with shadows on rough ground. Pixel art swaps in sprites: your figure turns with your feet while the gun swings onto your aim, and Rear guard adds a second gun behind you. Green crawlers, bombs, blasts and xp get sprites too.</div>
     </div>
 
     <div class="set-pane" data-pane="upg" hidden>
       <div class="set-row">
-        <span>Blocked</span>
-        <button type="button" class="tog" id="banAdd">Block an upgrade</button>
+        <span data-t="set.blocked">Blocked</span>
+        <button type="button" class="tog" id="banAdd" data-t="set.blockadd">Block an upgrade</button>
         <b id="banCount">0/5</b>
       </div>
       <div class="banlist" id="banList"></div>
-      <div class="set-note">Blocked upgrades never come up in a level-up pick. Tap one to unblock it.</div>
+      <div class="set-note" data-t="set.blocknote">Blocked upgrades never come up in a level-up pick. Tap one to unblock it.</div>
     </div>
   </div>
 
   <div class="touchbar" id="touchbar">
-    <button class="tbtn" id="tbRewind" type="button">Rewind</button>
-    <button class="tbtn" id="tbFull" type="button">Full</button>
+    <button class="tbtn" id="tbRewind" type="button" data-t="touch.rewind">Rewind</button>
+    <button class="tbtn" id="tbFull" type="button" data-t="touch.full">Full</button>
   </div>
 
   <footer>
-    <div><b>Rewinding is an undo, not a shortcut.</b> Wind back past the damage you dealt and the boss gets it back — but your upgrades stay, so a rewound minute is a stronger one.</div>
-    <div><b>While scrubbing:</b> wheel, drag, or <kbd>A</kbd>/<kbd>D</kbd> move through time. <kbd>E</kbd> or <kbd>Space</kbd> drops you back in at that moment; everything after it is erased.</div>
-    <div><b>Nowhere is safe for long.</b> Running buys room, not escape — monsters spawn around you wherever you go, and the boss hunts. The arrow at the screen edge points at it, with the distance.</div>
+    <div data-t="foot.1"><b>Rewinding is an undo, not a shortcut.</b> Wind back past the damage you dealt and the boss gets it back — but your upgrades stay, so a rewound minute is a stronger one.</div>
+    <div data-t="foot.2"><b>While scrubbing:</b> wheel, drag, or <kbd>A</kbd>/<kbd>D</kbd> move through time. <kbd>E</kbd> or <kbd>Space</kbd> drops you back in at that moment; everything after it is erased.</div>
+    <div data-t="foot.3"><b>Nowhere is safe for long.</b> Running buys room, not escape — monsters spawn around you wherever you go, and the boss hunts. The arrow at the screen edge points at it, with the distance.</div>
     <div class="legend">
-      <span><span class="dot" style="background:var(--amber)"></span>you</span>
-      <span><span class="dot" style="background:var(--lime)"></span>monsters</span>
-      <span><span class="dot" style="background:var(--magenta)"></span>enemy fire</span>
-      <span><span class="dot" style="background:var(--lilac)"></span>rewind</span>
+      <span><span class="dot" style="background:var(--amber)"></span><span data-t="legend.you">you</span></span>
+      <span><span class="dot" style="background:var(--lime)"></span><span data-t="legend.mobs">monsters</span></span>
+      <span><span class="dot" style="background:var(--magenta)"></span><span data-t="legend.fire">enemy fire</span></span>
+      <span><span class="dot" style="background:var(--lilac)"></span><span data-t="legend.rewind">rewind</span></span>
     </div>
   </footer>
 </div>
@@ -728,6 +737,797 @@
   // 0 monster spit, then one per boss rank
   const FLAK_COLORS = ["#ffd166", "#4fd6e8", "#b98cff", "#ff2d55", "#5ce65c"];
   const FREEZE_TICKS = 1.5 * TPS;   // how long the ring's orb holds you still
+
+  /* ---------- languages ---------- */
+  /* English is read straight out of the page, so it is never written twice;
+     every other language fills in over it, key by key. */
+  const LANGS = [
+    { id: "en", name: "English" },
+    { id: "da", name: "Dansk" },
+    { id: "no", name: "Norsk" },
+    { id: "sv", name: "Svenska" },
+    { id: "de", name: "Deutsch" },
+    { id: "es", name: "Español" },
+    { id: "fr", name: "Français" }
+  ];
+  const STR = { en: {} };
+  document.querySelectorAll("[data-t]").forEach(e => { STR.en[e.dataset.t] = e.innerHTML; });
+  document.querySelectorAll("[data-tph]").forEach(e => { STR.en[e.dataset.tph] = e.placeholder; });
+  Object.assign(STR.en, {
+    "set.language": "Language",
+    "hud.clock.survive": "Survive the clock",
+    "hud.clock.between": "Between bosses",
+    "hud.clock.stopwatch": "Stopwatch — next boss in {n}s",
+    "hud.clock.duel": "{name} — clock held at {n}s",
+    "hud.killit": "kill it — {n}s",
+    "hud.left": "{n}s left",
+    "hud.xpto": "{n} xp to level {lvl}",
+    "hud.pick": "{n} pick waiting",
+    "hud.picks": "{n} picks waiting",
+    "hud.rewind1": "{n} rewind · heart in {t}",
+    "hud.rewinds": "{n} rewinds · heart in {t}",
+    "hud.killed": "{n} killed",
+    "hud.killedhot": "{n} killed · hits cost {c}",
+    "tier.0": "Quiet", "tier.1": "Rising", "tier.2": "Heavy",
+    "tier.3": "Severe", "tier.4": "Critical",
+    "rank.Easy": "Easy", "rank.Medium": "Medium", "rank.Hard": "Hard",
+    "set.nothing": "Nothing",
+    "set.nothingnote": "open every run empty-handed",
+    "pick.upgrade": "Upgrade",
+    "end.win.duel": "All three down",
+    "end.win": "You survived",
+    "end.best": "New best",
+    "end.ended": "Run ended",
+    "end.toll": "The rewinds took it",
+    "end.duelout": "It outlasted you",
+    "end.outlived": "Nothing left to kill",
+    "end.dead": "Out of hearts"
+  });
+
+
+  STR.da = {
+    "tag": "Overlev uret.<br>Spol det tilbage, bliv stående.",
+    "hud.hearts": "Hjerter", "hud.level": "Niveau", "hud.full": "Fuld skærm — F",
+    "key.move": "W A S D — bevæg", "key.aim": "mus — sigt", "key.rewind": "E — spol tilbage",
+    "key.pick": "1 2 3 — vælg", "key.full": "F — fuld skærm",
+    "btn.start": "Start runden", "btn.retry": "Start forfra", "btn.mode": "Skift tilstand",
+    "pick.eyebrow": "Tiden står stille — tag én", "pick.take": "Tag", "pick.amount": "skriv et antal",
+    "pick.foot": "De to du lader stå, er væk. Det du tager, overlever hver tilbagespoling.",
+    "pick.upgrade": "Opgradering",
+    "set.title": "Indstillinger", "set.tab.audio": "Lyd", "set.tab.game": "Spil",
+    "set.tab.art": "Grafik", "set.tab.upg": "Opgraderinger",
+    "set.music": "Musik", "set.effects": "Effekter", "set.on": "Til", "set.off": "Fra",
+    "set.sound": "Lyd", "set.shake": "Skærmrystelse", "set.controls": "Styring",
+    "set.auto": "Auto", "set.mobile": "Mobil", "set.desktop": "Computer",
+    "set.startwith": "Start med", "set.language": "Sprog", "set.style": "Stil",
+    "set.blocked": "Blokeret", "set.blockadd": "Bloker en opgradering",
+    "set.blocknote": "Blokerede opgraderinger dukker aldrig op ved et niveauvalg. Tryk på en for at fjerne blokeringen.",
+    "set.nothing": "Intet", "set.nothingnote": "start hver runde med tomme hænder",
+    "art.geo": "Geometri", "art.pixel": "Pixelkunst", "art.cool": "Cool", "art.balls": "Kugler",
+    "art.note": "Cool er neonglas — alt gløder, trækker spor og pulserer. Kugler er oplyste kugler med skygger på ujævn jord. Pixelkunst skifter til sprites: din figur drejer med fødderne, mens våbnet følger dit sigte, og Bagvagt giver dig et våben mere bagpå. Grønne kravlere, bomber, eksplosioner og xp får også sprites.",
+    "touch.rewind": "Tilbage", "touch.full": "Fuld",
+    "legend.you": "dig", "legend.mobs": "monstre", "legend.fire": "fjendtlig ild", "legend.rewind": "tilbagespoling",
+    "foot.1": "<b>Tilbagespoling er en fortrydelse, ikke en genvej.</b> Spoler du forbi den skade du gav, får bossen den igen — men dine opgraderinger bliver, så et tilbagespolet minut er stærkere.",
+    "foot.2": "<b>Mens du spoler:</b> hjul, træk eller <kbd>A</kbd>/<kbd>D</kbd> flytter dig i tiden. <kbd>E</kbd> eller <kbd>Space</kbd> sætter dig ind igen i det øjeblik; alt efter det slettes.",
+    "foot.3": "<b>Ingen steder er sikre længe.</b> At løbe køber plads, ikke flugt — monstre dukker op omkring dig, uanset hvor du går, og bossen jager. Pilen i skærmkanten peger på den, med afstanden.",
+    "intro.p1": "En uendelig mark, ingen vægge at bakke ind i, og tre bosser efter skema: <b style=\"color:#4fd6e8\">Splinter</b>, så <b style=\"color:#b98cff\">Fracture</b>, så <b style=\"color:#ff2d55\">Terminus</b>. Imellem dem bliver sværmen tættere — drivere, så jagere, spyttere, pile, bæster og vogtere, hver bølge hårdere end den før. Vælg hvordan du vil møde dem.",
+    "intro.p2": "<b>Dit våben følger musen</b> og skyder selv; et kort skud rammer hårdere end et langt, så skaden ligger tæt på. Opgraderinger giver lasere, småbomber, ringsalver, lægeskud der lægger helbredelse på jorden — og <b>Ekko</b>, der efterlader en kopi af dig, som spiller de sekunder du lige spolede tilbage.",
+    "intro.p3": "Tryk <b>E</b>, og tiden stopper. Rul tilbage så langt du vil — sværmen, kuglerne og den skade du gav ruller med, men <b>du bliver stående præcis hvor du er</b>. Tilbagespoling er ubegrænset, men ikke gratis: <b>hver femte koster et hjerte</b>, den giver aldrig hjerter tilbage, og den lægger sekunder tilbage på uret, du skal overleve igen. Du starter med tre hjerter, et træf koster ét, og ved nul starter runden forfra.",
+    "intro.p4": "<b>Drab er xp.</b> Fyld bjælken, tiden holder, og du <b>vælger én af tre</b> opgraderinger — hurtigere ild, delte løb, gennemtrængende skud, markplastre der heler dig, plader der giver et hjerte. De er det eneste tiden ikke kan tage tilbage: <b>tilbagespoling beholder dem alle</b>. Spol uret tilbage med et fuldt udbygget våben, og de samme sekunder rammer helt anderledes.",
+    "intro.phone": "<b>På telefon:</b> træk i venstre halvdel for at bevæge dig, i højre for at sigte — knapperne under banen klarer tilbagespoling og fuld skærm. Landskab plus fuld skærm giver mest plads.",
+    "mode.survive": "Overlev",
+    "mode.survive.note": "To minutter. Splinter ved 1:30 tilbage, Fracture ved 1:00, Terminus ved 0:30 — de lander, og de bliver. Overlev uret.",
+    "mode.endless": "Uendelig",
+    "mode.endless.note": "Ingen frist — et stopur der tæller op. Bosser lander hvert tredive sekund og kommer hårdere igen hver runde. Du stopper, når dine hjerter gør.",
+    "mode.duel": "Bossdueller",
+    "mode.duel.note": "Hver boss fryser uret helt og giver dig tredive sekunder til at dræbe den. Vind duellen, og uret starter forfra på tredive — den boss kommer aldrig igen. At dræbe alle tre er den eneste vej til sejr.",
+    "hud.clock.survive": "Overlev uret", "hud.clock.between": "Mellem bosser",
+    "hud.clock.stopwatch": "Stopur — næste boss om {n}s",
+    "hud.clock.duel": "{name} — uret holdt på {n}s",
+    "hud.killit": "dræb den — {n}s", "hud.left": "{n}s tilbage",
+    "hud.xpto": "{n} xp til niveau {lvl}", "hud.pick": "{n} valg venter", "hud.picks": "{n} valg venter",
+    "hud.rewind1": "{n} tilbagespoling · hjerte om {t}", "hud.rewinds": "{n} tilbagespolinger · hjerte om {t}",
+    "hud.killed": "{n} dræbt", "hud.killedhot": "{n} dræbt · træf koster {c}",
+    "tier.0": "Stille", "tier.1": "Stigende", "tier.2": "Tung", "tier.3": "Alvorlig", "tier.4": "Kritisk",
+    "rank.Easy": "Let", "rank.Medium": "Mellem", "rank.Hard": "Svær",
+    "end.win.duel": "Alle tre nede", "end.win": "Du overlevede", "end.best": "Ny rekord",
+    "end.ended": "Runden sluttede", "end.toll": "Tilbagespolingerne tog det",
+    "end.duelout": "Den overlevede dig", "end.outlived": "Intet tilbage at dræbe",
+    "end.dead": "Ingen hjerter tilbage",
+    upg: {
+      rapid: ["Hurtig ild", "kortere pause mellem skud"],
+      twin: ["Delt løb", "en kugle mere pr. salve"],
+      pierce: ["Gennemtrængning", "skud går igennem et monster"],
+      boots: ["Lette støvler", "hurtigere på benene"],
+      heavy: ["Tunge kugler", "hvert træf rammer hårdere"],
+      barrel: ["Langt løb", "skaden holder på afstand"],
+      patch: ["Markplaster", "hel to hjerter, med det samme"],
+      plate: ["Ekstra plade", "+1 maks hjerte, fyldt"],
+      siphon: ["Sugekugler", "drab heler dig af og til"],
+      ward: ["Langt værn", "længere nåde efter et træf"],
+      clone: ["Ekko", "hver tilbagespoling efterlader en kopi der spiller det du lige gjorde"],
+      medic: ["Lægeskud", "skud lægger helbredelse du kan gå ind i"],
+      laser: ["Laserlanse", "en gennemtrængende stråle langs dit sigte, på timer"],
+      bomb: ["Småbomber", "kaster en bombe der rydder hul i sværmen"],
+      ring: ["Ringskud", "hver femte salve skyder i alle retninger"],
+      orbit: ["Kredsklinge", "en skærv kredser om dig og skærer det den rører"],
+      stasis: ["Stasefelt", "alt fjendtligt bevæger sig langsommere"],
+      over: ["Overklok", "kugler flyver hurtigere og længere"],
+      wind: ["Nyt pust", "overlev ét dødeligt slag, tilbage på ét hjerte"],
+      shock: ["Chokplade", "et træf sprænger alt tæt på dig"],
+      cluster: ["Klyngegranater", "dine bomber deler sig ved nedslag"],
+      tempo: ["Hurtig lære", "monstre giver mere xp — +35% hver"],
+      echoup: ["Højt ekko", "dine ekkoer skyder meget hurtigere"],
+      prism: ["Prismelanse", "strålen deler sig i tre"],
+      wide: ["Bred ring", "ringsalver kommer oftere"],
+      storm: ["Klingestorm", "kredsskærver svinger bredere og bider hårdere"],
+      triage: ["Triage", "efterladt helbredelse er to hjerter værd"],
+      deep: ["Dybfrost", "stase bremser også det bosserne skyder"],
+      hollow: ["Hulspidser", "+25% skade mod monstre"],
+      siege: ["Belejringskugler", "+25% skade mod bosser"],
+      crit: ["Præcision", "nogle skud rammer dobbelt"],
+      bounce: ["Rikochet", "skud springer videre til et andet monster"],
+      homing: ["Målsøgende chips", "kugler krummer mod det nærmeste"],
+      sniper: ["Langskud", "skaden vokser med afstanden i stedet for at falde"],
+      rail: ["Railskud", "hver ottende salve er et gennemtrængende railskud"],
+      chill: ["Kolde kugler", "det du rammer bevæger sig langsommere et stykke tid"],
+      back: ["Bagvagt", "et skud går også bagud"],
+      rations: ["Rationer", "et hjerte tilbage ved hvert niveau"],
+      trophy: ["Trofæ", "at dræbe en boss heler dig"],
+      adren: ["Adrenalin", "et spring i fart efter du er ramt"],
+      magnet: ["Magnet", "efterladt helbredelse driver hen mod dig"],
+      battery: ["Kronobatteri", "tilbagespolingsafgiften er nogle gange gratis"],
+      aegis: ["Ægide", "du lander fra en tilbagespoling urørlig et øjeblik"],
+      bounty: ["Dusør", "bosser giver langt mere xp"],
+      napalm: ["Napalm", "eksplosioner efterlader ild på jorden"],
+      twinl: ["Dobbeltlanse", "lansen fyrer dobbelt så ofte"],
+      rebar: ["Forstærket plade", "dit chokbrag rammer bredere og hårdere"],
+      guardb: ["Klingeværn", "kredsskærver slår fjendtlige kugler ud af luften"],
+      dejavu: ["Déjà vu", "ekkoer spiller længere"],
+      echobomb: ["Ekkogranat", "et ekko detonerer når det forsvinder"]
+    }
+  };
+
+  STR.no = {
+    "tag": "Overlev klokka.<br>Spol den tilbake, bli stående.",
+    "hud.hearts": "Hjerter", "hud.level": "Nivå", "hud.full": "Fullskjerm — F",
+    "key.move": "W A S D — beveg", "key.aim": "mus — sikt", "key.rewind": "E — spol tilbake",
+    "key.pick": "1 2 3 — velg", "key.full": "F — fullskjerm",
+    "btn.start": "Start runden", "btn.retry": "Start på nytt", "btn.mode": "Bytt modus",
+    "pick.eyebrow": "Tiden står stille — ta én", "pick.take": "Ta", "pick.amount": "skriv et antall",
+    "pick.foot": "De to du lar stå, er borte. Det du tar, overlever hver tilbakespoling.",
+    "pick.upgrade": "Oppgradering",
+    "set.title": "Innstillinger", "set.tab.audio": "Lyd", "set.tab.game": "Spill",
+    "set.tab.art": "Grafikk", "set.tab.upg": "Oppgraderinger",
+    "set.music": "Musikk", "set.effects": "Effekter", "set.on": "På", "set.off": "Av",
+    "set.sound": "Lyd", "set.shake": "Skjermrist", "set.controls": "Styring",
+    "set.auto": "Auto", "set.mobile": "Mobil", "set.desktop": "Datamaskin",
+    "set.startwith": "Start med", "set.language": "Språk", "set.style": "Stil",
+    "set.blocked": "Blokkert", "set.blockadd": "Blokker en oppgradering",
+    "set.blocknote": "Blokkerte oppgraderinger dukker aldri opp i et nivåvalg. Trykk på en for å låse den opp igjen.",
+    "set.nothing": "Ingenting", "set.nothingnote": "start hver runde tomhendt",
+    "art.geo": "Geometri", "art.pixel": "Pikselkunst", "art.cool": "Cool", "art.balls": "Kuler",
+    "art.note": "Cool er neonglass — alt gløder, trekker spor og pulserer. Kuler er opplyste kuler med skygger på ujevn bakke. Pikselkunst bytter til sprites: figuren din snur seg med føttene mens våpenet følger siktet, og Bakvakt gir deg et våpen til på ryggen. Grønne krypere, bomber, smell og xp får sprites også.",
+    "touch.rewind": "Tilbake", "touch.full": "Full",
+    "legend.you": "deg", "legend.mobs": "monstre", "legend.fire": "fiendtlig ild", "legend.rewind": "tilbakespoling",
+    "foot.1": "<b>Tilbakespoling er en angring, ikke en snarvei.</b> Spoler du forbi skaden du gjorde, får bossen den tilbake — men oppgraderingene dine blir, så et tilbakespolt minutt er sterkere.",
+    "foot.2": "<b>Mens du spoler:</b> hjul, dra eller <kbd>A</kbd>/<kbd>D</kbd> flytter deg i tid. <kbd>E</kbd> eller <kbd>Space</kbd> setter deg inn igjen i det øyeblikket; alt etter det slettes.",
+    "foot.3": "<b>Ingen steder er trygge lenge.</b> Å løpe kjøper plass, ikke flukt — monstre dukker opp rundt deg uansett hvor du går, og bossen jakter. Pilen i skjermkanten peker på den, med avstanden.",
+    "intro.p1": "En endeløs slette, ingen vegger å rygge inn i, og tre bosser etter timeplan: <b style=\"color:#4fd6e8\">Splinter</b>, så <b style=\"color:#b98cff\">Fracture</b>, så <b style=\"color:#ff2d55\">Terminus</b>. Mellom dem blir svermen tettere — drivere, så jagere, spyttere, piler, beist og voktere, hver bølge hardere enn den før. Velg hvordan du vil møte dem.",
+    "intro.p2": "<b>Våpenet ditt følger musa</b> og skyter selv; et kort skudd treffer hardere enn et langt, så skaden ligger nær. Oppgraderinger gir lasere, småbomber, ringsalver, legeskudd som legger helbredelse på bakken — og <b>Ekko</b>, som etterlater en kopi av deg som spiller sekundene du nettopp spolte tilbake.",
+    "intro.p3": "Trykk <b>E</b>, og tiden stopper. Rull tilbake så langt du vil — svermen, kulene og skaden du gjorde ruller med, men <b>du blir stående nøyaktig der du er</b>. Tilbakespoling er ubegrenset, men ikke gratis: <b>hver femte koster et hjerte</b>, den gir aldri hjerter tilbake, og den legger sekunder tilbake på klokka du må overleve på nytt. Du starter med tre hjerter, et treff koster ett, og på null starter runden på nytt.",
+    "intro.p4": "<b>Drap er xp.</b> Fyll stolpen, tiden holder, og du <b>velger én av tre</b> oppgraderinger — raskere ild, delte løp, gjennomtrengende skudd, feltplaster som heler deg, plating som gir et hjerte. De er det eneste tiden ikke kan ta tilbake: <b>tilbakespoling beholder hver eneste</b>. Spol klokka tilbake med et fullt utbygd våpen, og de samme sekundene treffer helt annerledes.",
+    "intro.phone": "<b>På telefon:</b> dra i venstre halvdel for å bevege deg, i høyre for å sikte — knappene under banen tar tilbakespoling og fullskjerm. Liggende pluss fullskjerm gir mest plass.",
+    "mode.survive": "Overlev",
+    "mode.survive.note": "To minutter. Splinter ved 1:30 igjen, Fracture ved 1:00, Terminus ved 0:30 — de lander, og de blir. Overlev klokka.",
+    "mode.endless": "Endeløs",
+    "mode.endless.note": "Ingen frist — en stoppeklokke som teller opp. Bosser lander hvert tretti sekund og kommer hardere tilbake hver runde. Du stopper når hjertene dine gjør det.",
+    "mode.duel": "Bossdueller",
+    "mode.duel.note": "Hver boss fryser klokka helt og gir deg tretti sekunder på å drepe den. Vinn duellen, og klokka starter på tretti igjen — den bossen kommer aldri tilbake. Å drepe alle tre er eneste vei til seier.",
+    "hud.clock.survive": "Overlev klokka", "hud.clock.between": "Mellom bosser",
+    "hud.clock.stopwatch": "Stoppeklokke — neste boss om {n}s",
+    "hud.clock.duel": "{name} — klokka holdt på {n}s",
+    "hud.killit": "drep den — {n}s", "hud.left": "{n}s igjen",
+    "hud.xpto": "{n} xp til nivå {lvl}", "hud.pick": "{n} valg venter", "hud.picks": "{n} valg venter",
+    "hud.rewind1": "{n} tilbakespoling · hjerte om {t}", "hud.rewinds": "{n} tilbakespolinger · hjerte om {t}",
+    "hud.killed": "{n} drept", "hud.killedhot": "{n} drept · treff koster {c}",
+    "tier.0": "Stille", "tier.1": "Stigende", "tier.2": "Tung", "tier.3": "Alvorlig", "tier.4": "Kritisk",
+    "rank.Easy": "Lett", "rank.Medium": "Middels", "rank.Hard": "Vanskelig",
+    "end.win.duel": "Alle tre nede", "end.win": "Du overlevde", "end.best": "Ny rekord",
+    "end.ended": "Runden er slutt", "end.toll": "Tilbakespolingene tok det",
+    "end.duelout": "Den overlevde deg", "end.outlived": "Ingenting igjen å drepe",
+    "end.dead": "Tom for hjerter",
+    upg: {
+      rapid: ["Hurtigild", "kortere pause mellom skudd"],
+      twin: ["Delt løp", "en kule til per salve"],
+      pierce: ["Gjennomtrenging", "skudd går tvers gjennom et monster"],
+      boots: ["Lette støvler", "raskere til beins"],
+      heavy: ["Tunge kuler", "hvert treff slår hardere"],
+      barrel: ["Langt løp", "skaden holder seg på avstand"],
+      patch: ["Feltplaster", "hel to hjerter, med en gang"],
+      plate: ["Ekstra plating", "+1 maks hjerte, fylt"],
+      siphon: ["Sugekuler", "drap heler deg iblant"],
+      ward: ["Langt vern", "lengre nåde etter et treff"],
+      clone: ["Ekko", "hver tilbakespoling etterlater en kopi som spiller det du nettopp gjorde"],
+      medic: ["Legeskudd", "skudd legger igjen helbredelse du kan gå inn i"],
+      laser: ["Laserlanse", "en gjennomtrengende stråle langs siktet, på timer"],
+      bomb: ["Småbomber", "kaster en bombe som river hull i svermen"],
+      ring: ["Ringskudd", "hver femte salve skyter i alle retninger"],
+      orbit: ["Bandekniv", "et skår kretser rundt deg og skjærer det det rører"],
+      stasis: ["Stasefelt", "alt fiendtlig beveger seg tregere"],
+      over: ["Overklokk", "kuler flyr raskere og lengre"],
+      wind: ["Ny giv", "overlev ett dødelig slag, tilbake på ett hjerte"],
+      shock: ["Sjokkplating", "et treff sprenger alt nær deg"],
+      cluster: ["Klasegranater", "bombene dine deler seg ved nedslag"],
+      tempo: ["Rask lærling", "monstre gir mer xp — +35% hver"],
+      echoup: ["Høyt ekko", "ekkoene dine skyter mye raskere"],
+      prism: ["Prismelanse", "strålen deler seg i tre"],
+      wide: ["Vid ring", "ringsalver kommer oftere"],
+      storm: ["Bladstorm", "kretsskårene svinger videre og biter hardere"],
+      triage: ["Triage", "helbredelse på bakken er verdt to hjerter"],
+      deep: ["Dypfrys", "stase bremser også det bossene skyter"],
+      hollow: ["Hulspisser", "+25% skade mot monstre"],
+      siege: ["Beleiringskuler", "+25% skade mot bosser"],
+      crit: ["Presisjon", "noen skudd treffer dobbelt"],
+      bounce: ["Rikosjett", "skudd spretter videre til et annet monster"],
+      homing: ["Målsøkende brikker", "kuler krummer mot det nærmeste"],
+      sniper: ["Langskudd", "skaden vokser med avstanden i stedet for å falle"],
+      rail: ["Railskudd", "hver åttende salve er et gjennomtrengende railskudd"],
+      chill: ["Kalde kuler", "det du treffer beveger seg tregere en stund"],
+      back: ["Bakvakt", "et skudd går bakover også"],
+      rations: ["Rasjoner", "et hjerte tilbake for hvert nivå"],
+      trophy: ["Trofé", "å drepe en boss heler deg"],
+      adren: ["Adrenalin", "et rykk med fart etter at du er truffet"],
+      magnet: ["Magnet", "helbredelse på bakken driver mot deg"],
+      battery: ["Kronobatteri", "tilbakespolingsavgiften er noen ganger gratis"],
+      aegis: ["Egide", "du lander fra en tilbakespoling urørlig et øyeblikk"],
+      bounty: ["Dusør", "bosser gir langt mer xp"],
+      napalm: ["Napalm", "smell etterlater ild som brenner på bakken"],
+      twinl: ["Dobbeltlanse", "lansen fyrer dobbelt så ofte"],
+      rebar: ["Forsterket plating", "sjokksmellet ditt treffer videre og hardere"],
+      guardb: ["Bladvakt", "kretsskårene slår fiendens kuler ut av lufta"],
+      dejavu: ["Déjà vu", "ekkoer spiller lenger"],
+      echobomb: ["Ekkogranat", "et ekko detonerer når det forsvinner"]
+    }
+  };
+
+
+  STR.sv = {
+    "tag": "Överlev klockan.<br>Spola tillbaka den, stå kvar.",
+    "hud.hearts": "Hjärtan", "hud.level": "Nivå", "hud.full": "Helskärm — F",
+    "key.move": "W A S D — rör dig", "key.aim": "mus — sikta", "key.rewind": "E — spola tillbaka",
+    "key.pick": "1 2 3 — välj", "key.full": "F — helskärm",
+    "btn.start": "Starta omgången", "btn.retry": "Börja om", "btn.mode": "Byt läge",
+    "pick.eyebrow": "Tiden står still — ta en", "pick.take": "Ta", "pick.amount": "skriv ett antal",
+    "pick.foot": "De två du lämnar är borta. Det du tar överlever varje tillbakaspolning.",
+    "pick.upgrade": "Uppgradering",
+    "set.title": "Inställningar", "set.tab.audio": "Ljud", "set.tab.game": "Spel",
+    "set.tab.art": "Grafik", "set.tab.upg": "Uppgraderingar",
+    "set.music": "Musik", "set.effects": "Effekter", "set.on": "På", "set.off": "Av",
+    "set.sound": "Ljud", "set.shake": "Skärmskak", "set.controls": "Styrning",
+    "set.auto": "Auto", "set.mobile": "Mobil", "set.desktop": "Dator",
+    "set.startwith": "Börja med", "set.language": "Språk", "set.style": "Stil",
+    "set.blocked": "Blockerat", "set.blockadd": "Blockera en uppgradering",
+    "set.blocknote": "Blockerade uppgraderingar dyker aldrig upp vid ett nivåval. Tryck på en för att låsa upp den.",
+    "set.nothing": "Ingenting", "set.nothingnote": "börja varje omgång tomhänt",
+    "art.geo": "Geometri", "art.pixel": "Pixelkonst", "art.cool": "Cool", "art.balls": "Klot",
+    "art.note": "Cool är neonglas — allt glöder, drar spår och pulserar. Klot är upplysta sfärer med skuggor på skrovlig mark. Pixelkonst byter till sprites: din figur vänder sig med fötterna medan vapnet följer siktet, och Bakvakt ger dig ett vapen till bakåt. Gröna krypare, bomber, smällar och xp får sprites också.",
+    "touch.rewind": "Tillbaka", "touch.full": "Full",
+    "legend.you": "du", "legend.mobs": "monster", "legend.fire": "fiendeeld", "legend.rewind": "tillbakaspolning",
+    "foot.1": "<b>Tillbakaspolning är en ångring, inte en genväg.</b> Spolar du förbi skadan du gjorde får bossen tillbaka den — men dina uppgraderingar stannar, så en tillbakaspolad minut är starkare.",
+    "foot.2": "<b>Medan du spolar:</b> hjul, dra eller <kbd>A</kbd>/<kbd>D</kbd> flyttar dig i tiden. <kbd>E</kbd> eller <kbd>Space</kbd> släpper in dig igen i det ögonblicket; allt efter det raderas.",
+    "foot.3": "<b>Ingenstans är säkert länge.</b> Att springa köper utrymme, inte flykt — monster dyker upp runt dig var du än går, och bossen jagar. Pilen i skärmkanten pekar på den, med avståndet.",
+    "intro.p1": "Ett ändlöst fält, inga väggar att backa in i, och tre bossar enligt schema: <b style=\"color:#4fd6e8\">Splinter</b>, sedan <b style=\"color:#b98cff\">Fracture</b>, sedan <b style=\"color:#ff2d55\">Terminus</b>. Mellan dem tätnar svärmen — drivare, sedan jagare, spottare, pilar, best och väktare, varje våg hårdare än den förra. Välj hur du vill möta dem.",
+    "intro.p2": "<b>Ditt vapen följer musen</b> och skjuter av sig självt; ett kort skott slår hårdare än ett långt, så skadan finns nära. Uppgraderingar ger lasrar, småbomber, ringsalvor, läkarskott som lägger läkning på marken — och <b>Eko</b>, som lämnar en kopia av dig som spelar upp sekunderna du just spolade tillbaka.",
+    "intro.p3": "Tryck <b>E</b> och tiden stannar. Rulla bakåt hur långt du vill — svärmen, kulorna och skadan du gjorde rullar med, men <b>du står kvar exakt där du är</b>. Tillbakaspolning är obegränsad men inte gratis: <b>var femte kostar ett hjärta</b>, den ger aldrig hjärtan tillbaka, och den lägger sekunder tillbaka på klockan du måste överleva igen. Du börjar med tre hjärtan, en träff kostar ett, och vid noll börjar omgången om.",
+    "intro.p4": "<b>Dödade är xp.</b> Fyll mätaren, tiden håller, och du <b>väljer en av tre</b> uppgraderingar — snabbare eld, delade pipor, genomträngande skott, fältplåster som läker dig, plåt som ger ett hjärta. De är det enda tiden inte kan ta tillbaka: <b>tillbakaspolning behåller varenda en</b>. Spola tillbaka klockan med ett fullt utbyggt vapen, och samma sekunder slår helt annorlunda.",
+    "intro.phone": "<b>På telefon:</b> dra i vänstra halvan för att röra dig, i högra för att sikta — knapparna under planen sköter tillbakaspolning och helskärm. Liggande plus helskärm ger mest plats.",
+    "mode.survive": "Överleva",
+    "mode.survive.note": "Två minuter. Splinter vid 1:30 kvar, Fracture vid 1:00, Terminus vid 0:30 — de landar och de stannar. Överlev klockan.",
+    "mode.endless": "Ändlöst",
+    "mode.endless.note": "Ingen deadline — ett tidtagarur som räknar upp. Bossar landar var trettionde sekund och kommer tillbaka hårdare varje varv. Du stannar när dina hjärtan gör det.",
+    "mode.duel": "Bossdueller",
+    "mode.duel.note": "Varje boss fryser klockan helt och ger dig trettio sekunder att döda den. Vinn duellen så startar klockan om på trettio — den bossen kommer aldrig tillbaka. Att döda alla tre är enda vägen till vinst.",
+    "hud.clock.survive": "Överlev klockan", "hud.clock.between": "Mellan bossar",
+    "hud.clock.stopwatch": "Tidtagarur — nästa boss om {n}s",
+    "hud.clock.duel": "{name} — klockan hålls på {n}s",
+    "hud.killit": "döda den — {n}s", "hud.left": "{n}s kvar",
+    "hud.xpto": "{n} xp till nivå {lvl}", "hud.pick": "{n} val väntar", "hud.picks": "{n} val väntar",
+    "hud.rewind1": "{n} tillbakaspolning · hjärta om {t}", "hud.rewinds": "{n} tillbakaspolningar · hjärta om {t}",
+    "hud.killed": "{n} dödade", "hud.killedhot": "{n} dödade · träffar kostar {c}",
+    "tier.0": "Stilla", "tier.1": "Stigande", "tier.2": "Tung", "tier.3": "Allvarlig", "tier.4": "Kritisk",
+    "rank.Easy": "Lätt", "rank.Medium": "Medel", "rank.Hard": "Svår",
+    "end.win.duel": "Alla tre nere", "end.win": "Du överlevde", "end.best": "Nytt rekord",
+    "end.ended": "Omgången slut", "end.toll": "Tillbakaspolningarna tog det",
+    "end.duelout": "Den överlevde dig", "end.outlived": "Inget kvar att döda",
+    "end.dead": "Slut på hjärtan",
+    upg: {
+      rapid: ["Snabbeld", "kortare paus mellan skott"],
+      twin: ["Delad pipa", "en kula till per salva"],
+      pierce: ["Genomträngning", "skott går rakt igenom ett monster"],
+      boots: ["Lätta stövlar", "snabbare till fots"],
+      heavy: ["Tunga kulor", "varje träff slår hårdare"],
+      barrel: ["Lång pipa", "skadan håller på avstånd"],
+      patch: ["Fältplåster", "läk två hjärtan, direkt"],
+      plate: ["Extra plåt", "+1 max hjärta, fyllt"],
+      siphon: ["Sugkulor", "dödade läker dig ibland"],
+      ward: ["Långt värn", "längre nåd efter en träff"],
+      clone: ["Eko", "varje tillbakaspolning lämnar en kopia som spelar upp det du nyss gjorde"],
+      medic: ["Läkarskott", "skott lämnar läkning du kan gå in i"],
+      laser: ["Laserlans", "en genomträngande stråle längs siktet, på timer"],
+      bomb: ["Småbomber", "kastar en bomb som river hål i svärmen"],
+      ring: ["Ringskott", "var femte salva skjuter åt alla håll"],
+      orbit: ["Kretsklinga", "en skärva kretsar runt dig och skär det den rör"],
+      stasis: ["Stasfält", "allt fientligt rör sig långsammare"],
+      over: ["Överklockning", "kulor flyger snabbare och längre"],
+      wind: ["Ny kraft", "överlev ett dödande slag, tillbaka på ett hjärta"],
+      shock: ["Chockplåt", "en träff spränger allt nära dig"],
+      cluster: ["Klustergranater", "dina bomber delar sig vid nedslag"],
+      tempo: ["Snabblärd", "monster ger mer xp — +35% var"],
+      echoup: ["Högt eko", "dina ekon skjuter mycket snabbare"],
+      prism: ["Prismalans", "strålen delas i tre"],
+      wide: ["Bred ring", "ringsalvor kommer oftare"],
+      storm: ["Klingstorm", "kretsskärvor svänger vidare och biter hårdare"],
+      triage: ["Triage", "läkning på marken är värd två hjärtan"],
+      deep: ["Djupfrys", "stas bromsar även det bossarna skjuter"],
+      hollow: ["Hålspetsar", "+25% skada mot monster"],
+      siege: ["Belägringskulor", "+25% skada mot bossar"],
+      crit: ["Precision", "vissa skott slår dubbelt"],
+      bounce: ["Rikoschett", "skott studsar vidare till ett annat monster"],
+      homing: ["Målsökande chip", "kulor kröker mot det närmaste"],
+      sniper: ["Långskott", "skadan växer med avståndet i stället för att falna"],
+      rail: ["Railskott", "var åttonde salva är ett genomträngande railskott"],
+      chill: ["Kalla kulor", "det du träffar rör sig långsammare en stund"],
+      back: ["Bakvakt", "ett skott går bakåt också"],
+      rations: ["Ransoner", "ett hjärta tillbaka vid varje nivå"],
+      trophy: ["Trofé", "att döda en boss läker dig"],
+      adren: ["Adrenalin", "ett ryck av fart efter att du träffats"],
+      magnet: ["Magnet", "läkning på marken driver mot dig"],
+      battery: ["Kronobatteri", "tillbakaspolningsavgiften är ibland gratis"],
+      aegis: ["Egid", "du landar från en tillbakaspolning oåtkomlig ett ögonblick"],
+      bounty: ["Skottpengar", "bossar ger mycket mer xp"],
+      napalm: ["Napalm", "smällar lämnar eld brinnande på marken"],
+      twinl: ["Dubbellans", "lansen fyrar dubbelt så ofta"],
+      rebar: ["Förstärkt plåt", "din chockvåg träffar vidare och hårdare"],
+      guardb: ["Klingvakt", "kretsskärvor slår fiendens kulor ur luften"],
+      dejavu: ["Déjà vu", "ekon spelar längre"],
+      echobomb: ["Ekogranat", "ett eko detonerar när det bleknar"]
+    }
+  };
+
+  STR.de = {
+    "tag": "Überlebe die Uhr.<br>Dreh sie zurück, halte deinen Platz.",
+    "hud.hearts": "Herzen", "hud.level": "Stufe", "hud.full": "Vollbild — F",
+    "key.move": "W A S D — laufen", "key.aim": "Maus — zielen", "key.rewind": "E — zurückspulen",
+    "key.pick": "1 2 3 — wählen", "key.full": "F — Vollbild",
+    "btn.start": "Lauf starten", "btn.retry": "Neu anfangen", "btn.mode": "Modus wechseln",
+    "pick.eyebrow": "Die Zeit hält — nimm eins", "pick.take": "Nehmen", "pick.amount": "Anzahl eingeben",
+    "pick.foot": "Die zwei, die du stehen lässt, sind weg. Was du nimmst, übersteht jedes Zurückspulen.",
+    "pick.upgrade": "Verbesserung",
+    "set.title": "Einstellungen", "set.tab.audio": "Ton", "set.tab.game": "Spiel",
+    "set.tab.art": "Grafik", "set.tab.upg": "Verbesserungen",
+    "set.music": "Musik", "set.effects": "Effekte", "set.on": "An", "set.off": "Aus",
+    "set.sound": "Ton", "set.shake": "Bildwackeln", "set.controls": "Steuerung",
+    "set.auto": "Auto", "set.mobile": "Handy", "set.desktop": "Computer",
+    "set.startwith": "Starte mit", "set.language": "Sprache", "set.style": "Stil",
+    "set.blocked": "Gesperrt", "set.blockadd": "Verbesserung sperren",
+    "set.blocknote": "Gesperrte Verbesserungen tauchen bei einem Stufenaufstieg nie auf. Tippe eine an, um sie freizugeben.",
+    "set.nothing": "Nichts", "set.nothingnote": "jeden Lauf mit leeren Händen beginnen",
+    "art.geo": "Geometrie", "art.pixel": "Pixelkunst", "art.cool": "Cool", "art.balls": "Kugeln",
+    "art.note": "Cool ist Neonglas — alles glüht, zieht Spuren und pulsiert. Kugeln sind beleuchtete Sphären mit Schatten auf rauem Boden. Pixelkunst schaltet auf Sprites um: deine Figur dreht sich mit den Füßen, während die Waffe deinem Ziel folgt, und Rückendeckung gibt dir eine zweite Waffe nach hinten. Grüne Krabbler, Bomben, Explosionen und XP bekommen ebenfalls Sprites.",
+    "touch.rewind": "Zurück", "touch.full": "Voll",
+    "legend.you": "du", "legend.mobs": "Monster", "legend.fire": "Feindfeuer", "legend.rewind": "Zurückspulen",
+    "foot.1": "<b>Zurückspulen ist ein Rückgängig, keine Abkürzung.</b> Spulst du über deinen Schaden hinaus, bekommt der Boss ihn zurück — deine Verbesserungen bleiben aber, also ist eine zurückgespulte Minute stärker.",
+    "foot.2": "<b>Beim Spulen:</b> Rad, Ziehen oder <kbd>A</kbd>/<kbd>D</kbd> bewegen dich durch die Zeit. <kbd>E</kbd> oder <kbd>Space</kbd> setzt dich in diesem Moment wieder ein; alles danach wird gelöscht.",
+    "foot.3": "<b>Nirgends ist es lange sicher.</b> Laufen bringt Platz, keine Flucht — Monster erscheinen um dich herum, wohin du auch gehst, und der Boss jagt. Der Pfeil am Bildrand zeigt auf ihn, mit der Entfernung.",
+    "intro.p1": "Ein endloses Feld, keine Wände im Rücken, und drei Bosse nach Fahrplan: <b style=\"color:#4fd6e8\">Splinter</b>, dann <b style=\"color:#b98cff\">Fracture</b>, dann <b style=\"color:#ff2d55\">Terminus</b>. Dazwischen wird der Schwarm dichter — Treiber, dann Jäger, Spucker, Pfeile, Kolosse und Wächter, jede Welle härter als die letzte. Wähle, wie du ihnen begegnen willst.",
+    "intro.p2": "<b>Deine Waffe folgt der Maus</b> und feuert von selbst; ein kurzer Schuss trifft härter als ein langer, der Schaden liegt also in der Nähe. Verbesserungen bringen Laser, Bömbchen, Ringsalven, Sanitätsschüsse, die Heilung auf dem Boden hinterlassen — und <b>Echo</b>, das eine Kopie von dir zurücklässt, die die eben zurückgespulten Sekunden nachspielt.",
+    "intro.p3": "Drücke <b>E</b>, und die Zeit steht still. Spule zurück, so weit du willst — der Schwarm, die Kugeln und dein Schaden laufen mit zurück, aber <b>du bleibst genau dort stehen, wo du bist</b>. Zurückspulen ist unbegrenzt, aber nicht umsonst: <b>jedes fünfte Mal kostet ein Herz</b>, es gibt nie Herzen zurück, und es legt Sekunden auf die Uhr, die du erneut überleben musst. Du startest mit drei Herzen, ein Treffer kostet eins, und bei null beginnt der Lauf von vorn.",
+    "intro.p4": "<b>Abschüsse sind XP.</b> Füll die Leiste, die Zeit hält an, und du <b>nimmst eins von drei</b> — schnelleres Feuer, geteilte Läufe, durchschlagende Schüsse, Feldpflaster, die dich heilen, Panzerung für ein Herz mehr. Sie sind das Einzige, was die Zeit nicht zurücknimmt: <b>Zurückspulen behält jede davon</b>. Dreh die Uhr mit voll ausgebauter Waffe zurück, und dieselben Sekunden treffen ganz anders.",
+    "intro.phone": "<b>Am Handy:</b> Ziehe links zum Laufen, rechts zum Zielen — die Knöpfe unter dem Feld übernehmen Zurückspulen und Vollbild. Querformat plus Vollbild gibt am meisten Raum.",
+    "mode.survive": "Überleben",
+    "mode.survive.note": "Zwei Minuten. Splinter bei 1:30 Rest, Fracture bei 1:00, Terminus bei 0:30 — sie landen und sie bleiben. Überlebe die Uhr.",
+    "mode.endless": "Endlos",
+    "mode.endless.note": "Keine Frist — eine Stoppuhr, die hochzählt. Alle dreißig Sekunden landet ein Boss, jede Runde härter. Du hörst auf, wenn deine Herzen aufhören.",
+    "mode.duel": "Bossduelle",
+    "mode.duel.note": "Jeder Boss friert die Uhr ein und gibt dir dreißig Sekunden, ihn zu töten. Gewinnst du das Duell, startet die Uhr wieder bei dreißig — dieser Boss kommt nie zurück. Alle drei zu töten ist der einzige Weg zum Sieg.",
+    "hud.clock.survive": "Überlebe die Uhr", "hud.clock.between": "Zwischen den Bossen",
+    "hud.clock.stopwatch": "Stoppuhr — nächster Boss in {n}s",
+    "hud.clock.duel": "{name} — Uhr steht bei {n}s",
+    "hud.killit": "töte ihn — {n}s", "hud.left": "{n}s übrig",
+    "hud.xpto": "{n} XP bis Stufe {lvl}", "hud.pick": "{n} Wahl offen", "hud.picks": "{n} Wahlen offen",
+    "hud.rewind1": "{n} Rückspulung · Herz in {t}", "hud.rewinds": "{n} Rückspulungen · Herz in {t}",
+    "hud.killed": "{n} erledigt", "hud.killedhot": "{n} erledigt · Treffer kosten {c}",
+    "tier.0": "Ruhig", "tier.1": "Steigend", "tier.2": "Schwer", "tier.3": "Ernst", "tier.4": "Kritisch",
+    "rank.Easy": "Leicht", "rank.Medium": "Mittel", "rank.Hard": "Schwer",
+    "end.win.duel": "Alle drei erledigt", "end.win": "Du hast überlebt", "end.best": "Neue Bestzeit",
+    "end.ended": "Lauf beendet", "end.toll": "Das Zurückspulen hat es geholt",
+    "end.duelout": "Er hat dich überdauert", "end.outlived": "Nichts mehr zu töten",
+    "end.dead": "Keine Herzen mehr",
+    upg: {
+      rapid: ["Schnellfeuer", "kürzere Pause zwischen den Schüssen"],
+      twin: ["Geteilter Lauf", "eine Kugel mehr pro Salve"],
+      pierce: ["Durchschlag", "Schüsse gehen durch ein Monster hindurch"],
+      boots: ["Leichte Stiefel", "schneller auf den Beinen"],
+      heavy: ["Schwere Munition", "jeder Treffer schlägt härter"],
+      barrel: ["Langer Lauf", "der Schaden hält auf Distanz"],
+      patch: ["Feldpflaster", "heilt sofort zwei Herzen"],
+      plate: ["Zusatzpanzerung", "+1 maximales Herz, gefüllt"],
+      siphon: ["Saugmunition", "Abschüsse heilen dich manchmal"],
+      ward: ["Langer Schutz", "längere Gnadenfrist nach einem Treffer"],
+      clone: ["Echo", "jede Rückspulung lässt eine Kopie zurück, die dein eben Getanes nachspielt"],
+      medic: ["Sanitätsschüsse", "Schüsse hinterlassen Heilung, in die du laufen kannst"],
+      laser: ["Laserlanze", "ein durchschlagender Strahl entlang deines Ziels, auf Zeit"],
+      bomb: ["Bömbchen", "wirft eine Bombe, die ein Loch in den Schwarm reißt"],
+      ring: ["Ringschuss", "jede fünfte Salve feuert in alle Richtungen"],
+      orbit: ["Kreisklinge", "ein Splitter kreist um dich und schneidet, was er berührt"],
+      stasis: ["Stasefeld", "alles Feindliche bewegt sich langsamer"],
+      over: ["Übertaktung", "Kugeln fliegen schneller und weiter"],
+      wind: ["Zweiter Atem", "überlebe einen tödlichen Schlag, zurück auf einem Herz"],
+      shock: ["Schockpanzerung", "ein Treffer sprengt alles in deiner Nähe"],
+      cluster: ["Splittergranaten", "deine Bomben teilen sich beim Aufschlag"],
+      tempo: ["Schnelllerner", "Monster geben mehr XP — je +35%"],
+      echoup: ["Lautes Echo", "deine Echos feuern viel schneller"],
+      prism: ["Prismenlanze", "der Strahl teilt sich in drei"],
+      wide: ["Weiter Ring", "Ringsalven kommen früher"],
+      storm: ["Klingensturm", "Kreissplitter schwingen weiter und beißen härter"],
+      triage: ["Triage", "abgelegte Heilung ist zwei Herzen wert"],
+      deep: ["Tiefkühlung", "Stase bremst auch, was die Bosse schießen"],
+      hollow: ["Hohlspitzen", "+25% Schaden gegen Monster"],
+      siege: ["Belagerungsmunition", "+25% Schaden gegen Bosse"],
+      crit: ["Präzision", "manche Schüsse treffen doppelt"],
+      bounce: ["Querschläger", "Schüsse springen auf ein anderes Monster weiter"],
+      homing: ["Suchchips", "Kugeln krümmen sich zum Nächsten hin"],
+      sniper: ["Weitschuss", "der Schaden wächst mit der Entfernung, statt zu fallen"],
+      rail: ["Railschuss", "jede achte Salve ist ein durchschlagender Railschuss"],
+      chill: ["Kalte Munition", "was du triffst, wird eine Weile langsamer"],
+      back: ["Rückendeckung", "ein Schuss geht auch nach hinten"],
+      rations: ["Rationen", "ein Herz zurück bei jedem Stufenaufstieg"],
+      trophy: ["Trophäe", "einen Boss zu töten heilt dich"],
+      adren: ["Adrenalin", "ein Schub Tempo, nachdem du getroffen wurdest"],
+      magnet: ["Magnet", "abgelegte Heilung treibt zu dir"],
+      battery: ["Chrono-Batterie", "die Rückspulgebühr kostet manchmal nichts"],
+      aegis: ["Ägis", "nach einer Rückspulung bist du kurz unantastbar"],
+      bounty: ["Kopfgeld", "Bosse bringen weit mehr XP"],
+      napalm: ["Napalm", "Explosionen lassen Feuer am Boden brennen"],
+      twinl: ["Doppellanze", "die Lanze feuert doppelt so oft"],
+      rebar: ["Verstärkte Panzerung", "deine Schockwelle trifft weiter und härter"],
+      guardb: ["Klingenwache", "Kreissplitter schlagen feindliche Kugeln aus der Luft"],
+      dejavu: ["Déjà-vu", "Echos spielen länger nach"],
+      echobomb: ["Echogranate", "ein Echo detoniert, wenn es verblasst"]
+    }
+  };
+
+
+  STR.es = {
+    "tag": "Sobrevive al reloj.<br>Rebobínalo y no cedas terreno.",
+    "hud.hearts": "Corazones", "hud.level": "Nivel", "hud.full": "Pantalla completa — F",
+    "key.move": "W A S D — moverse", "key.aim": "ratón — apuntar", "key.rewind": "E — rebobinar",
+    "key.pick": "1 2 3 — elegir", "key.full": "F — pantalla completa",
+    "btn.start": "Empezar la partida", "btn.retry": "Empezar de nuevo", "btn.mode": "Cambiar modo",
+    "pick.eyebrow": "El tiempo se detiene — toma una", "pick.take": "Tomar", "pick.amount": "escribe una cantidad",
+    "pick.foot": "Las dos que dejas desaparecen. Lo que tomas sobrevive a cada rebobinado.",
+    "pick.upgrade": "Mejora",
+    "set.title": "Ajustes", "set.tab.audio": "Audio", "set.tab.game": "Juego",
+    "set.tab.art": "Gráficos", "set.tab.upg": "Mejoras",
+    "set.music": "Música", "set.effects": "Efectos", "set.on": "Sí", "set.off": "No",
+    "set.sound": "Sonido", "set.shake": "Temblor de pantalla", "set.controls": "Controles",
+    "set.auto": "Auto", "set.mobile": "Móvil", "set.desktop": "Ordenador",
+    "set.startwith": "Empezar con", "set.language": "Idioma", "set.style": "Estilo",
+    "set.blocked": "Bloqueadas", "set.blockadd": "Bloquear una mejora",
+    "set.blocknote": "Las mejoras bloqueadas nunca salen al subir de nivel. Toca una para desbloquearla.",
+    "set.nothing": "Nada", "set.nothingnote": "empezar cada partida con las manos vacías",
+    "art.geo": "Geometría", "art.pixel": "Pixel art", "art.cool": "Cool", "art.balls": "Esferas",
+    "art.note": "Cool es vidrio de neón: todo brilla, deja estela y late. Esferas son bolas iluminadas con sombras sobre suelo áspero. Pixel art cambia a sprites: tu figura gira con los pies mientras el arma sigue tu puntería, y Retaguardia añade una segunda arma a tu espalda. Los reptadores verdes, las bombas, las explosiones y la xp también tienen sprites.",
+    "touch.rewind": "Rebobinar", "touch.full": "Pantalla",
+    "legend.you": "tú", "legend.mobs": "monstruos", "legend.fire": "fuego enemigo", "legend.rewind": "rebobinado",
+    "foot.1": "<b>Rebobinar es deshacer, no un atajo.</b> Si retrocedes más allá del daño que hiciste, el jefe lo recupera, pero tus mejoras se quedan: un minuto rebobinado es un minuto más fuerte.",
+    "foot.2": "<b>Mientras rebobinas:</b> la rueda, arrastrar o <kbd>A</kbd>/<kbd>D</kbd> te mueven por el tiempo. <kbd>E</kbd> o <kbd>Space</kbd> te devuelven a ese instante; todo lo posterior se borra.",
+    "foot.3": "<b>Ningún sitio es seguro mucho rato.</b> Correr da espacio, no huida: los monstruos aparecen a tu alrededor vayas donde vayas, y el jefe te caza. La flecha del borde señala hacia él, con la distancia.",
+    "intro.p1": "Un campo sin fin, sin paredes donde refugiarse, y tres jefes con horario: <b style=\"color:#4fd6e8\">Splinter</b>, luego <b style=\"color:#b98cff\">Fracture</b>, luego <b style=\"color:#ff2d55\">Terminus</b>. Entre ellos el enjambre se espesa — errantes, luego perseguidores, escupidores, dardos, brutos y guardianes, cada oleada más dura que la anterior. Elige cómo quieres recibirlos.",
+    "intro.p2": "<b>Tu arma sigue al ratón</b> y dispara sola; un disparo corto pega más fuerte que uno largo, así que el daño está de cerca. Las mejoras añaden láseres, bombitas, ráfagas en anillo, disparos médicos que dejan curación en el suelo — y <b>Eco</b>, que deja una copia de ti repitiendo los segundos que acabas de rebobinar.",
+    "intro.p3": "Pulsa <b>E</b> y el tiempo se detiene. Retrocede todo lo que quieras: el enjambre, las balas y el daño que hiciste se deshacen contigo, pero <b>tú te quedas exactamente donde estás</b>. Rebobinar es ilimitado pero no gratis: <b>cada quinto rebobinado cuesta un corazón</b>, nunca devuelve corazones y vuelve a poner segundos en el reloj que tendrás que sobrevivir de nuevo. Empiezas con tres corazones, un golpe cuesta uno, y a cero la partida vuelve a empezar.",
+    "intro.p4": "<b>Las muertes son xp.</b> Llena la barra, el tiempo se detiene y <b>eliges una de tres</b> mejoras: más cadencia, cañones divididos, disparos perforantes, parches de campo que te curan, blindaje que suma un corazón. Son lo único que el tiempo no puede quitarte: <b>el rebobinado las conserva todas</b>. Rebobina el reloj con el arma completa y esos mismos segundos golpean de otra manera.",
+    "intro.phone": "<b>En el móvil:</b> arrastra la mitad izquierda para moverte y la derecha para apuntar; los botones bajo el campo se encargan de rebobinar y de la pantalla completa. En horizontal y a pantalla completa tendrás más sitio.",
+    "mode.survive": "Sobrevivir",
+    "mode.survive.note": "Dos minutos. Splinter a falta de 1:30, Fracture a 1:00, Terminus a 0:30 — aterrizan y se quedan. Sobrevive al reloj.",
+    "mode.endless": "Sin fin",
+    "mode.endless.note": "Sin plazo: un cronómetro que sube. Los jefes aterrizan cada treinta segundos y vuelven más duros en cada ciclo. Paras cuando paran tus corazones.",
+    "mode.duel": "Duelos de jefes",
+    "mode.duel.note": "Cada jefe congela el reloj y te da treinta segundos para matarlo. Gana el duelo y el reloj vuelve a empezar en treinta: ese jefe no regresa. Matar a los tres es la única forma de ganar.",
+    "hud.clock.survive": "Sobrevive al reloj", "hud.clock.between": "Entre jefes",
+    "hud.clock.stopwatch": "Cronómetro — próximo jefe en {n}s",
+    "hud.clock.duel": "{name} — reloj detenido en {n}s",
+    "hud.killit": "mátalo — {n}s", "hud.left": "quedan {n}s",
+    "hud.xpto": "{n} xp para el nivel {lvl}", "hud.pick": "{n} elección pendiente", "hud.picks": "{n} elecciones pendientes",
+    "hud.rewind1": "{n} rebobinado · corazón en {t}", "hud.rewinds": "{n} rebobinados · corazón en {t}",
+    "hud.killed": "{n} eliminados", "hud.killedhot": "{n} eliminados · los golpes cuestan {c}",
+    "tier.0": "Calma", "tier.1": "Creciente", "tier.2": "Intensa", "tier.3": "Grave", "tier.4": "Crítica",
+    "rank.Easy": "Fácil", "rank.Medium": "Medio", "rank.Hard": "Difícil",
+    "end.win.duel": "Los tres caídos", "end.win": "Sobreviviste", "end.best": "Nuevo récord",
+    "end.ended": "Partida terminada", "end.toll": "Se lo llevaron los rebobinados",
+    "end.duelout": "Te aguantó más", "end.outlived": "Nada que matar",
+    "end.dead": "Sin corazones",
+    upg: {
+      rapid: ["Fuego rápido", "menos pausa entre disparos"],
+      twin: ["Cañón dividido", "una bala más por ráfaga"],
+      pierce: ["Perforación", "los disparos atraviesan a un monstruo"],
+      boots: ["Botas ligeras", "más rápido a pie"],
+      heavy: ["Munición pesada", "cada impacto pega más"],
+      barrel: ["Cañón largo", "el daño aguanta a distancia"],
+      patch: ["Parche de campo", "cura dos corazones al instante"],
+      plate: ["Blindaje extra", "+1 corazón máximo, lleno"],
+      siphon: ["Balas sifón", "las muertes a veces te curan"],
+      ward: ["Guardia larga", "más gracia tras un golpe"],
+      clone: ["Eco", "cada rebobinado deja una copia repitiendo lo que acabas de hacer"],
+      medic: ["Balas médicas", "los disparos dejan curación por la que puedes pasar"],
+      laser: ["Lanza láser", "un rayo perforante a lo largo de tu mira, con temporizador"],
+      bomb: ["Bombitas", "lanza una bomba que abre un hueco en el enjambre"],
+      ring: ["Disparo en anillo", "cada quinta ráfaga dispara en todas direcciones"],
+      orbit: ["Hoja orbital", "un fragmento gira a tu alrededor y corta lo que toca"],
+      stasis: ["Campo de estasis", "todo lo hostil se mueve más lento"],
+      over: ["Overclock", "las balas vuelan más rápido y más lejos"],
+      wind: ["Segundo aliento", "sobrevive a un golpe mortal, con un corazón"],
+      shock: ["Blindaje de choque", "recibir un golpe revienta todo lo cercano"],
+      cluster: ["Racimo", "tus bombas se dividen al impactar"],
+      tempo: ["Aprendizaje rápido", "los monstruos sueltan más xp — +35% cada uno"],
+      echoup: ["Eco alto", "tus ecos disparan mucho más rápido"],
+      prism: ["Lanza prisma", "el rayo se divide en tres"],
+      wide: ["Anillo amplio", "las ráfagas en anillo llegan antes"],
+      storm: ["Tormenta de hojas", "los fragmentos giran más lejos y muerden más"],
+      triage: ["Triaje", "la curación en el suelo vale dos corazones"],
+      deep: ["Congelación", "la estasis también frena lo que disparan los jefes"],
+      hollow: ["Punta hueca", "+25% de daño a monstruos"],
+      siege: ["Munición de asedio", "+25% de daño a jefes"],
+      crit: ["Precisión", "algunos disparos hacen el doble"],
+      bounce: ["Rebote", "los disparos saltan a otro monstruo"],
+      homing: ["Chips guía", "las balas se curvan hacia lo cercano"],
+      sniper: ["Tiro lejano", "el daño crece con la distancia en vez de caer"],
+      rail: ["Disparo riel", "cada octava ráfaga es un riel perforante"],
+      chill: ["Balas frías", "lo que golpeas se mueve más lento un rato"],
+      back: ["Retaguardia", "también sale un disparo por detrás"],
+      rations: ["Raciones", "un corazón de vuelta en cada nivel"],
+      trophy: ["Trofeo", "matar a un jefe te cura"],
+      adren: ["Adrenalina", "un empujón de velocidad tras recibir un golpe"],
+      magnet: ["Imán", "la curación del suelo va hacia ti"],
+      battery: ["Batería crono", "el peaje del rebobinado a veces sale gratis"],
+      aegis: ["Égida", "aterrizas de un rebobinado intocable un instante"],
+      bounty: ["Recompensa", "los jefes valen mucha más xp"],
+      napalm: ["Napalm", "las explosiones dejan fuego ardiendo en el suelo"],
+      twinl: ["Lanza doble", "la lanza dispara el doble de veces"],
+      rebar: ["Blindaje reforzado", "tu onda de choque llega más lejos y más fuerte"],
+      guardb: ["Guardia de hojas", "los fragmentos derriban las balas enemigas"],
+      dejavu: ["Déjà vu", "los ecos duran más"],
+      echobomb: ["Carga de eco", "un eco detona al desvanecerse"]
+    }
+  };
+
+  STR.fr = {
+    "tag": "Survis à l'horloge.<br>Rembobine-la, garde ta place.",
+    "hud.hearts": "Cœurs", "hud.level": "Niveau", "hud.full": "Plein écran — F",
+    "key.move": "W A S D — se déplacer", "key.aim": "souris — viser", "key.rewind": "E — rembobiner",
+    "key.pick": "1 2 3 — choisir", "key.full": "F — plein écran",
+    "btn.start": "Lancer la partie", "btn.retry": "Recommencer", "btn.mode": "Changer de mode",
+    "pick.eyebrow": "Le temps s'arrête — prends-en une", "pick.take": "Prendre", "pick.amount": "saisis un nombre",
+    "pick.foot": "Les deux que tu laisses sont perdues. Ce que tu prends survit à chaque rembobinage.",
+    "pick.upgrade": "Amélioration",
+    "set.title": "Réglages", "set.tab.audio": "Audio", "set.tab.game": "Jeu",
+    "set.tab.art": "Graphismes", "set.tab.upg": "Améliorations",
+    "set.music": "Musique", "set.effects": "Effets", "set.on": "Oui", "set.off": "Non",
+    "set.sound": "Son", "set.shake": "Secousses", "set.controls": "Commandes",
+    "set.auto": "Auto", "set.mobile": "Mobile", "set.desktop": "Ordinateur",
+    "set.startwith": "Commencer avec", "set.language": "Langue", "set.style": "Style",
+    "set.blocked": "Bloquées", "set.blockadd": "Bloquer une amélioration",
+    "set.blocknote": "Les améliorations bloquées ne sortent jamais lors d'un passage de niveau. Touche-en une pour la débloquer.",
+    "set.nothing": "Rien", "set.nothingnote": "commencer chaque partie les mains vides",
+    "art.geo": "Géométrie", "art.pixel": "Pixel art", "art.cool": "Cool", "art.balls": "Sphères",
+    "art.note": "Cool, c'est du verre néon : tout brille, laisse une traîne et pulse. Sphères, ce sont des boules éclairées avec des ombres sur un sol rugueux. Le pixel art passe aux sprites : ta figure tourne avec tes pieds pendant que l'arme suit ta visée, et Arrière-garde ajoute une seconde arme dans ton dos. Les rampants verts, les bombes, les explosions et l'xp ont aussi leurs sprites.",
+    "touch.rewind": "Rembobiner", "touch.full": "Plein",
+    "legend.you": "toi", "legend.mobs": "monstres", "legend.fire": "tir ennemi", "legend.rewind": "rembobinage",
+    "foot.1": "<b>Rembobiner, c'est annuler, pas raccourcir.</b> Reviens au-delà des dégâts que tu as faits et le boss les récupère — mais tes améliorations restent : une minute rembobinée est plus forte.",
+    "foot.2": "<b>Pendant le rembobinage :</b> la molette, le glissement ou <kbd>A</kbd>/<kbd>D</kbd> te déplacent dans le temps. <kbd>E</kbd> ou <kbd>Space</kbd> te replace à cet instant ; tout ce qui suit est effacé.",
+    "foot.3": "<b>Aucun endroit n'est sûr longtemps.</b> Courir gagne de la place, pas la fuite : les monstres apparaissent autour de toi où que tu ailles, et le boss chasse. La flèche au bord de l'écran le désigne, avec la distance.",
+    "intro.p1": "Un champ sans fin, aucun mur où se réfugier, et trois boss à l'heure dite : <b style=\"color:#4fd6e8\">Splinter</b>, puis <b style=\"color:#b98cff\">Fracture</b>, puis <b style=\"color:#ff2d55\">Terminus</b>. Entre eux l'essaim s'épaissit — traînards, puis poursuivants, cracheurs, dards, brutes et gardiens, chaque vague plus dure que la précédente. Choisis comment les recevoir.",
+    "intro.p2": "<b>Ton arme suit la souris</b> et tire toute seule ; un tir court frappe plus fort qu'un tir long, donc les dégâts sont de près. Les améliorations ajoutent lasers, bombettes, salves en anneau, tirs de soin qui laissent de la santé au sol — et <b>Écho</b>, qui laisse une copie de toi rejouant les secondes que tu viens de rembobiner.",
+    "intro.p3": "Appuie sur <b>E</b> et le temps s'arrête. Reviens en arrière autant que tu veux : l'essaim, les balles et les dégâts que tu as infligés se défont avec toi, mais <b>tu restes exactement où tu es</b>. Le rembobinage est illimité, pas gratuit : <b>un sur cinq coûte un cœur</b>, il n'en rend jamais, et il remet des secondes sur l'horloge qu'il faudra survivre à nouveau. Tu commences avec trois cœurs, un coup en coûte un, et à zéro la partie repart.",
+    "intro.p4": "<b>Les kills, c'est de l'xp.</b> Remplis la barre, le temps se fige et tu <b>prends une amélioration sur trois</b> — cadence, canons dédoublés, tirs perforants, pansements qui te soignent, blindage qui ajoute un cœur. C'est la seule chose que le temps ne reprend pas : <b>le rembobinage les garde toutes</b>. Rembobine avec une arme complète et les mêmes secondes frappent tout autrement.",
+    "intro.phone": "<b>Au téléphone :</b> glisse sur la moitié gauche pour bouger, sur la droite pour viser — les boutons sous le terrain gèrent le rembobinage et le plein écran. En paysage et en plein écran, tu as le plus de place.",
+    "mode.survive": "Survivre",
+    "mode.survive.note": "Deux minutes. Splinter à 1:30 restantes, Fracture à 1:00, Terminus à 0:30 — ils arrivent et ils restent. Survis à l'horloge.",
+    "mode.endless": "Sans fin",
+    "mode.endless.note": "Aucune limite : un chronomètre qui monte. Un boss arrive toutes les trente secondes et revient plus dur à chaque cycle. Tu t'arrêtes quand tes cœurs s'arrêtent.",
+    "mode.duel": "Duels de boss",
+    "mode.duel.note": "Chaque boss fige l'horloge et te donne trente secondes pour le tuer. Gagne le duel et l'horloge repart à trente : ce boss ne revient jamais. Tuer les trois est la seule façon de gagner.",
+    "hud.clock.survive": "Survis à l'horloge", "hud.clock.between": "Entre les boss",
+    "hud.clock.stopwatch": "Chronomètre — prochain boss dans {n}s",
+    "hud.clock.duel": "{name} — horloge figée à {n}s",
+    "hud.killit": "tue-le — {n}s", "hud.left": "{n}s restantes",
+    "hud.xpto": "{n} xp jusqu'au niveau {lvl}", "hud.pick": "{n} choix en attente", "hud.picks": "{n} choix en attente",
+    "hud.rewind1": "{n} rembobinage · cœur dans {t}", "hud.rewinds": "{n} rembobinages · cœur dans {t}",
+    "hud.killed": "{n} tués", "hud.killedhot": "{n} tués · les coups coûtent {c}",
+    "tier.0": "Calme", "tier.1": "Montante", "tier.2": "Lourde", "tier.3": "Sévère", "tier.4": "Critique",
+    "rank.Easy": "Facile", "rank.Medium": "Moyen", "rank.Hard": "Difficile",
+    "end.win.duel": "Les trois à terre", "end.win": "Tu as survécu", "end.best": "Nouveau record",
+    "end.ended": "Partie terminée", "end.toll": "Les rembobinages l'ont pris",
+    "end.duelout": "Il t'a survécu", "end.outlived": "Plus rien à tuer",
+    "end.dead": "Plus de cœurs",
+    upg: {
+      rapid: ["Tir rapide", "moins de pause entre les tirs"],
+      twin: ["Canon dédoublé", "une balle de plus par salve"],
+      pierce: ["Perforation", "les tirs traversent un monstre"],
+      boots: ["Bottes légères", "plus rapide à pied"],
+      heavy: ["Munitions lourdes", "chaque impact frappe plus fort"],
+      barrel: ["Canon long", "les dégâts tiennent à distance"],
+      patch: ["Pansement", "soigne deux cœurs, tout de suite"],
+      plate: ["Blindage", "+1 cœur maximum, rempli"],
+      siphon: ["Balles siphon", "les kills te soignent parfois"],
+      ward: ["Garde longue", "plus de répit après un coup"],
+      clone: ["Écho", "chaque rembobinage laisse une copie rejouant ce que tu viens de faire"],
+      medic: ["Tirs de soin", "les tirs laissent des soins où tu peux marcher"],
+      laser: ["Lance laser", "un rayon perforant dans ta visée, en boucle"],
+      bomb: ["Bombettes", "lance une bombe qui ouvre un trou dans l'essaim"],
+      ring: ["Tir en anneau", "une salve sur cinq part dans toutes les directions"],
+      orbit: ["Lame orbitale", "un éclat tourne autour de toi et coupe ce qu'il touche"],
+      stasis: ["Champ de stase", "tout ce qui est hostile ralentit"],
+      over: ["Overclock", "les balles volent plus vite et plus loin"],
+      wind: ["Second souffle", "survis à un coup fatal, avec un cœur"],
+      shock: ["Blindage à choc", "un coup reçu fait exploser tout ce qui t'entoure"],
+      cluster: ["Obus à fragmentation", "tes bombes se divisent à l'impact"],
+      tempo: ["Apprentissage rapide", "les monstres donnent plus d'xp — +35% chacun"],
+      echoup: ["Écho fort", "tes échos tirent bien plus vite"],
+      prism: ["Lance prisme", "le rayon se divise en trois"],
+      wide: ["Anneau large", "les salves en anneau reviennent plus tôt"],
+      storm: ["Tempête de lames", "les éclats tournent plus large et mordent plus fort"],
+      triage: ["Triage", "les soins au sol valent deux cœurs"],
+      deep: ["Grand froid", "la stase ralentit aussi les tirs des boss"],
+      hollow: ["Pointes creuses", "+25% de dégâts sur les monstres"],
+      siege: ["Munitions de siège", "+25% de dégâts sur les boss"],
+      crit: ["Précision", "certains tirs font double"],
+      bounce: ["Ricochet", "les tirs rebondissent sur un autre monstre"],
+      homing: ["Puces de guidage", "les balles s'incurvent vers le plus proche"],
+      sniper: ["Tir long", "les dégâts montent avec la distance au lieu de tomber"],
+      rail: ["Tir rail", "une salve sur huit est un rail perforant"],
+      chill: ["Balles froides", "ce que tu touches ralentit un moment"],
+      back: ["Arrière-garde", "un tir part aussi derrière toi"],
+      rations: ["Rations", "un cœur rendu à chaque niveau"],
+      trophy: ["Trophée", "tuer un boss te soigne"],
+      adren: ["Adrénaline", "une poussée de vitesse après un coup reçu"],
+      magnet: ["Aimant", "les soins au sol dérivent vers toi"],
+      battery: ["Batterie chrono", "le péage du rembobinage est parfois gratuit"],
+      aegis: ["Égide", "tu sors d'un rembobinage intouchable un instant"],
+      bounty: ["Prime", "les boss rapportent bien plus d'xp"],
+      napalm: ["Napalm", "les explosions laissent du feu au sol"],
+      twinl: ["Double lance", "la lance tire deux fois plus souvent"],
+      rebar: ["Blindage renforcé", "ton onde de choc frappe plus large et plus fort"],
+      guardb: ["Garde de lames", "les éclats abattent les balles ennemies"],
+      dejavu: ["Déjà-vu", "les échos rejouent plus longtemps"],
+      echobomb: ["Charge d'écho", "un écho explose en disparaissant"]
+    }
+  };
+
+
+  Object.assign(STR.en, {
+    "card.needs": "needs {name}",
+    "card.already": "already ×{n}",
+    "card.new": "new",
+    "card.maxed": "maxed out",
+    "card.blocked": "blocked",
+    "card.block": "block this",
+    "card.chosen": "chosen",
+    "card.startthis": "start with this",
+    "card.noblocked": "nothing blocked"
+  });
+  Object.assign(STR.da, {
+    "card.needs": "kræver {name}",
+    "card.already": "allerede ×{n}",
+    "card.new": "ny",
+    "card.maxed": "på max",
+    "card.blocked": "blokeret",
+    "card.block": "bloker denne",
+    "card.chosen": "valgt",
+    "card.startthis": "start med denne",
+    "card.noblocked": "intet blokeret"
+  });
+  Object.assign(STR.no, {
+    "card.needs": "krever {name}",
+    "card.already": "allerede ×{n}",
+    "card.new": "ny",
+    "card.maxed": "på maks",
+    "card.blocked": "blokkert",
+    "card.block": "blokker denne",
+    "card.chosen": "valgt",
+    "card.startthis": "start med denne",
+    "card.noblocked": "ingenting blokkert"
+  });
+  Object.assign(STR.sv, {
+    "card.needs": "kräver {name}",
+    "card.already": "redan ×{n}",
+    "card.new": "ny",
+    "card.maxed": "på max",
+    "card.blocked": "blockerad",
+    "card.block": "blockera denna",
+    "card.chosen": "vald",
+    "card.startthis": "börja med denna",
+    "card.noblocked": "inget blockerat"
+  });
+  Object.assign(STR.de, {
+    "card.needs": "braucht {name}",
+    "card.already": "schon ×{n}",
+    "card.new": "neu",
+    "card.maxed": "am Maximum",
+    "card.blocked": "gesperrt",
+    "card.block": "diese sperren",
+    "card.chosen": "gewählt",
+    "card.startthis": "damit starten",
+    "card.noblocked": "nichts gesperrt"
+  });
+  Object.assign(STR.es, {
+    "card.needs": "necesita {name}",
+    "card.already": "ya ×{n}",
+    "card.new": "nueva",
+    "card.maxed": "al máximo",
+    "card.blocked": "bloqueada",
+    "card.block": "bloquear esta",
+    "card.chosen": "elegida",
+    "card.startthis": "empezar con esta",
+    "card.noblocked": "nada bloqueado"
+  });
+  Object.assign(STR.fr, {
+    "card.needs": "exige {name}",
+    "card.already": "déjà ×{n}",
+    "card.new": "nouveau",
+    "card.maxed": "au maximum",
+    "card.blocked": "bloquée",
+    "card.block": "bloquer celle-ci",
+    "card.chosen": "choisie",
+    "card.startthis": "commencer avec",
+    "card.noblocked": "rien de bloqué"
+  });
+
+  STR.en["touch.land"] = "Land here";
+  STR.da["touch.land"] = "Land her";
+  STR.no["touch.land"] = "Land her";
+  STR.sv["touch.land"] = "Landa här";
+  STR.de["touch.land"] = "Hier landen";
+  STR.es["touch.land"] = "Aterrizar aquí";
+  STR.fr["touch.land"] = "Atterrir ici";
+
+  let lang = "en";
+  try { const L = localStorage.getItem("tw-lang"); if (L && LANGS.some(l => l.id === L)) lang = L; } catch {}
+
+  /* {n} style holes get filled from the vars object */
+  function tr(key, vars) {
+    const dict = STR[lang] || STR.en;
+    let out = dict[key] !== undefined ? dict[key] : STR.en[key];
+    if (out === undefined) return key;
+    if (vars) for (const k in vars) out = out.split("{" + k + "}").join(vars[k]);
+    return out;
+  }
+
+  function applyLang() {
+    document.querySelectorAll("[data-t]").forEach(e => { e.innerHTML = tr(e.dataset.t); });
+    document.querySelectorAll("[data-tph]").forEach(e => { e.placeholder = tr(e.dataset.tph); });
+    const words = (STR[lang] && STR[lang].upg) || {};
+    for (const u of UPGRADES) {
+      if (!u.en) u.en = { name: u.name, note: u.note };
+      const w = words[u.id];
+      u.name = w ? w[0] : u.en.name;
+      u.note = w ? w[1] : u.en.note;
+    }
+    TIERS.forEach((tier, i) => {
+      if (tier.en === undefined) tier.en = tier.name;
+      tier.name = tr("tier." + i);
+    });
+    BOSSES.forEach(b => {
+      if (b.enRank === undefined) b.enRank = b.rank;
+      b.rank = (STR[lang] || {})["rank." + b.enRank] || b.enRank;
+    });
+    try { localStorage.setItem("tw-lang", lang); } catch {}
+    renderUpgradeChips();
+    renderBans();
+    syncMuteBtn();
+    syncHud();
+  }
 
   const keys = new Set();
   const sticks = new Map();               // active touch sticks, by pointer id
@@ -1980,8 +2780,8 @@
     return {
       name: u.name,
       note: u.note,
-      tag: !hasReq(u) ? `needs ${reqOf(u).name}`
-         : maxed(u) ? "maxed out" : have ? `already ×${have}` : "new",
+      tag: !hasReq(u) ? tr("card.needs", { name: reqOf(u).name })
+         : maxed(u) ? tr("card.maxed") : have ? tr("card.already", { n: have }) : tr("card.new"),
       disabled: maxed(u) || !hasReq(u) || (u.avail && !u.avail()),
       run: () => grant(u, 1)
     };
@@ -2083,7 +2883,7 @@
     document.body.dataset.state = s;
     const tb = document.getElementById("tbRewind");
     if (tb) {
-      tb.textContent = s === "scrub" ? "Land here" : "Rewind";
+      tb.textContent = tr(s === "scrub" ? "touch.land" : "touch.rewind");
       tb.classList.toggle("armed", s === "scrub");
     }
   }
@@ -3934,25 +4734,25 @@
     if (game.duel) {
       const kill = Math.max(0, game.duel.timer / TPS);
       el.clockFill.style.transform = `scaleX(${kill / 30})`;   // duel timer is always 30
-      el.clockLead.textContent = `kill it — ${kill.toFixed(1)}s`;
+      el.clockLead.textContent = tr("hud.killit", { n: kill.toFixed(1) });
       el.clockLead.classList.add("duelclock");
-      el.clockLabel.textContent = `${BOSSES[game.duel.tier].name} — clock held at ${left.toFixed(1)}s`;
+      el.clockLabel.textContent = tr("hud.clock.duel", { name: BOSSES[game.duel.tier].name, n: left.toFixed(1) });
     } else if (game.mode === "endless") {
       const elapsed = game.tick / TPS;
       const next = (game.bossWave + 1) * (ENDLESS_BOSS_EVERY / TPS) - elapsed;
       el.clockFill.style.transform = `scaleX(${1 - clamp(next / (ENDLESS_BOSS_EVERY / TPS), 0, 1)})`;
       el.clockLead.textContent = mmss(elapsed);
       el.clockLead.classList.remove("duelclock");
-      el.clockLabel.textContent = `Stopwatch — next boss in ${Math.max(0, next).toFixed(0)}s`;
+      el.clockLabel.textContent = tr("hud.clock.stopwatch", { n: Math.max(0, next).toFixed(0) });
     } else {
       el.clockFill.style.transform = `scaleX(${1 - left / loopSeconds()})`;   // fills up as you survive
-      el.clockLead.textContent = left.toFixed(1) + "s left";
+      el.clockLead.textContent = tr("hud.left", { n: left.toFixed(1) });
       el.clockLead.classList.remove("duelclock");
-      el.clockLabel.textContent = game.mode === "duel" ? "Between bosses" : "Survive the clock";
+      el.clockLabel.textContent = tr(game.mode === "duel" ? "hud.clock.between" : "hud.clock.survive");
     }
     const ti = tierIndex(game.tick);
     el.threat.dataset.tier = ti;
-    el.threat.textContent = TIERS[ti].name;
+    el.threat.textContent = tr("tier." + ti);
     if (player.max > HEART_PIPS) {
       // too many to draw — one heart and a count
       if (el.hearts.dataset.mode !== "count") {
@@ -3984,14 +4784,14 @@
     el.xpVal.textContent = `${game.xp} / ${need} xp`;
     el.xpFill.style.transform = `scaleX(${clamp(game.xp / need, 0, 1)})`;
     el.next.textContent = game.pending > 0
-      ? `${game.pending} pick${game.pending > 1 ? "s" : ""} waiting`
-      : `${Math.max(0, need - game.xp)} xp to level ${game.level + 1}`;
+      ? tr(game.pending > 1 ? "hud.picks" : "hud.pick", { n: game.pending })
+      : tr("hud.xpto", { n: Math.max(0, need - game.xp), lvl: game.level + 1 });
     const toGo = REWIND_TOLL - (game.rewinds % REWIND_TOLL);
-    el.rewinds.textContent = `${game.rewinds} rewind${game.rewinds === 1 ? "" : "s"} · heart in ${toGo}`;
+    el.rewinds.textContent = tr(game.rewinds === 1 ? "hud.rewind1" : "hud.rewinds", { n: game.rewinds, t: toGo });
     const cost = hitCost();
     el.kills.textContent = cost > 1
-      ? `${game.kills} killed · hits cost ${cost}`
-      : `${game.kills} killed`;
+      ? tr("hud.killedhot", { n: game.kills, c: cost })
+      : tr("hud.killed", { n: game.kills });
     el.kills.classList.toggle("hot", cost > 1);
   }
 
@@ -4016,11 +4816,11 @@
     const downed = BOSSES.filter((d, t) => (game.spawned & (1 << t)) && !bosses.some(b => b.tier === t));
     const rw = `${game.rewinds} rewind${game.rewinds === 1 ? "" : "s"}`;
     if (reason === "win" && game.mode === "duel") {
-      endTitle.textContent = "All three down";
+      endTitle.textContent = tr("end.win.duel");
       endText.innerHTML = `Splinter, Fracture and Terminus, each inside its own thirty seconds — through <b>${rw}</b> ` +
         `and <b>${game.kills}</b> monsters, finishing with <b>${player.hp}</b> of <b>${player.max}</b> hearts.`;
     } else if (reason === "win") {
-      endTitle.textContent = "You survived";
+      endTitle.textContent = tr("end.win");
       endText.innerHTML = `Two full minutes, <b>${rw}</b>, <b>${game.kills}</b> monsters and ` +
         (downed.length
           ? `<b>${downed.map(d => d.name).join(", ")}</b> put down`
@@ -4032,26 +4832,26 @@
       try { best = Number(localStorage.getItem("tw-best-endless")) || 0; } catch {}
       const record = t > best;
       if (record) { try { localStorage.setItem("tw-best-endless", String(Math.floor(t))); } catch {} }
-      endTitle.textContent = record ? "New best" : "Run ended";
+      endTitle.textContent = tr(record ? "end.best" : "end.ended");
       endText.innerHTML = `You lasted <b>${mmss(t)}</b> through <b>${game.bossWave}</b> boss wave${game.bossWave === 1 ? "" : "s"}, ` +
         `<b>${game.kills}</b> monsters and <b>${game.level}</b> levels` +
         (record ? `. That's your longest yet.` : `. Your best is <b>${mmss(best)}</b>.`);
     } else if (reason === "toll") {
-      endTitle.textContent = "The rewinds took it";
+      endTitle.textContent = tr("end.toll");
       endText.innerHTML = `Rewind number <b>${game.rewinds}</b> cost the last heart. Every fifth one bills you — ` +
         `scrub back for the fights that matter, not for every scratch.`;
     } else if (reason === "duelout") {
       const def = BOSSES[game.duel ? game.duel.tier : 0];
       const live = bosses.find(b => game.duel && b.tier === game.duel.tier);
-      endTitle.textContent = "It outlasted you";
+      endTitle.textContent = tr("end.duelout");
       endText.innerHTML = `<b style="color:${def.color}">${def.name}</b> survived its thirty seconds` +
         (live ? ` with <b>${Math.ceil(live.hp)}</b> of <b>${live.max || def.hp}</b> left` : "") +
         `. In boss duels the only way out is killing it — rewind into the fight and try the kill again with more gun.`;
     } else if (reason === "outlived") {
-      endTitle.textContent = "Nothing left to kill";
+      endTitle.textContent = tr("end.outlived");
       endText.innerHTML = `The clock emptied with bosses still unspawned. Boss duels are won by killing all three, so this run ends flat.`;
     } else {
-      endTitle.textContent = "Out of hearts";
+      endTitle.textContent = tr("end.dead");
       const alive = bosses.map(b => b.def.rank.toLowerCase());
       const togo = game.mode === "duel"
         ? (game.duel
@@ -4150,6 +4950,7 @@
       chip.addEventListener("click", () => { banned.delete(id); saveBans(); renderBans(); });
       banList.appendChild(chip);
     }
+    banList.dataset.empty = tr("card.noblocked");
     banCount.textContent = `${banned.size}/${BAN_MAX}`;
     document.getElementById("banAdd").disabled = banned.size >= BAN_MAX;
   }
@@ -4158,7 +4959,7 @@
     const cards = UPGRADES.map(u => ({
       name: u.name,
       note: u.note,
-      tag: banned.has(u.id) ? "blocked" : "block this",
+      tag: tr(banned.has(u.id) ? "card.blocked" : "card.block"),
       disabled: banned.has(u.id) || banned.size >= BAN_MAX,
       run: () => { banned.add(u.id); saveBans(); renderBans(); }
     }));
@@ -4211,12 +5012,24 @@
     if (su) startUpgrade = su === "none" ? null : su;
   } catch {}
 
+  /* the language row */
+  const setLangSel = document.getElementById("setLang");
+  LANGS.forEach(l => {
+    const o = document.createElement("option");
+    o.value = l.id; o.textContent = l.name;
+    setLangSel.appendChild(o);
+  });
+  setLangSel.value = lang;
+  setLangSel.addEventListener("change", () => { lang = setLangSel.value; applyLang(); });
+  setLangSel.addEventListener("keydown", e => e.stopPropagation());
+  applyLang();
+
   function syncMuteBtn() {
     const off = SND.muted();
     btnMute.classList.toggle("silent", off);      // the gear stops glowing when sound is off
     btnMute.title = off ? "Settings — sound is off" : "Settings";
     btnMute.setAttribute("aria-expanded", String(!setPanel.hidden));
-    setMute.textContent = off ? "Off" : "On";
+    setMute.textContent = tr(off ? "set.off" : "set.on");
     setMute.classList.toggle("on", !off);
     volMusic.value = Math.round(SND.music() * 100);
     volSfx.value = Math.round(SND.sfx() * 100);
@@ -4226,10 +5039,10 @@
     artPixBtn.classList.toggle("on", artMode === "pixel");
     artCoolBtn.classList.toggle("on", artMode === "cool");
     artRealBtn.classList.toggle("on", artMode === "real");
-    setShake.textContent = shakeOn ? "On" : "Off";
+    setShake.textContent = tr(shakeOn ? "set.on" : "set.off");
     setShake.classList.toggle("on", shakeOn);
     const su = startUpgrade && UPGRADES.find(u => u.id === startUpgrade);
-    setEchoBtn.textContent = su ? su.name : "Nothing";
+    setEchoBtn.textContent = su ? su.name : tr("set.nothing");
     setEchoBtn.classList.toggle("on", !!su);
     for (const [m, btn] of Object.entries(ctlBtns)) btn.classList.toggle("on", controlMode === m);
     applyControlMode();
@@ -4283,10 +5096,10 @@
     const cards = UPGRADES.filter(u => !u.req && !banned.has(u.id)).map(u => ({   // gated ones need a parent first
       name: u.name,
       note: u.note,
-      tag: startUpgrade === u.id ? "chosen" : "start with this",
+      tag: tr(startUpgrade === u.id ? "card.chosen" : "card.startthis"),
       run: () => choose(u.id)
     }));
-    cards.unshift({ name: "Nothing", note: "open every run empty-handed", tag: startUpgrade ? "" : "chosen", run: () => choose(null) });
+    cards.unshift({ name: tr("set.nothing"), note: tr("set.nothingnote"), tag: startUpgrade ? "" : tr("card.chosen"), run: () => choose(null) });
     showCards(cards, "Settings", "Start every run with");
   });
   volMusic.addEventListener("input", () => { SND.unlock(); SND.setMusic(volMusic.value / 100); volMusicVal.textContent = volMusic.value; });
