@@ -321,7 +321,7 @@
   .banchip:hover{background:rgba(255,61,129,.32)}
   .banchip::after{content:" ×";opacity:.7}
 
-  .set-row{display:flex;align-items:center;gap:9px;font-size:.78rem;color:var(--ink)}
+  .set-row{display:flex;flex-wrap:wrap;align-items:center;gap:9px;font-size:.78rem;color:var(--ink)}
   .set-row>span{width:74px;flex:none;color:var(--muted)}
   .set-row b{
     font-family:"Azeret Mono",ui-monospace,monospace;font-size:.68rem;color:var(--lilac);
@@ -340,7 +340,8 @@
     width:14px;height:14px;border-radius:50%;background:var(--cyan);cursor:pointer;border:none;
   }
   .tog{
-    flex:1;background:transparent;color:var(--muted);border:1px solid var(--line);
+    /* four style buttons wrap onto a second line rather than run off the panel */
+    flex:1 1 84px;background:transparent;color:var(--muted);border:1px solid var(--line);
     padding:4px 0;font-size:.68rem;letter-spacing:.12em;box-shadow:none;border-radius:5px;
   }
   .tog:hover{transform:none;border-color:var(--lilac)}
