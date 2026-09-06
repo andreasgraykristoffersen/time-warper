@@ -1449,7 +1449,7 @@
                 pick: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] },
       chase:  { img: "spr_chase",  cols: 1, rows: 2 },
       shot:   { img: "spr_shot",   cols: 2, rows: 3, pick: [0, 1, 2, 3, 4] },
-      spit:   { img: "spr_spit",   cols: 1, rows: 1 },
+      bossN:  { img: "spr_spit",   cols: 1, rows: 1 },
       dart:   { img: "spr_dart",   cols: 3, rows: 3, pick: [0,1,2,3,4,5,6] },
       weaver: { img: "spr_weaver", cols: 3, rows: 3, pick: [0,1,2,3,4,5,6] },
       redguy: { img: "spr_titan",  cols: 3, rows: 3, pick: [0,1,2,3,4,5,6,7] },
@@ -3294,12 +3294,10 @@
       const fps = k === 0 ? CRAWL_FPS : k === 1 ? CHASE_FPS
                 : (k === 5 || k === 6) ? DART_FPS : k === 4 ? RED_FPS
                 : k === 8 ? BLOB_FPS : MOB_FPS;
-      const sheet = k === 0 ? "crawl" : k === 1 ? "chase" : k === 2 ? "spit"
+      const sheet = k === 0 ? "crawl" : k === 1 ? "chase"
                   : k === 5 ? "dart" : k === 6 ? "weaver" : k === 4 ? "redguy"
                   : k === 8 ? "blob" : "mob" + k;
-      // one-frame sprites get a slow breath so they are not dead still
-      const breath = k === 2 ? 1 + Math.sin(game.lived * 0.18 + x) * 0.08 : 1;
-      PIX.draw(sheet, (game.lived / (TPS / fps)) | 0, x, y, def.r * 1.7 * breath);
+      PIX.draw(sheet, (game.lived / (TPS / fps)) | 0, x, y, def.r * 1.7);
       if (hp < max) {
         const w = def.r * 2;
         ctx.fillStyle = "rgba(15,7,24,0.9)";
@@ -3339,9 +3337,11 @@
     const def = BOSSES[tier];
     const R = rad || def.r;
     if (artMode === "pixel") {
-      const bossSheet = tier === 0 ? "bossA" : "boss" + tier;
+      const bossSheet = tier === 0 ? "bossA" : tier === 4 ? "bossN" : "boss" + tier;
       const bossFps = tier === 0 ? BOSS_ANIM_FPS : BOSS_FPS;
-      PIX.draw(bossSheet, (game.lived / (TPS / bossFps)) | 0, x, y, R * 1.9);
+      // a one-frame boss breathes instead of animating
+      const breath = tier === 4 ? 1 + Math.sin(game.lived * 0.12) * 0.07 : 1;
+      PIX.draw(bossSheet, (game.lived / (TPS / bossFps)) | 0, x, y, R * 1.9 * breath);
       const frac2 = hp / (max || def.hp);
       if (frac2 < 1) {                                  // the health ring stays
         ctx.strokeStyle = "rgba(15,7,24,0.85)"; ctx.lineWidth = 4;
