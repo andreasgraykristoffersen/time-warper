@@ -767,7 +767,8 @@
   const QTY_MAX = 999999999;
   const REWIND_TOLL = 5;                // rewinds per heart
   const HEART_MAX = 999;                // the console can hand out this many
-  const CRAWL_FPS = 12;                 // green crawler: 17 frames, so it needs a faster tick
+  const CRAWL_FPS = 6;                  // green crawler animation speed
+  const BLOB_FPS = 12;                  // the 17-frame green blob
   const CHASE_FPS = 12;                 // teal chaser animation speed
   const DART_FPS = 24;                  // the dart flickers twice as fast again
   const TITAN_FPS = 15;                 // the red bruiser
@@ -1443,8 +1444,9 @@
     const SHEETS = {
       player: { img: "spr_player", cols: 1, rows: 1 },
       gun:    { img: "spr_gun",    cols: 1, rows: 1 },
-      crawl:  { img: "spr_crawl2", cols: 4, rows: 5,
-                 pick: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] },
+      crawl:  { img: "spr_crawl",  cols: 1, rows: 2 },
+      blob:   { img: "spr_crawl2", cols: 4, rows: 5,
+                pick: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] },
       chase:  { img: "spr_chase",  cols: 1, rows: 2 },
       shot:   { img: "spr_shot",   cols: 2, rows: 3, pick: [0, 1, 2, 3, 4] },
       spit:   { img: "spr_spit",   cols: 1, rows: 1 },
@@ -3290,9 +3292,11 @@
     const def = KINDS[k];
     if (artMode === "pixel") {
       const fps = k === 0 ? CRAWL_FPS : k === 1 ? CHASE_FPS
-                : (k === 5 || k === 6) ? DART_FPS : k === 15 ? TITAN_FPS : MOB_FPS;
+                : (k === 5 || k === 6) ? DART_FPS : k === 15 ? TITAN_FPS
+                : k === 8 ? BLOB_FPS : MOB_FPS;
       const sheet = k === 0 ? "crawl" : k === 1 ? "chase" : k === 2 ? "spit"
-                  : k === 5 ? "dart" : k === 6 ? "weaver" : k === 15 ? "titan" : "mob" + k;
+                  : k === 5 ? "dart" : k === 6 ? "weaver" : k === 15 ? "titan"
+                  : k === 8 ? "blob" : "mob" + k;
       // one-frame sprites get a slow breath so they are not dead still
       const breath = k === 2 ? 1 + Math.sin(game.lived * 0.18 + x) * 0.08 : 1;
       PIX.draw(sheet, (game.lived / (TPS / fps)) | 0, x, y, def.r * 1.7 * breath);
