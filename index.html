@@ -771,7 +771,7 @@
   const BLOB_FPS = 12;                  // the 17-frame green blob
   const CHASE_FPS = 12;                 // teal chaser animation speed
   const DART_FPS = 24;                  // the dart flickers twice as fast again
-  const TITAN_FPS = 15;                 // the red bruiser
+  const RED_FPS = 15;                   // the red bomber
   const BOSS_FPS = 4;                   // painted bosses breathe slowly
   const BOSS_ANIM_FPS = 10;             // drawn boss sheets run at their own pace
   const MOB_FPS = 8;                    // the rest of the swarm
@@ -1452,7 +1452,7 @@
       spit:   { img: "spr_spit",   cols: 1, rows: 1 },
       dart:   { img: "spr_dart",   cols: 3, rows: 3, pick: [0,1,2,3,4,5,6] },
       weaver: { img: "spr_weaver", cols: 3, rows: 3, pick: [0,1,2,3,4,5,6] },
-      titan:  { img: "spr_titan",  cols: 3, rows: 3, pick: [0,1,2,3,4,5,6,7] },
+      redguy: { img: "spr_titan",  cols: 3, rows: 3, pick: [0,1,2,3,4,5,6,7] },
       bossA:  { img: "spr_boss0", cols: 3, rows: 4, pick: [0,1,2,3,4,5,6,7,8,9,10] },
       flakA:  { img: "spr_flak0", cols: 3, rows: 3 },
       heartOn:  { img: "spr_heart",    cols: 1, rows: 1 },
@@ -3292,10 +3292,10 @@
     const def = KINDS[k];
     if (artMode === "pixel") {
       const fps = k === 0 ? CRAWL_FPS : k === 1 ? CHASE_FPS
-                : (k === 5 || k === 6) ? DART_FPS : k === 15 ? TITAN_FPS
+                : (k === 5 || k === 6) ? DART_FPS : k === 12 ? RED_FPS
                 : k === 8 ? BLOB_FPS : MOB_FPS;
       const sheet = k === 0 ? "crawl" : k === 1 ? "chase" : k === 2 ? "spit"
-                  : k === 5 ? "dart" : k === 6 ? "weaver" : k === 15 ? "titan"
+                  : k === 5 ? "dart" : k === 6 ? "weaver" : k === 12 ? "redguy"
                   : k === 8 ? "blob" : "mob" + k;
       // one-frame sprites get a slow breath so they are not dead still
       const breath = k === 2 ? 1 + Math.sin(game.lived * 0.18 + x) * 0.08 : 1;
