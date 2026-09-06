@@ -603,6 +603,14 @@
         <button type="button" class="tog" id="ctlDesktop" data-t="set.desktop">Desktop</button>
       </div>
       <div class="set-row">
+        <span data-t="set.difficulty">Difficulty</span>
+        <button type="button" class="tog" id="difEasy" data-t="diff.easy">Easy</button>
+        <button type="button" class="tog" id="difNormal" data-t="diff.normal">Normal</button>
+        <button type="button" class="tog" id="difHard" data-t="diff.hard">Hard</button>
+        <button type="button" class="tog" id="difBrutal" data-t="diff.brutal">Brutal</button>
+      </div>
+      <div class="set-note" data-t="diff.note">Difficulty sets the hearts you start with and how thick and tough the swarm gets. It takes hold on your next run.</div>
+      <div class="set-row">
         <span data-t="set.language">Language</span>
         <select class="tog langsel" id="setLang" aria-label="Language"></select>
       </div>
@@ -692,6 +700,20 @@
   const SPEED = 3.35;
   const SNAP_EVERY = 2;                 // one rewind frame per 2 ticks
   const START_HEARTS = 3;
+
+  /* difficulty: hearts you open with, how tough the swarm is, how fast it comes */
+  const DIFFS = [
+    { id: "easy",   hearts: 5, hp: 0.7,  rate: 1.35, cap: 0.8 },
+    { id: "normal", hearts: 3, hp: 1,    rate: 1,    cap: 1 },
+    { id: "hard",   hearts: 2, hp: 1.45, rate: 0.78, cap: 1.2 },
+    { id: "brutal", hearts: 1, hp: 2,    rate: 0.6,  cap: 1.45 }
+  ];
+  let diff = "normal";
+  try {
+    const d = localStorage.getItem("tw-diff");
+    if (d && DIFFS.some(x => x.id === d)) diff = d;
+  } catch {}
+  const DIF = () => DIFFS.find(d => d.id === diff) || DIFFS[1];
   const IFRAMES = 70;                   // mercy ticks after a hit
 
   const ENDLESS_BOSS_EVERY = 30 * TPS;   // a boss lands every half minute, forever
@@ -700,7 +722,8 @@
   const loopSeconds = () => (game.mode === "duel" ? 30 : 120);
   // endless has no deadline — the tier ramp just keeps climbing
   const loopTicks = () => (game.mode === "endless" ? ENDLESS_RAMP : loopSeconds() * TPS);
-  const enemyCap = () => (game.mode === "duel" ? 16 : game.mode === "endless" ? 34 : 30);
+  const enemyCap = () =>
+    Math.round((game.mode === "duel" ? 16 : game.mode === "endless" ? 34 : 30) * DIF().cap);
 
   // waves are read as a fraction of the run, so both modes escalate the same way
   const TIERS = [
@@ -1491,6 +1514,64 @@
   STR.de["touch.land"] = "Hier landen";
   STR.es["touch.land"] = "Aterrizar aquí";
   STR.fr["touch.land"] = "Atterrir ici";
+
+
+  Object.assign(STR.en, {
+    "set.difficulty": "Difficulty",
+    "diff.easy": "Easy",
+    "diff.normal": "Normal",
+    "diff.hard": "Hard",
+    "diff.brutal": "Brutal",
+    "diff.note": "Difficulty sets the hearts you start with and how thick and tough the swarm gets. It takes hold on your next run."
+  });
+  Object.assign(STR.da, {
+    "set.difficulty": "Sværhedsgrad",
+    "diff.easy": "Let",
+    "diff.normal": "Normal",
+    "diff.hard": "Svær",
+    "diff.brutal": "Brutal",
+    "diff.note": "Sværhedsgraden bestemmer, hvor mange hjerter du starter med, og hvor tæt og hård sværmen bliver. Den slår igennem i næste runde."
+  });
+  Object.assign(STR.no, {
+    "set.difficulty": "Vanskelighet",
+    "diff.easy": "Lett",
+    "diff.normal": "Normal",
+    "diff.hard": "Vanskelig",
+    "diff.brutal": "Brutal",
+    "diff.note": "Vanskelighetsgraden bestemmer hvor mange hjerter du starter med, og hvor tett og hard svermen blir. Den slår inn i neste runde."
+  });
+  Object.assign(STR.sv, {
+    "set.difficulty": "Svårighet",
+    "diff.easy": "Lätt",
+    "diff.normal": "Normal",
+    "diff.hard": "Svår",
+    "diff.brutal": "Brutal",
+    "diff.note": "Svårigheten bestämmer hur många hjärtan du börjar med och hur tät och tuff svärmen blir. Den gäller från nästa omgång."
+  });
+  Object.assign(STR.de, {
+    "set.difficulty": "Schwierigkeit",
+    "diff.easy": "Leicht",
+    "diff.normal": "Normal",
+    "diff.hard": "Schwer",
+    "diff.brutal": "Brutal",
+    "diff.note": "Die Schwierigkeit bestimmt, mit wie vielen Herzen du startest und wie dicht und zäh der Schwarm wird. Sie greift ab dem nächsten Lauf."
+  });
+  Object.assign(STR.es, {
+    "set.difficulty": "Dificultad",
+    "diff.easy": "Fácil",
+    "diff.normal": "Normal",
+    "diff.hard": "Difícil",
+    "diff.brutal": "Brutal",
+    "diff.note": "La dificultad fija los corazones con los que empiezas y lo denso y duro que se vuelve el enjambre. Se aplica en la próxima partida."
+  });
+  Object.assign(STR.fr, {
+    "set.difficulty": "Difficulté",
+    "diff.easy": "Facile",
+    "diff.normal": "Normal",
+    "diff.hard": "Difficile",
+    "diff.brutal": "Brutal",
+    "diff.note": "La difficulté fixe les cœurs de départ et la densité et la dureté de l'essaim. Elle s'applique à la partie suivante."
+  });
 
   let lang = "en";
   try { const L = localStorage.getItem("tw-lang"); if (L && LANGS.some(l => l.id === L)) lang = L; } catch {}
@@ -2862,7 +2943,7 @@
     stats.echoLong = 0; stats.echoBomb = 0; stats.bossXp = 0; stats.guard = 0;
     fires = []; player.rush = 0; player.fire = 0; player.fireRoll = 0; player.frozen = 0;
     clones = []; orbs = []; bombs = []; beams = []; xpDrops = []; volley = 0; pathLog.length = 0;
-    player.hp = START_HEARTS; player.max = START_HEARTS; player.inv = 0; player.flash = 0;
+    player.hp = DIF().hearts; player.max = DIF().hearts; player.inv = 0; player.flash = 0;
     renderUpgradeChips();
     bosses = []; game.spawned = 0; game.duel = null; game.bossWave = 0;
     player.x = 0; player.y = 0;
@@ -3331,7 +3412,8 @@
 
   function spawnWave() {
     const tier = TIERS[tierIndex(game.tick)];
-    if (game.tick % tier.every !== 0 || mobs.length >= enemyCap()) return;
+    const every = Math.max(8, Math.round(tier.every * DIF().rate));
+    if (game.tick % every !== 0 || mobs.length >= enemyCap()) return;
     for (let i = 0; i < tier.count; i++) spawnMob(pick(tier.kinds));
   }
 
@@ -3343,7 +3425,7 @@
     const ramp = game.mode === "endless"
       ? game.tick / loopTicks()
       : clamp(game.tick / loopTicks(), 0, 1);
-    const hp = Math.round(def.hp * (1 + ramp * 1.4));
+    const hp = Math.round(def.hp * (1 + ramp * 1.4) * DIF().hp);
     mobs.push({
       k, x: player.x + Math.cos(a) * d, y: player.y + Math.sin(a) * d,
       hp, max: hp, t: (Math.random() * 90) | 0
@@ -3457,6 +3539,7 @@
 
   function placeBoss(tier, hp) {
     const def = BOSSES[tier];
+    hp = Math.round(hp * DIF().hp);
     const a = Math.random() * Math.PI * 2;
     const b = {
       tier, def, hp, max: hp, t: 0,
@@ -5012,6 +5095,21 @@
     if (su) startUpgrade = su === "none" ? null : su;
   } catch {}
 
+  /* the difficulty row */
+  const difBtns = {
+    easy: document.getElementById("difEasy"),
+    normal: document.getElementById("difNormal"),
+    hard: document.getElementById("difHard"),
+    brutal: document.getElementById("difBrutal")
+  };
+  for (const [id, btn] of Object.entries(difBtns)) {
+    btn.addEventListener("click", () => {
+      diff = id;
+      try { localStorage.setItem("tw-diff", diff); } catch {}
+      syncMuteBtn();
+    });
+  }
+
   /* the language row */
   const setLangSel = document.getElementById("setLang");
   LANGS.forEach(l => {
@@ -5040,6 +5138,7 @@
     artCoolBtn.classList.toggle("on", artMode === "cool");
     artRealBtn.classList.toggle("on", artMode === "real");
     setShake.textContent = tr(shakeOn ? "set.on" : "set.off");
+    for (const [id, btn] of Object.entries(difBtns)) btn.classList.toggle("on", diff === id);
     setShake.classList.toggle("on", shakeOn);
     const su = startUpgrade && UPGRADES.find(u => u.id === startUpgrade);
     setEchoBtn.textContent = su ? su.name : tr("set.nothing");
