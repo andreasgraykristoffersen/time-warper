@@ -162,6 +162,12 @@
   @media (max-width:560px){ .console .hint{display:none} }
 
   .modes{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .best{
+    display:block;font-style:normal;font-family:"Azeret Mono",ui-monospace,monospace;
+    font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);
+    margin-bottom:2px;min-height:.8rem;
+  }
+  .best:empty{min-height:0}
   .mode{
     all:unset;cursor:pointer;width:230px;padding:11px 14px;border-radius:8px;text-align:left;
     background:linear-gradient(180deg,var(--panel-2),var(--panel));
@@ -473,26 +479,32 @@
       <p data-t="intro.p4"><b>Kills are xp.</b> Fill the bar, time holds, and you <b>pick one of three</b> upgrades — faster fire, split barrels, piercing rounds, field patches that heal you, plating that adds a heart. They're the one thing time can't take back: <b>rewinding keeps every one</b>. Wind the clock back with a fully built gun and the same seconds hit very differently.</p>
       <div class="modes" id="modes">
         <button type="button" class="mode on" data-mode="survive">
+          <i class="best" data-best="survive"></i>
           <b data-t="mode.survive">Survive</b><span data-t="mode.survive.note">Two minutes. Splinter at 1:30 left, Fracture at 1:00, Terminus at 0:30 — they land and they stay. Outlive the clock.</span>
         </button>
         <button type="button" class="mode" data-mode="endless">
+          <i class="best" data-best="endless"></i>
           <b data-t="mode.endless">Endless</b><span data-t="mode.endless.note">No deadline — a stopwatch counting up. Bosses land every thirty seconds and come back harder each cycle. You stop when your hearts do.</span>
         </button>
         <button type="button" class="mode" data-mode="rush">
+          <i class="best" data-best="rush"></i>
           <b data-t="mode.rush">Boss rush</b><span data-t="mode.rush.note">Bosses only, one after another, all seven of them. No swarm, no clock — the next one lands three seconds after the last one falls. Kill them all to win.</span>
         </button>
         <button type="button" class="mode" data-mode="horde">
+          <i class="best" data-best="horde"></i>
           <b data-t="mode.horde">Horde</b><span data-t="mode.horde.note">Two minutes, no bosses at all — just the swarm, twice as thick and twice as fast. Outlive the clock.</span>
         </button>
         <button type="button" class="mode" data-mode="iron">
+          <i class="best" data-best="iron"></i>
           <b data-t="mode.iron">Iron run</b><span data-t="mode.iron.note">Survive two minutes with the three bosses, but the rewind is locked. One line through time, no undo.</span>
         </button>
         <button type="button" class="mode" data-mode="duel">
+          <i class="best" data-best="duel"></i>
         <b data-t="mode.duel">Boss duels</b><span data-t="mode.duel.note">Each boss freezes the clock dead and gives you thirty seconds to kill it. Win the duel and the clock restarts at thirty — that boss never comes back. Killing all three is the only way to win.</span>
         </button>
       </div>
       <div class="keys">
-        <kbd data-t="key.move">W A S D — move</kbd><kbd data-t="key.aim">mouse — aim</kbd><kbd data-t="key.rewind">E — rewind</kbd><kbd data-t="key.pick">1 2 3 — pick</kbd><kbd data-t="key.full">F — fullscreen</kbd>
+        <kbd data-t="key.move">W A S D — move</kbd><kbd data-t="key.aim">mouse — aim</kbd><kbd data-t="key.rewind">E — rewind</kbd><kbd data-t="key.pick">1 2 3 — pick</kbd><kbd data-t="key.pause">P — pause</kbd><kbd data-t="key.full">F — fullscreen</kbd>
       </div>
       <p style="font-size:.82rem" data-t="intro.phone"><b>On a phone:</b> drag the left half to move, the right half to aim — the buttons under the field handle rewinding and fullscreen. Landscape plus fullscreen gives you the most room.</p>
       <button id="btnStart" data-t="btn.start">Start the run</button>
@@ -513,6 +525,12 @@
         <span id="qtyNote"></span>
       </form>
       <p class="pick-foot" data-t="pick.foot">The two you leave are gone. What you take survives every rewind.</p>
+    </div>
+
+    <div class="overlay" id="ovPause" hidden>
+      <h2 data-t="pause.title">Paused</h2>
+      <p data-t="pause.note">The clock, the swarm and everything in the air is holding. Nothing moves until you come back.</p>
+      <button id="btnResume" data-t="pause.resume">Back in</button>
     </div>
 
     <div class="overlay" id="ovEnd" hidden>
@@ -1691,6 +1709,62 @@
     "mode.iron.note": "Survis deux minutes avec les trois boss, mais le rembobinage est verrouillé. Une seule ligne dans le temps, sans annuler."
   });
 
+
+  Object.assign(STR.en, {
+    "best.long": "best {t}",
+    "best.fast": "cleared {t}"
+  });
+  Object.assign(STR.da, {
+    "best.long": "bedste {t}",
+    "best.fast": "klaret på {t}",
+    "pause.title": "Pause",
+    "pause.note": "Uret, sværmen og alt i luften holder stille. Intet rører sig, før du er tilbage.",
+    "pause.resume": "Tilbage i spillet"
+  });
+  Object.assign(STR.no, {
+    "best.long": "beste {t}",
+    "best.fast": "klart på {t}",
+    "pause.title": "Pause",
+    "pause.note": "Klokka, svermen og alt i lufta står stille. Ingenting rører seg før du er tilbake.",
+    "pause.resume": "Tilbake i spillet"
+  });
+  Object.assign(STR.sv, {
+    "best.long": "bästa {t}",
+    "best.fast": "klarat på {t}",
+    "pause.title": "Paus",
+    "pause.note": "Klockan, svärmen och allt i luften står stilla. Ingenting rör sig förrän du är tillbaka.",
+    "pause.resume": "Tillbaka in"
+  });
+  Object.assign(STR.de, {
+    "best.long": "Bestzeit {t}",
+    "best.fast": "geschafft in {t}",
+    "pause.title": "Pause",
+    "pause.note": "Die Uhr, der Schwarm und alles in der Luft hält an. Nichts bewegt sich, bis du zurück bist.",
+    "pause.resume": "Zurück ins Spiel"
+  });
+  Object.assign(STR.es, {
+    "best.long": "mejor {t}",
+    "best.fast": "superado en {t}",
+    "pause.title": "Pausa",
+    "pause.note": "El reloj, el enjambre y todo lo que vuela están quietos. Nada se mueve hasta que vuelvas.",
+    "pause.resume": "Volver al juego"
+  });
+  Object.assign(STR.fr, {
+    "best.long": "record {t}",
+    "best.fast": "fini en {t}",
+    "pause.title": "Pause",
+    "pause.note": "L'horloge, l'essaim et tout ce qui vole sont figés. Rien ne bouge tant que tu n'es pas revenu.",
+    "pause.resume": "Reprendre"
+  });
+
+
+  STR.da["key.pause"] = "P — pause";
+  STR.no["key.pause"] = "P — pause";
+  STR.sv["key.pause"] = "P — paus";
+  STR.de["key.pause"] = "P — Pause";
+  STR.es["key.pause"] = "P — pausa";
+  STR.fr["key.pause"] = "P — pause";
+
   let lang = "en";
   try { const L = localStorage.getItem("tw-lang"); if (L && LANGS.some(l => l.id === L)) lang = L; } catch {}
 
@@ -1723,6 +1797,7 @@
     });
     try { localStorage.setItem("tw-lang", lang); } catch {}
     renderUpgradeChips();
+    renderBests();
     renderBans();
     syncMuteBtn();
     syncHud();
@@ -3131,10 +3206,51 @@
     syncHud();
   }
 
+  /* what a run is worth: time survived, or the clock it took to clear */
+  const RACE = m => m === "rush" || m === "duel";
+  function bestKey(m) { return "tw-best-" + m; }
+  function readBest(m) {
+    try { return Number(localStorage.getItem(bestKey(m))) || 0; } catch { return 0; }
+  }
+  function saveBest(reason) {
+    const m = game.mode;
+    const secs = game.tick / TPS;
+    const had = readBest(m);
+    if (RACE(m)) {
+      if (reason !== "win") return false;                  // only a clear counts
+      if (had && had <= secs) return false;
+      try { localStorage.setItem(bestKey(m), String(Math.round(secs))); } catch {}
+      return true;
+    }
+    if (secs <= had) return false;
+    try { localStorage.setItem(bestKey(m), String(Math.floor(secs))); } catch {}
+    return true;
+  }
+  function renderBests() {
+    document.querySelectorAll("[data-best]").forEach(e => {
+      const m = e.dataset.best;
+      const v = readBest(m);
+      e.textContent = v ? tr(RACE(m) ? "best.fast" : "best.long", { t: mmss(v) }) : "";
+    });
+  }
+
+  function pauseGame() {
+    if (game.state !== "playing") return;
+    setState("paused");
+    ovPause.hidden = false;
+  }
+  function resumeGame() {
+    if (game.state !== "paused") return;
+    ovPause.hidden = true;
+    setState("playing");
+  }
+
   function gameOver(reason) {
     setState("over");
     reason === "win" ? SND.win() : SND.lose();
-    showEnd(reason);
+    showEnd(reason);           // the end screen reads the old record, then it is replaced
+    saveBest(reason);
+    renderBests();
     syncHud();
   }
 
@@ -5422,6 +5538,10 @@
   document.getElementById("btnStart").addEventListener("click", () => { ovTitle.hidden = true; startRun(); });
   document.getElementById("btnRetry").addEventListener("click", () => { ovEnd.hidden = true; startRun(); });
   document.getElementById("btnMode").addEventListener("click", () => { ovEnd.hidden = true; ovTitle.hidden = false; });
+  const ovPause = document.getElementById("ovPause");
+  document.getElementById("btnResume").addEventListener("click", resumeGame);
+  addEventListener("blur", () => pauseGame());        // switching away holds the run
+  renderBests();
 
   /* ---------- console: / opens it, /u and /g hand out upgrades ---------- */
   const consoleEl = document.getElementById("console");
@@ -5487,6 +5607,10 @@
     if (k === "f") { toggleFullscreen(); return; }
     if (k === "m") { SND.toggle(); syncMuteBtn(); return; }
     if (k === "escape" && !setPanel.hidden) { setPanel.hidden = true; return; }
+    if (k === "p" || (k === "escape" && (game.state === "playing" || game.state === "paused"))) {
+      game.state === "paused" ? resumeGame() : pauseGame();
+      return;
+    }
     if (k === "escape" && stage.classList.contains("cinema")) { setCinema(false); return; }
     if (game.state === "choose") {
       if (k === "1" || k === "2" || k === "3") chooseUpgrade(+k - 1);
