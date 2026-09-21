@@ -1836,7 +1836,7 @@
   const hasReq = u => !u.req || countOf(u.req) > 0;
 
   const player = { x: 0, y: 0, hp: START_HEARTS, max: START_HEARTS, inv: 0, flash: 0,
-                   fire: 0, fireRoll: 0, frozen: 0, face: -Math.PI / 2 };
+                   fire: 0, fireRoll: 0, frozen: 0, moving: false, face: -Math.PI / 2 };
   const cam = { x: 0, y: 0 };           // the field has no walls; the view follows you
   let bosses = [];
   let mobs = [];
@@ -3026,6 +3026,11 @@
     if (player.frozen > 0) player.frozen--;
     if (player.fire > 0) {
       player.fire--;
+      if (player.moving) player.fire -= 2;        // keep running and it burns itself out
+      if (player.fire <= 0) {
+        player.fire = 0;
+        burst(player.x, player.y, "#8a8a9a", 10, 2.4);   // a puff of smoke
+      }
       sparks.push({ x: player.x + rnd(-9, 9), y: player.y + rnd(-11, 4),
                     vx: rnd(-0.4, 0.4), vy: rnd(-1.5, -0.5),
                     life: 16, color: Math.random() < 0.4 ? "#ffd60a" : "#ff7a1a" });
@@ -3109,6 +3114,7 @@
     const rush = player.rush > 0 ? 1 + stats.adrenaline * 0.28 : 1;
     if (player.frozen > 0) { dx = 0; dy = 0; }   // held fast — you can still shoot
     const mag = Math.hypot(dx, dy);
+    player.moving = mag > 0;
     if (mag > 0) {
       player.face = Math.atan2(dy, dx);          // the sprite turns to follow your feet
       player.x += dx / mag * stats.speed * throttle * rush;
@@ -3870,6 +3876,10 @@
   }
 
   function heal(n) {
+    if (player.fire > 0) {                        // water on the flames
+      player.fire = 0;
+      burst(player.x, player.y, "#8a8a9a", 14, 2.8);
+    }
     if (player.hp < player.max) SND.heal();
     player.hp = Math.min(player.max, player.hp + n);
     burst(player.x, player.y, C.lime, 16, 2.6);
@@ -4432,7 +4442,8 @@
       const flick = 1 + Math.sin(game.lived * 0.4) * 0.12;
       ctx.globalAlpha = 0.9;
       if (artMode === "pixel") {
-        PIX.draw("flame", 0, player.x, player.y - 11, 16 * flick);
+        const fade = 0.55 + 0.45 * clamp(player.fire / FIRE_TICKS, 0, 1);
+        PIX.draw("flame", 0, player.x, player.y - 11, 16 * flick * fade);
       } else {
         ctx.fillStyle = "#ff7a1a"; ctx.shadowColor = "#ffd60a"; ctx.shadowBlur = 22;
         ctx.beginPath(); ctx.arc(player.x, player.y, (PLAYER_R + 3) * flick, 0, Math.PI * 2); ctx.fill();
