@@ -183,6 +183,9 @@
   .duelclock{color:var(--magenta) !important;font-weight:700}
   .stat.hot{color:var(--magenta) !important;font-weight:700}   /* endless: hits cost more than a heart */
   .endbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center}
+  .endbuild{display:flex;flex-direction:column;gap:7px;align-items:center;max-width:46ch}
+  .buildhead{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .buildchips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 
   .qtyform{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:2px}
   .qtyform[hidden]{display:none}
@@ -536,6 +539,10 @@
     <div class="overlay" id="ovEnd" hidden>
       <h2 id="endTitle">Run over</h2>
       <p id="endText"></p>
+      <div class="endbuild" id="endBuild" hidden>
+        <span class="buildhead" data-t="end.build">What you were running</span>
+        <div class="buildchips" id="buildChips"></div>
+      </div>
       <div class="endbtns">
         <button id="btnRetry" data-t="btn.retry">Start over</button>
         <button class="ghost" id="btnMode" type="button" data-t="btn.mode">Change mode</button>
@@ -672,6 +679,7 @@
 
   <div class="touchbar" id="touchbar">
     <button class="tbtn" id="tbRewind" type="button" data-t="touch.rewind">Rewind</button>
+    <button class="tbtn" id="tbPause" type="button" data-t="touch.pause">Pause</button>
     <button class="tbtn" id="tbFull" type="button" data-t="touch.full">Full</button>
   </div>
 
@@ -1764,6 +1772,32 @@
   STR.de["key.pause"] = "P — Pause";
   STR.es["key.pause"] = "P — pausa";
   STR.fr["key.pause"] = "P — pause";
+
+
+  Object.assign(STR.da, {
+    "touch.pause": "Pause",
+    "end.build": "Sådan så dit våben ud"
+  });
+  Object.assign(STR.no, {
+    "touch.pause": "Pause",
+    "end.build": "Slik så våpenet ditt ut"
+  });
+  Object.assign(STR.sv, {
+    "touch.pause": "Paus",
+    "end.build": "Så såg ditt vapen ut"
+  });
+  Object.assign(STR.de, {
+    "touch.pause": "Pause",
+    "end.build": "Womit du unterwegs warst"
+  });
+  Object.assign(STR.es, {
+    "touch.pause": "Pausa",
+    "end.build": "Con lo que ibas"
+  });
+  Object.assign(STR.fr, {
+    "touch.pause": "Pause",
+    "end.build": "Ce que tu avais en main"
+  });
 
   let lang = "en";
   try { const L = localStorage.getItem("tw-lang"); if (L && LANGS.some(l => l.id === L)) lang = L; } catch {}
@@ -5181,7 +5215,26 @@
   const takenBosses = () =>
     BOSSES.filter((d, t) => (game.spawned & (1 << t)) && !bosses.some(b => b.tier === t)).length;
 
+  /* the end screen shows the build the run died with */
+  function renderEndBuild() {
+    const box = document.getElementById("buildChips");
+    box.innerHTML = "";
+    let any = 0;
+    for (const id of takenOrder) {
+      const u = UPGRADES.find(x => x.id === id);
+      const n = countOf(id);
+      if (!u || !n) continue;
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = n > 1 ? `${u.name} ×${fmt(n)}` : u.name;
+      box.appendChild(chip);
+      any++;
+    }
+    document.getElementById("endBuild").hidden = !any;
+  }
+
   function showEnd(reason) {
+    renderEndBuild();
     const secs = (game.tick / TPS).toFixed(1);
     const downed = BOSSES.filter((d, t) => (game.spawned & (1 << t)) && !bosses.some(b => b.tier === t));
     const rw = `${game.rewinds} rewind${game.rewinds === 1 ? "" : "s"}`;
@@ -5539,6 +5592,9 @@
   document.getElementById("btnRetry").addEventListener("click", () => { ovEnd.hidden = true; startRun(); });
   document.getElementById("btnMode").addEventListener("click", () => { ovEnd.hidden = true; ovTitle.hidden = false; });
   const ovPause = document.getElementById("ovPause");
+  document.getElementById("tbPause").addEventListener("click", () => {
+    game.state === "paused" ? resumeGame() : pauseGame();
+  });
   document.getElementById("btnResume").addEventListener("click", resumeGame);
   addEventListener("blur", () => pauseGame());        // switching away holds the run
   renderBests();
